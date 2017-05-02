@@ -1,0 +1,23 @@
+﻿@using System.Web.Mvc.Html;
+@using System.Web.Mvc;
+
+@helper TableRowButtons(object routeValues)
+{
+  <td nowrap>
+    <a href='@Url.Action("Edit",    routeValues)' class="btn btn-primary btn-xs" title = "Изменить" ><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
+    <a href='@Url.Action("Details", routeValues)' class="btn btn-primary btn-xs" title = "Просмотор"><img width="20" height="20" src='@Url.Content("~/Images/View-white.svg")' /></a>
+    <a href='@Url.Action("Delete",  routeValues)' class="btn btn-primary btn-xs" title = "Удалить"  ><img width="20" height="20" src='@Url.Content("~/Images/Delete-white.svg")' /></a>
+  </td>
+}
+
+@functions {
+  protected static new System.Web.Mvc.HtmlHelper Html
+  {
+    get { return ((System.Web.Mvc.WebViewPage)WebPageContext.Current.Page).Html; }
+  }
+
+  protected static UrlHelper Url
+  {
+    get { return ((System.Web.Mvc.WebViewPage)WebPageContext.Current.Page).Url; }
+  }
+}

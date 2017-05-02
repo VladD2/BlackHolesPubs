@@ -1,0 +1,59 @@
+﻿@using BlackHoles.DataContexts;
+@using BlackHoles.Entities;
+@using BlackHoles.Models;
+@using BlackHoles.Utils;
+@using System.Security.Principal;
+
+@model BlackHoles.Models.AuthorListModel
+
+<div id="authors">
+  @{
+    var articleAuthors = Model.ArticleAuthors;
+    var isManyArticleAuthors = articleAuthors.Count > 1;
+  }
+
+  <div @*class="form-group"*@>
+    @for (int i = 0; i < Model.ArticleAuthors.Count; i++)
+    {
+      var author = Model.ArticleAuthors[i];
+      var num = isManyArticleAuthors ? " № " + i : "";
+      <div style="margin-bottom: 5px; margin-top: 5px; @*margin-left: 15px;*@">
+        <b>Автор@(num):</b> @Html.Hidden("Id", author.Id)@Html.DisplayFor(modelItem => author.RusSurname) @Html.DisplayFor(modelItem => author.RusInitials) (@Html.DisplayFor(modelItem => author.Email))
+        <a id="deleteButton" data-id="@author.Id" href="@author.Id" class="btn btn-primary btn-xs" title="Удалить"><img width="20" height="20" src='@Url.Content("~/Images/Delete-white.svg")' /></a>
+      </div>
+    }
+  </div>
+  <div @*class="col-md-10"*@>
+  @if (Model.AvailableAuthors.Count > 0)
+  {
+    <div class="text-primary small">Выберите автора, чтобы добавить его в статью: @Html.DropDownList("availableAuthorsComboBox", GetAuthors(Model.AvailableAuthors))</div>
+  }
+  else if (Model.ArticleAuthors.Count == 0)
+  {
+    <div class="text-danger">Перед добавлением заявки на публикацию статьи нужно добавить описание авторов!</div>
+  }
+  else
+  {
+    <div class="text-warning">Вы выбрали всех доступных авторов.</div>
+  }
+  </div>
+</div>
+
+@functions{
+  List<SelectListItem> GetAuthors(List<Author> articleAuthors)
+  {
+    var result = new List<SelectListItem>(articleAuthors.Count + 1);
+    result.Add(new SelectListItem() { Value = "-1", Text = "Выберите автора...", Selected = true, Disabled = true });
+
+    foreach (var a in articleAuthors)
+      result.Add(new SelectListItem()
+      {
+        Value = a.Id.ToString(),
+        Text = a.RusSurname + " " + a.RusInitials + " (" + a.Email + ")"
+      });
+
+    return result;
+  }
+}
+
+

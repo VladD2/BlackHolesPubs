@@ -1,0 +1,112 @@
+﻿@model BlackHoles.Entities.Author
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Удаление автора</h2>
+
+<h3>Вы уверены, что хотите удалить автора? </h3>
+<div>
+    <h4>Author</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RusSurname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RusSurname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RusInitials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RusInitials)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RusOrgName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RusOrgName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RusSubdivision)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RusSubdivision)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RusPosition)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RusPosition)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnuSurname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnuSurname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnuInitials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnuInitials)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnuOrgName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnuOrgName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ScienceDegree)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ScienceDegree)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-default" /> |
+            @Html.ActionLink("К списку номеров", "Index")
+        </div>
+    }
+</div>

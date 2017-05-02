@@ -1,0 +1,128 @@
+﻿@using BlackHoles.DataContexts;
+@using BlackHoles.Entities;
+@using BlackHoles.Models;
+@using BlackHoles.Utils;
+@using System.Security.Principal;
+@model BlackHoles.Entities.Article
+
+@{
+  ViewBag.Title = "Create";
+  IssuesDb db = new IssuesDb();
+}
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+
+  <div class="form-horizontal">
+    <h4>Добавление статьи.</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+      @Html.LabelFor(model => model.Specialty, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @{
+          var lst = new List<SelectListItem>()
+          {
+            new SelectListItem() { Text="Выберите номер специальности...", Disabled=true, Selected=true },
+            new SelectListItem() { Value="12.00.01", Text="12.00.01 – Теория и история права и государства; история учений о праве и государстве" },
+            new SelectListItem() { Value="12.00.02", Text="12.00.02 – Конституционное право; конституционный судебный процесс; муниципальное право" },
+            new SelectListItem() { Value="12.00.03", Text="12.00.03 – Гражданское право; предпринимательское право; семейное право; международное частное право" },
+            new SelectListItem() { Value="12.00.04", Text="12.00.04 – Финансовое право; налоговое право; бюджетное право" },
+            new SelectListItem() { Value="12.00.05", Text="12.00.05 – Трудовое право; право социального обеспечения" },
+            new SelectListItem() { Value="12.00.06", Text="12.00.06 – Земельное право; природоресурсное право; экологическое право; аграрное право" },
+            new SelectListItem() { Value="12.00.07", Text="12.00.07 – Корпоративное право; энергетическое право" },
+            new SelectListItem() { Value="12.00.08", Text="12.00.08 – Уголовное право и криминология; уголовно - исполнительное право" },
+            new SelectListItem() { Value="12.00.09", Text="12.00.09 – Уголовный процесс" },
+            new SelectListItem() { Value="12.00.10", Text="12.00.10 – Международное право; Европейское право" },
+            new SelectListItem() { Value="12.00.11", Text="12.00.11 – Судебная деятельность, прокурорская деятельность, правозащитная и правоохранительная деятельность" },
+            new SelectListItem() { Value="12.00.12", Text="12.00.12 – Криминалистика; судебно - экспертная деятельность; оперативно - розыскная деятельность" },
+            new SelectListItem() { Value="12.00.13", Text="12.00.13 – Информационное право" },
+            new SelectListItem() { Value="12.00.14", Text="12.00.14 – Административное право; административный процесс" },
+            new SelectListItem() { Value="12.00.15", Text="12.00.15 – Гражданский процесс; арбитражный процесс" },
+          };
+        }
+        @Html.DropDownListFor(model => model.Specialty, lst, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.RusArtTitles, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.RusArtTitles, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.RusArtTitles, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.Authors, "Автор(ы)", htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.Partial("AuthorList", AuthorListModel.GetEmptyAuthorListModel(db, User))
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.ShortArtTitles, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.ShortArtTitles, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.ShortArtTitles, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.RusAbstract, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.RusAbstract, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.RusAbstract, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.RusKeywords, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.RusKeywords, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.RusKeywords, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.EnuArtTitles, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.EnuArtTitles, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.EnuArtTitles, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.EnuAbstract, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.EnuAbstract, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.EnuAbstract, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(model => model.EnuKeywords, htmlAttributes: new { @class = "control-label col-md-2" })
+      <div class="col-md-10">
+        @Html.EditorFor(model => model.EnuKeywords, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.EnuKeywords, "", new { @class = "text-danger" })
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Создать запрос на публикацию" class="btn btn-default" />
+      </div>
+    </div>
+  </div>
+}
+
+<div>
+  @Html.ActionLink("К списку статей", "Index")
+</div>
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/Scripts/Article.js")
+}

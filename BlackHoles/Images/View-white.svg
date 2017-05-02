@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="512" height="512" enable-background="new 0 0 512 512" xml:space="preserve"><rect id="backgroundrect" width="100%" height="100%" x="0" y="0" fill="none" stroke="none"/>
+
+<g class="currentLayer"><title>Layer 1</title><g id="svg_1" class="selected" fill="#ffffff" fill-opacity="1">
+	<path d="M497.938,430.063L380.469,312.594c-17.5,27.219-40.656,50.375-67.875,67.875l117.469,117.469   c18.75,18.75,49.156,18.75,67.875,0C516.688,479.219,516.688,448.813,497.938,430.063z" id="svg_2" fill="#ffffff" fill-opacity="1"/>
+	<path d="M384,192C384,85.969,298.031,0,192,0S0,85.969,0,192s85.969,192,192,192S384,298.031,384,192z M192,336   c-79.406,0-144-64.594-144-144S112.594,48,192,48s144,64.594,144,144S271.406,336,192,336z" id="svg_3" fill="#ffffff" fill-opacity="1"/>
+	<path d="M80,192h32c0-44.109,35.891-80,80-80V80C130.25,80,80,130.25,80,192z" id="svg_4" fill="#ffffff" fill-opacity="1"/>
+</g></g></svg>

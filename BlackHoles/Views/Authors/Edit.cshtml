@@ -1,0 +1,19 @@
+﻿@model BlackHoles.Entities.Author
+
+@{
+  ViewBag.Title = "Редактирование автора";
+  ViewBag.SubmitCaption = "Сохранить";
+}
+
+<h2>Редактирование автора</h2>
+
+@using (Html.BeginForm())
+{
+  <div class="form-horizontal">
+    @Html.Partial("AuthorView", Model)
+  </div>
+}
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}

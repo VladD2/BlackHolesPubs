@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BlackHoles.Entities.Article>
+
+@{
+  ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+  @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+  <tr>
+    <th>@Html.DisplayNameFor(model => model.Specialty)</th>
+    <th>@Html.DisplayNameFor(model => model.RusArtTitles)</th>
+    <th>@Html.DisplayNameFor(model => model.ShortArtTitles)</th>
+    <th>@Html.DisplayNameFor(model => model.RusAbstract)</th>
+    <th>@Html.DisplayNameFor(model => model.RusKeywords)</th>
+    <th>@Html.DisplayNameFor(model => model.EnuArtTitles)</th>
+    <th>@Html.DisplayNameFor(model => model.EnuAbstract)</th>
+    <th>@Html.DisplayNameFor(model => model.EnuKeywords)</th>
+  </tr>
+
+  @foreach (var item in Model)
+  {
+    <tr>
+      <td>@Html.DisplayFor(modelItem => item.Specialty)</td>
+      <td>@Html.DisplayFor(modelItem => item.RusArtTitles)</td>
+      <td>@Html.DisplayFor(modelItem => item.ShortArtTitles)</td>
+      <td>@Html.DisplayFor(modelItem => item.RusAbstract)</td>
+      <td>@Html.DisplayFor(modelItem => item.RusKeywords)</td>
+      <td>@Html.DisplayFor(modelItem => item.EnuArtTitles)</td>
+      <td>@Html.DisplayFor(modelItem => item.EnuAbstract)</td>
+      <td>@Html.DisplayFor(modelItem => item.EnuKeywords)</td>
+      @Shared.TableRowButtons(new { id = item.Id })
+    </tr>
+  }
+
+</table>

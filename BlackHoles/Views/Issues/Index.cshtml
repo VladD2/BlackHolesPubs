@@ -1,0 +1,29 @@
+﻿@model IEnumerable<BlackHoles.Entities.Issue>
+
+@{
+  ViewBag.Title = "Index";
+}
+
+<h2>Список номеров</h2>
+
+<p>
+  @Html.ActionLink("Добавить номер", "Create", null, new { @class = "btn btn-primary btn-lg" })
+</p>
+<table class="table">
+  <tr>
+    <th>@Html.DisplayNameFor(model => model.Year)</th>
+    <th>@Html.DisplayNameFor(model => model.Number)</th>
+    <th>@Html.DisplayNameFor(model => model.Active)</th>
+  </tr>
+
+  @foreach (var item in Model)
+  {
+    <tr>
+      <td>@Html.DisplayFor(modelItem => item.Year)</td>
+      <td>@Html.DisplayFor(modelItem => item.Number)</td>
+      <td>@Html.DisplayFor(modelItem => item.Active)</td>
+      @Shared.TableRowButtons(new { year = item.Year, number = item.Number })
+    </tr>
+  }
+
+</table>

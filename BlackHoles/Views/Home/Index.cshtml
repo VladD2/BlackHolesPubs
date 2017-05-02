@@ -1,0 +1,23 @@
+﻿@using BlackHoles.Properties;
+@using BlackHoles.Utils;
+@{
+  ViewBag.Title = "Публикация в журнале " + MvcApplication.Jur;
+  var settings = @Settings.Default;
+}
+
+<div class="jumbotron">
+  <h2>Публикация в журнале <b>@MvcApplication.Jur</b></h2>
+  <p class="lead">
+    Сейчас идет формирование № @settings.Number за @settings.Year год, который выйдет в @Html.PublicationMonth(settings.Number). 
+    На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и статьях.
+
+  </p>
+  <p class="lead">
+    Сначала добавьте авторов публикаций, а потом публикации (где можно будет указать заранее веденных авторов).
+  </p>
+
+  <p>@Html.ActionLink("Номера", "Index", "Issues", null, new { @class = "btn btn-primary btn-lg" })</p>
+  <p>@Html.ActionLink("Авторы", "Index", "Authors", null, new { @class = "btn btn-primary btn-lg" })</p>
+  <p>@Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary btn-lg" })</p>
+
+</div>

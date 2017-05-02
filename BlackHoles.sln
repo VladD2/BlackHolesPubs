@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackHoles", "BlackHoles\BlackHoles.csproj", "{06054FBA-1348-42EC-B742-01F254FB3097}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackHoles.Tests", "BlackHoles.Tests\BlackHoles.Tests.csproj", "{99666933-BB7F-4DB0-9A14-B13B78A8D932}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackHoles.Entities", "BlackHoles.Entities\BlackHoles.Entities.csproj", "{A6F3B33E-AE63-40C7-8E65-C50FE2690325}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06054FBA-1348-42EC-B742-01F254FB3097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06054FBA-1348-42EC-B742-01F254FB3097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06054FBA-1348-42EC-B742-01F254FB3097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06054FBA-1348-42EC-B742-01F254FB3097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99666933-BB7F-4DB0-9A14-B13B78A8D932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99666933-BB7F-4DB0-9A14-B13B78A8D932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99666933-BB7F-4DB0-9A14-B13B78A8D932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99666933-BB7F-4DB0-9A14-B13B78A8D932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6F3B33E-AE63-40C7-8E65-C50FE2690325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6F3B33E-AE63-40C7-8E65-C50FE2690325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6F3B33E-AE63-40C7-8E65-C50FE2690325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6F3B33E-AE63-40C7-8E65-C50FE2690325}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

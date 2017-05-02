@@ -1,0 +1,29 @@
+﻿@model IEnumerable<BlackHoles.Entities.Author>
+
+@{ ViewBag.Title = "Авторы"; }
+
+<h2>Авторы</h2>
+
+<p>Доавьте сюда авторов которые будут использоваться в публикуемых вами статьях.</p>
+
+@Html.ActionLink("Добавить автора", "Create", null, new { @class = "btn btn-primary btn-lg" })
+</p>
+<table class="table">
+  <tr>
+    <th>@Html.DisplayNameFor(model => model.RusSurname)</th>
+    <th>@Html.DisplayNameFor(model => model.RusInitials)</th>
+    <th>@Html.DisplayNameFor(model => model.RusOrgName)</th>
+    <th>@Html.DisplayNameFor(model => model.Email)</th>
+  </tr>
+
+  @foreach (var item in Model)
+  {
+    <tr>
+      <td>@Html.DisplayFor(modelItem => item.RusSurname)</td>
+      <td>@Html.DisplayFor(modelItem => item.RusInitials)</td>
+      <td>@Html.DisplayFor(modelItem => item.RusOrgName)</td>
+      <td>@Html.DisplayFor(modelItem => item.Email)</td>
+      @Shared.TableRowButtons(new { id = item.Id })
+    </tr>
+  }
+</table>
