@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -200,7 +203,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AuthorListModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -224,8 +226,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\Add.png" />
+    <Content Include="Images\Back-white.svg" />
+    <Content Include="Images\Delete-white.svg" />
+    <Content Include="Images\Edit-white.svg" />
+    <Content Include="Images\View-white.svg" />
     <Content Include="Scripts\Article.js" />
+    <Content Include="Scripts\bootstrap-filestyle.js" />
+    <Content Include="Scripts\bootstrap-filestyle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -298,8 +305,8 @@
     <Content Include="Views\Articles\Index.cshtml" />
     <Content Include="Views\Authors\AuthorView.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StringOpt.cshtml" />
-    <Content Include="Views\Articles\Autors.cshtml" />
     <Content Include="Views\Articles\AuthorList.cshtml" />
+    <Content Include="Views\Articles\ArticleView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

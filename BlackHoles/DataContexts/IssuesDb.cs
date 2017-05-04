@@ -22,9 +22,24 @@ namespace BlackHoles.DataContexts
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
       modelBuilder.Entity<Article>()
-        .HasRequired(c => c.Authors)
+                  .HasMany<Author>(s => s.Authors)
+                  .WithMany(c => c.Articles)
+                  .Map(cs =>
+                    {
+                      cs.MapLeftKey("AuthorRefId");
+                      cs.MapRightKey("ArticleRefId");
+                      cs.ToTable("ArticleAuthors");
+                    });
+
+      modelBuilder.Entity<Article>()
+        .HasRequired(c => c.Owner)
         .WithMany()
         .WillCascadeOnDelete(false);
+
+      //modelBuilder.Entity<Article>()
+      //  .HasRequired(c => c.Authors)
+      //  .WithMany()
+      //  .WillCascadeOnDelete(false);
 
       base.OnModelCreating(modelBuilder);
     }

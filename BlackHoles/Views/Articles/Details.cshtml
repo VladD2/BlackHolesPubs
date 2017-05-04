@@ -1,82 +1,37 @@
 ﻿@model BlackHoles.Entities.Article
 
 @{
-    ViewBag.Title = "Details";
+  ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Заявка на публикацию статьи</h2>
 
 <div>
-    <h4>Article</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Specialty)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Specialty)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RusArtTitles)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RusArtTitles)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ShortArtTitles)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ShortArtTitles)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RusAbstract)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RusAbstract)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RusKeywords)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RusKeywords)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuArtTitles)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuArtTitles)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuAbstract)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuAbstract)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuKeywords)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuKeywords)
-        </dd>
-
-    </dl>
+  <hr />
+  <dl class="dl-horizontal">
+    <dt>@Html.DisplayNameFor(model => model.Specialty)</dt>
+    <dd>@Html.DisplayFor(model => model.Specialty)</dd>
+    <dt>@Html.DisplayNameFor(model => model.RusArtTitles)</dt>
+    <dd>@Html.DisplayFor(model => model.RusArtTitles)</dd>
+    <dt>@Html.DisplayNameFor(model => model.ShortArtTitles)</dt>
+    <dd>@Html.DisplayFor(model => model.ShortArtTitles)</dd>
+    <dt>@Html.DisplayNameFor(model => model.RusAbstract)</dt>
+    <dd>@Html.DisplayFor(model => model.RusAbstract)</dd>
+    <dt>@Html.DisplayNameFor(model => model.RusKeywords)</dt>
+    <dd>@Html.DisplayFor(model => model.RusKeywords)</dd>
+    <dt>@Html.DisplayNameFor(model => model.EnuArtTitles)</dt>
+    <dd>@Html.DisplayFor(model => model.EnuArtTitles)</dd>
+    <dt>@Html.DisplayNameFor(model => model.EnuAbstract)</dt>
+    <dd>@Html.DisplayFor(model => model.EnuAbstract)</dd>
+    <dt>@Html.DisplayNameFor(model => model.EnuKeywords)</dt>
+    <dd>@Html.DisplayFor(model => model.EnuKeywords)</dd>
+    <dt>@Html.DisplayNameFor(model => model.Created)</dt>
+    <dd>@Html.DisplayFor(model => model.Created)</dd>
+    <dt>@Html.DisplayNameFor(model => model.Modified)</dt>
+    <dd>@Html.DisplayFor(model => model.Modified)</dd>
+  </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+  @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+  @Html.ActionLink("Back to List", "Index")
 </p>

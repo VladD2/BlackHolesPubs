@@ -4,7 +4,7 @@
 @using BlackHoles.Utils;
 @using System.Security.Principal;
 
-@model BlackHoles.Models.AuthorListModel
+@model BlackHoles.Models.ArticleAuthorsViewModel
 
 <div id="authors">
   @{
@@ -16,9 +16,9 @@
     @for (int i = 0; i < Model.ArticleAuthors.Count; i++)
     {
       var author = Model.ArticleAuthors[i];
-      var num = isManyArticleAuthors ? " № " + i : "";
-      <div style="margin-bottom: 5px; margin-top: 5px; @*margin-left: 15px;*@">
-        <b>Автор@(num):</b> @Html.Hidden("Id", author.Id)@Html.DisplayFor(modelItem => author.RusSurname) @Html.DisplayFor(modelItem => author.RusInitials) (@Html.DisplayFor(modelItem => author.Email))
+      var num = isManyArticleAuthors ? "<b>" + (i + 1) + ".</b> " : "";
+      <div style="margin-bottom: 5px; margin-top: 5px;"> @*margin-left: 15px;*@
+        @Html.Raw(num)@Html.Hidden("Id", author.Id)@Html.DisplayFor(modelItem => author.RusSurname) @Html.DisplayFor(modelItem => author.RusInitials)
         <a id="deleteButton" data-id="@author.Id" href="@author.Id" class="btn btn-primary btn-xs" title="Удалить"><img width="20" height="20" src='@Url.Content("~/Images/Delete-white.svg")' /></a>
       </div>
     }

@@ -19,7 +19,7 @@
         <td>Будет опубликован в статье и по нему будет высылаться PDF.</td>
       </tr>
 
-      <tr><td colspan="3">Следующие поля заплняются на <b>русском</b> языке:</td></tr>
+      <tr><td colspan="3" class="label-info">Следующие поля заплняются на <b>русском</b> языке:</td></tr>
 
       <tr>
         <td>@Html.LabelFor(model => model.RusSurname, htmlAttributes: new { @class = "control-label col-md-2" })</td>
@@ -101,7 +101,7 @@
         <td>Необязательное поле. Используется для связи с автором.</td>
       </tr>
 
-      <tr><td colspan="3">Следующие поля заплняются на <b>английсокм</b> языке:</td></tr>
+      <tr><td colspan="3" class="label-info">Следующие поля заплняются на <b>английсокм</b> языке:</td></tr>
 
       <tr>
         <td>@Html.LabelFor(model => model.EnuSurname, htmlAttributes: new { @class = "control-label col-md-2" })</td>
@@ -138,7 +138,7 @@
     </table>
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="@ViewBag.SubmitCaption" class="btn btn-default" />
+        @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Записать" class="btn btn-primary" />
       </div>
     </div>
   </div>

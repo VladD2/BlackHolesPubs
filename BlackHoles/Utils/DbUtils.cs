@@ -1,4 +1,6 @@
-﻿using BlackHoles.Models;
+﻿using BlackHoles.DataContexts;
+using BlackHoles.Entities;
+using BlackHoles.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -12,16 +14,30 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
+    public static string MakeBriefFio(this Author author)
+    {
+      return author.RusSurname + " " + author.RusInitials.MakeBriefInitials();
+    }
+
+    public static string MakeBriefInitials(this string fullInitials)
+    {
+      return string.Concat(fullInitials.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x[0] + "."));
+    }
+
+    public static int[] ParseToIntArray(this string authorsIds)
+    {
+      return authorsIds.Split(',').Select(int.Parse).ToArray();
+    }
+
     public static string GetUserId(this IPrincipal principal)
     {
       return principal.Identity.GetUserId();
     }
 
-    public static ApplicationUser GetApplicationUser(this IPrincipal principal)
+    public static ApplicationUser GetApplicationUser(this IPrincipal principal, IssuesDb db)
     {
-      var userId = principal.Identity.GetUserId();
-      var user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
-
+      var userId = principal.GetUserId();
+      var user = db.Users.Find(userId);
       return user;
     }
 

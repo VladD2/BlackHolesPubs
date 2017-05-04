@@ -3,12 +3,18 @@ var url = "/Articles/AddAuthorsAjax";//"<not set>";
 
 function attachEvents()
 {
+  var value = "[" + $('#AuthorsIds').val() + "]";
+  authorIds = eval(value);
+
   $('#availableAuthorsComboBox').on("change", onChange);
   $('#authors').on("click", "a", onRemoveAuthor);
+  $('#uploadArticle').on('click', onUploadArticle);
+  $(":fileInput").filestyle();
 }
 
 function updateAuthors(authorIds)
 {
+  $('#AuthorsIds').val(authorIds);
   $.ajax({
     traditional: true,
     url: url,
@@ -46,6 +52,25 @@ function onRemoveAuthor()
 
   console.log("<<< onRemoveAuthor");
   return false;
+}
+
+function onUploadArticle(e)
+{
+  e.preventDefault();
+  var formData = new FormData();
+  var file = document.getElementById("fileInput").files[0];
+  formData.append("fileInput", file);
+
+  $.ajax({
+    url: "/Articles/UploadArticle",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function () {
+      alert("URA");
+    }
+  });
 }
 
 $(attachEvents);

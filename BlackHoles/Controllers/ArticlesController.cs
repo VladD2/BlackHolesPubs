@@ -10,6 +10,8 @@ using BlackHoles.DataContexts;
 using BlackHoles.Entities;
 using BlackHoles.Utils;
 using BlackHoles.Models;
+using BlackHoles.Properties;
+using AutoMapper;
 
 namespace BlackHoles.Controllers
 {
@@ -21,7 +23,8 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      return View(db.Articles.Where(a => a.Owner.Id == userId).ToList());
+      var authors = db.Articles.Include(a => a.Authors).Where(a => a.OwnerId == userId).ToList();
+      return View(authors);
     }
 
     // GET: Articles/Details/5
@@ -32,7 +35,7 @@ namespace BlackHoles.Controllers
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
       Article article = db.Articles.Find(id);
-      if (article == null || article.Owner.Id != User.GetUserId())
+      if (article == null || article.OwnerId != User.GetUserId())
       {
         return HttpNotFound();
       }
@@ -42,7 +45,19 @@ namespace BlackHoles.Controllers
     // GET: Articles/Create
     public ActionResult Create()
     {
-      return View();
+      var settings = Settings.Default;
+      var userId = User.GetUserId();
+      var other = db.Authors.Where(a => a.OwnerId == userId).ToList();
+      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = new List<Author>(), AvailableAuthors = other };
+      var now = DateTime.UtcNow;
+      var newArticle = new Article()
+      {
+        AuthorsViewModel = newArticleAuthors,
+        IssueYear        = settings.Year,
+        IssueNumber      = settings.Number,
+        Created          = now,
+      };
+      return View(newArticle);
     }
 
     // POST: Articles/Create
@@ -50,9 +65,12 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords")] Article article)
+    public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
     {
-      article.Owner = User.GetApplicationUser();
+      FillPrperties(article);
+      article.Owner = User.GetApplicationUser(db);
+      article.Issue = db.Issues.Find(article.IssueYear, article.IssueNumber);
+      DbUtils.Revalidate(this, article);
       if (ModelState.IsValid)
       {
         db.Articles.Add(article);
@@ -63,42 +81,34 @@ namespace BlackHoles.Controllers
       return View(article);
     }
 
+    private void FillPrperties(Article article)
+    {
+      var authorsIds = article.AuthorsIds.ParseToIntArray();
+      article.Authors.Clear();
+      var authors = db.Authors.Where(a => authorsIds.Contains(a.Id)).ToList();
+      article.Authors.AddRange(authors);
+      article.Modified = DateTime.UtcNow;
+    }
+
     // GET: Articles/Edit/5
     public ActionResult Edit(int? id)
     {
       if (id == null)
-      {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-      }
-      Article article = db.Articles.Find(id);
-      if (article == null)
-      {
-        return HttpNotFound();
-      }
-      return View(article);
-    }
 
-    [HttpPost]
-    public ActionResult AddAuthors(int autorId)
-    {
-      return View();
-    }
-
-    [HttpPost]
-    public ActionResult AddAuthorsAjax(List<int> autorIds)
-    {
       var userId = User.GetUserId();
-      autorIds = autorIds?.Distinct()?.ToList() ?? new List<int>();
-      var autors = db.Authors.Include(a => a.Owner)
-                    .Where(a => autorIds.Contains(a.Id) && a.Owner.Id == userId)
-                    .ToList();
-      var autorsOrdered = (from autorId in autorIds join o in autors on autorId equals o.Id select o).ToList();
-      var other = db.Authors.Include(a => a.Owner)
-                    .Where(a => !autorIds.Contains(a.Id) && a.Owner.Id == userId)
-                    .OrderBy(a => a.RusSurname).ThenBy(a => a.RusInitials)
-                    .ToList();
-      var model = new AuthorListModel() { ArticleAuthors = autorsOrdered, AvailableAuthors = other };
-      return PartialView("AuthorList", model);
+
+      var article = db.Articles.Include(a => a.Authors).Where(a => a.OwnerId == userId).FirstOrDefault(a => a.Id == id);
+      if (article == null)
+        return HttpNotFound();
+
+      var authorsIds = article.Authors.Select(a => a.Id).ToArray();
+      article.AuthorsIds = string.Join(", ", authorsIds);
+
+      var other = db.Authors.Where(a => a.OwnerId == userId && !authorsIds.Contains(a.Id)).ToList();
+      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors, AvailableAuthors = other };
+      article.AuthorsViewModel = newArticleAuthors;
+      return View(article);
     }
 
     // POST: Articles/Edit/5
@@ -106,11 +116,38 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords")] Article article)
+    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
     {
+      var userId = User.GetUserId();
+      var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue).FirstOrDefault(a => a.Id == article.Id && a.OwnerId == userId);
+      if (orig == null)
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+
+      Mapper.Initialize(cfg =>
+        cfg.CreateMap<Article, Article>()
+           .ForMember(dest => dest.Created,     opt => opt.Ignore())
+           .ForMember(dest => dest.Owner,       opt => opt.Ignore())
+           .ForMember(dest => dest.OwnerId,     opt => opt.Ignore())
+           .ForMember(dest => dest.Issue,       opt => opt.Ignore())
+           .ForMember(dest => dest.IssueYear,   opt => opt.Ignore())
+           .ForMember(dest => dest.IssueNumber, opt => opt.Ignore())
+           .ForMember(dest => dest.Authors,     opt => opt.Ignore())
+           .ForMember(dest => dest.Modified,    opt => opt.Ignore())
+           );
+
+      Mapper.Map(article, orig);
+
+      FillPrperties(orig);
+
+      //var entry = db.Entry(orog);
+      //entry.Reference(a => a.Owner).Load();
+      //entry.Reference(a => a.Issue).Load();
+      DbUtils.Revalidate(this, orig);
+
       if (ModelState.IsValid)
       {
-        db.Entry(article).State = EntityState.Modified;
+        //db.Entry(article).State = EntityState.Modified;
         db.SaveChanges();
         return RedirectToAction("Index");
       }
@@ -142,6 +179,40 @@ namespace BlackHoles.Controllers
       db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public ActionResult AddAuthorsAjax(List<int> autorIds)
+    {
+      var userId = User.GetUserId();
+      autorIds = autorIds?.Distinct()?.ToList() ?? new List<int>();
+      var autors = db.Authors
+                    .Where(a => autorIds.Contains(a.Id) && a.OwnerId == userId)
+                    .ToList();
+      var autorsOrdered = (from autorId in autorIds join o in autors on autorId equals o.Id select o).ToList();
+      var other = db.Authors.Include(a => a.Owner)
+                    .Where(a => !autorIds.Contains(a.Id) && a.OwnerId == userId)
+                    .OrderBy(a => a.RusSurname).ThenBy(a => a.RusInitials)
+                    .ToList();
+      var model = new ArticleAuthorsViewModel() { ArticleAuthors = autorsOrdered, AvailableAuthors = other };
+      return PartialView("AuthorList", model);
+    }
+
+    [HttpPost]
+    public ActionResult UploadArticle(HttpPostedFileBase fileInput)
+    {
+      var dir = Server.MapPath("~/Files/");
+      if (!System.IO.Directory.Exists(dir))
+        System.IO.Directory.CreateDirectory(dir);
+      var path = System.IO.Path.Combine(dir, fileInput.FileName);
+      fileInput.SaveAs(path);
+      return View();
+    }
+
+    //[HttpPost]
+    //public ActionResult UploadArticle()
+    //{
+    //  return PartialView("AuthorList");
+    //}
 
     protected override void Dispose(bool disposing)
     {

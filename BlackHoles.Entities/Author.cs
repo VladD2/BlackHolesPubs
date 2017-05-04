@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,14 +11,17 @@ namespace BlackHoles.Entities
 {
   public class Author
   {
+    [Key]
     public int    Id            { get; set; }
+
+    [ForeignKey("Owner")]
+    public string OwnerId { get; set; }
 
     [Required]
     public ApplicationUser Owner { get; set; }
 
     [Required, StringLength(100)]
     public string Email         { get; set; }
-
 
     [Required, StringLength(100), Display(Name = "Фамилия")]
     public string RusSurname       { get; set; }
