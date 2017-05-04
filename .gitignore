@@ -32,3 +32,4 @@ _ReSharper*/
 packages/
 *.mdf
 *.ldf
+App_Data/

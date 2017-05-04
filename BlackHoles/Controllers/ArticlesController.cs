@@ -200,7 +200,7 @@ namespace BlackHoles.Controllers
     [HttpPost]
     public ActionResult UploadArticle(HttpPostedFileBase fileInput)
     {
-      var dir = Server.MapPath("~/Files/");
+      var dir = Server.MapPath("~/App_Data/UploadedFiles/");
       if (!System.IO.Directory.Exists(dir))
         System.IO.Directory.CreateDirectory(dir);
       var path = System.IO.Path.Combine(dir, fileInput.FileName);
