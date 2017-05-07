@@ -15,6 +15,7 @@ using AutoMapper;
 
 namespace BlackHoles.Controllers
 {
+  [Authorize]
   public class ArticlesController : Controller
   {
     private IssuesDb db = new IssuesDb();
@@ -67,9 +68,17 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
     {
+      if (string.IsNullOrWhiteSpace(article.AuthorsIds))
+      {
+        FillPrperties(article);
+        article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, new int[0]);
+        return View(article);
+      }
+
       FillPrperties(article);
-      article.Owner = User.GetApplicationUser(db);
-      article.Issue = db.Issues.Find(article.IssueYear, article.IssueNumber);
+      article.Created = article.Modified;
+      article.Owner   = User.GetApplicationUser(db);
+      article.Issue   = db.Issues.Find(article.IssueYear, article.IssueNumber);
       DbUtils.Revalidate(this, article);
       if (ModelState.IsValid)
       {
@@ -78,13 +87,17 @@ namespace BlackHoles.Controllers
         return RedirectToAction("Index");
       }
 
+      article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, article.AuthorsIds.ParseToIntArray());
       return View(article);
     }
 
     private void FillPrperties(Article article)
     {
       var authorsIds = article.AuthorsIds.ParseToIntArray();
-      article.Authors.Clear();
+      if (article.Authors == null)
+        article.Authors = new List<Author>();
+      else
+        article.Authors.Clear();
       var authors = db.Authors.Where(a => authorsIds.Contains(a.Id)).ToList();
       article.Authors.AddRange(authors);
       article.Modified = DateTime.UtcNow;
@@ -105,10 +118,19 @@ namespace BlackHoles.Controllers
       var authorsIds = article.Authors.Select(a => a.Id).ToArray();
       article.AuthorsIds = string.Join(", ", authorsIds);
 
-      var other = db.Authors.Where(a => a.OwnerId == userId && !authorsIds.Contains(a.Id)).ToList();
-      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors, AvailableAuthors = other };
+      ArticleAuthorsViewModel newArticleAuthors = MakeArticleAuthorsViewModel(userId, article, authorsIds);
       article.AuthorsViewModel = newArticleAuthors;
       return View(article);
+    }
+
+    private ArticleAuthorsViewModel MakeArticleAuthorsViewModel(string userId, Article article, int[] authorsIds)
+    {
+      var query = db.Authors.Where(a => a.OwnerId == userId);
+      if (authorsIds != null && authorsIds.Length != 0)
+        query = query.Where(a => !authorsIds.Contains(a.Id));
+      var other = query.ToList();
+      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors, AvailableAuthors = other };
+      return newArticleAuthors;
     }
 
     // POST: Articles/Edit/5
@@ -200,6 +222,9 @@ namespace BlackHoles.Controllers
     [HttpPost]
     public ActionResult UploadArticle(HttpPostedFileBase fileInput)
     {
+      if (fileInput == null)
+        return View();
+
       var dir = Server.MapPath("~/App_Data/UploadedFiles/");
       if (!System.IO.Directory.Exists(dir))
         System.IO.Directory.CreateDirectory(dir);

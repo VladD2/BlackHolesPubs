@@ -26,6 +26,9 @@ namespace BlackHoles.Utils
 
     public static int[] ParseToIntArray(this string authorsIds)
     {
+      if (string.IsNullOrWhiteSpace(authorsIds))
+        return new int[0];
+
       return authorsIds.Split(',').Select(int.Parse).ToArray();
     }
 

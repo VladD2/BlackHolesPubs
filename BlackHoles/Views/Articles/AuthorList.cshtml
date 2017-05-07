@@ -8,7 +8,7 @@
 
 <div id="authors">
   @{
-    var articleAuthors = Model.ArticleAuthors;
+    var articleAuthors = Model.ArticleAuthors ?? new List<Author>();
     var isManyArticleAuthors = articleAuthors.Count > 1;
   }
 
@@ -24,6 +24,11 @@
     }
   </div>
   <div @*class="col-md-10"*@>
+  @if (Model.ArticleAuthors.Count == 0)
+  {
+    <div class="text-danger">Не выбрано ни одного автора! Список авторов должн содержать хотя бы одну запись!</div>
+  }
+
   @if (Model.AvailableAuthors.Count > 0)
   {
     <div class="text-primary small">Выберите автора, чтобы добавить его в статью: @Html.DropDownList("availableAuthorsComboBox", GetAuthors(Model.AvailableAuthors))</div>

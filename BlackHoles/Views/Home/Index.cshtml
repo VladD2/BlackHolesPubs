@@ -1,4 +1,5 @@
-﻿@using BlackHoles.Properties;
+﻿@using BlackHoles;
+@using BlackHoles.Properties;
 @using BlackHoles.Utils;
 @{
   ViewBag.Title = "Публикация в журнале " + MvcApplication.Jur;
@@ -16,8 +17,22 @@
     Сначала добавьте авторов публикаций, а потом публикации (где можно будет указать заранее веденных авторов).
   </p>
 
-  <p>@Html.ActionLink("Номера",                     "Index", "Issues",   null, new { @class = "btn btn-primary btn-lg" })</p>
-  <p>@Html.ActionLink("Авторы статей",              "Index", "Authors",  null, new { @class = "btn btn-primary btn-lg" })</p>
-  <p>@Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary btn-lg" })</p>
+  <hr />
 
+  @if (Request.IsAuthenticated)
+  {
+    if (User.IsInRole(Constants.AdminRole))
+    {
+      <p>@Html.ActionLink("Номера", "Index", "Issues", null, new { @class = "btn btn-primary btn-lg" })</p>
+    }
+    <p>@Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary btn-lg" })</p>
+    <p>@Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary btn-lg" })</p>
+  }
+  else
+  {
+    <p class="text-danger">Вы не произвели вход в систему (не автораизовались)!</p>
+    <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("авторизоваться (войти в свою учетную запись)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
+    <p>Если у Вас еще нет учетной записи, @Html.ActionLink("зарегистрируйтес", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }) в системе.</p>
+  }
 </div>
+

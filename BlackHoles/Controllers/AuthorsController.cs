@@ -9,9 +9,11 @@ using System.Web.Mvc;
 using BlackHoles.DataContexts;
 using BlackHoles.Entities;
 using BlackHoles.Utils;
+using AutoMapper;
 
 namespace BlackHoles.Controllers
 {
+  [Authorize]
   public class AuthorsController : Controller
   {
     private IssuesDb db = new IssuesDb();
@@ -91,15 +93,26 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Edit([Bind(Include = "Id,Email,RusSurname,RusInitials,RusOrgName,RusSubdivision,RusPosition,EnuSurname,EnuInitials,EnuOrgName,ScienceDegree,Phone")] Author author)
     {
-      var entry = db.Entry(author);
-      entry.State = EntityState.Unchanged;
-      db.Entry(author).Reference(x => x.Owner).Load();
+      var userId = User.GetUserId();
+      var orig = db.Authors.Include(a => a.Owner).FirstOrDefault(a => a.Id == author.Id && a.OwnerId == userId);
+      if (orig == null)
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-      this.Revalidate(author);
+      Mapper.Initialize(cfg =>
+          cfg.CreateMap<Author, Author>()
+              .ForMember(dest => dest.Owner,    opt => opt.Ignore())
+              .ForMember(dest => dest.OwnerId,  opt => opt.Ignore())
+              .ForMember(dest => dest.Articles, opt => opt.Ignore())
+              );
+
+      Mapper.Map(author, orig);
+
+
+      this.Revalidate(orig);
 
       if (ModelState.IsValid)
       {
-        db.Entry(author).State = EntityState.Modified;
+        //db.Entry(author).State = EntityState.Modified;
         db.SaveChanges();
         return RedirectToAction("Index");
       }

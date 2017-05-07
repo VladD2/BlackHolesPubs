@@ -11,6 +11,7 @@ using BlackHoles.Entities;
 
 namespace BlackHoles.Controllers
 {
+  [Authorize(Roles = Constants.AdminRole)]
   public class IssuesController : Controller
   {
     private IssuesDb db = new IssuesDb();
