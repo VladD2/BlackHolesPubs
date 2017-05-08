@@ -17,6 +17,7 @@
     <th>@Html.DisplayNameFor(model => model.ShortArtTitles)</th>
     <th>@Html.DisplayNameFor(model => model.Created)</th>
     <th>@Html.DisplayNameFor(model => model.Modified)</th>
+    <th>@Html.Label("Файлы")</th>
   </tr>
 
   @foreach (var article in Model)
@@ -28,6 +29,10 @@
       <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
       <td>@Html.DisplayFor(modelItem => article.Created)</td>
       <td>@Html.DisplayFor(modelItem => article.Modified)</td>
+      <td>@Html.CheckBox("ArticleVersions",    article.ArticleVersions    > 0, new { Title = $"Загружено версий статьи:  {article.ArticleVersions}" })  
+          @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}" })
+          @Html.CheckBox("ReviewImgVersions",  article.ReviewImgVersions  > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}" })
+      </td>
       @Shared.TableRowButtons(new { id = article.Id })
     </tr>
   }

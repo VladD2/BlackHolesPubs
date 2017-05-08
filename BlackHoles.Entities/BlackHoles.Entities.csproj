@@ -58,6 +58,7 @@
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="ArticleAuthorsViewModel.cs" />
     <Compile Include="Issue.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

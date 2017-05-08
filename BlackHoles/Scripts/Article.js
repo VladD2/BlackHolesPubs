@@ -9,7 +9,6 @@ function attachEvents()
   $('#availableAuthorsComboBox').on("change", onChange);
   $('#authors').on("click", "a", onRemoveAuthor);
   $('#uploadArticle').on('click', onUploadArticle);
-  $(":fileInput").filestyle();
 }
 
 function updateAuthors(authorIds)
@@ -58,8 +57,15 @@ function onUploadArticle(e)
 {
   e.preventDefault();
   var formData = new FormData();
-  var file = document.getElementById("fileInput").files[0];
-  formData.append("fileInput", file);
+
+  var file = document.getElementById("articleFile").files[0];
+  formData.append("articleFile", file);
+
+  file = document.getElementById("additionalText").files[0];
+  formData.append("additionalText", file);
+
+  file = document.getElementById("additionalImg").files[0];
+  formData.append("additionalImg", file);
 
   $.ajax({
     url: "/Articles/UploadArticle",
@@ -73,4 +79,15 @@ function onUploadArticle(e)
   });
 }
 
+function addComment(articleId)
+{
+  var val = document.getElementById("commentText_" + articleId).value;
+  alert(val);
+}
+
+function addReply(articleId, parentId)
+{
+  var val = document.getElementById("replyText_" + parentId).value;
+  alert(val);
+}
 $(attachEvents);

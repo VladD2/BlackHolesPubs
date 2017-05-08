@@ -45,5 +45,7 @@ namespace BlackHoles.DataContexts
     }
 
     public System.Data.Entity.DbSet<BlackHoles.Entities.Issue> Issues { get; set; }
+
+    public System.Data.Entity.DbSet<BlackHoles.Entities.Message> Messages { get; set; }
   }
 }

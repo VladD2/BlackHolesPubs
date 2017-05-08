@@ -12,12 +12,19 @@ using BlackHoles.Utils;
 using BlackHoles.Models;
 using BlackHoles.Properties;
 using AutoMapper;
+using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
+using IOFile = System.IO.File;
+using System.IO;
 
 namespace BlackHoles.Controllers
 {
   [Authorize]
   public class ArticlesController : Controller
   {
+    const string ReviewTextPrefix = "review-text-";
+    const string ReviewImgPrefix = "review-img-";
     private IssuesDb db = new IssuesDb();
 
     // GET: Articles
@@ -25,6 +32,8 @@ namespace BlackHoles.Controllers
     {
       var userId = User.GetUserId();
       var authors = db.Articles.Include(a => a.Authors).Where(a => a.OwnerId == userId).ToList();
+      foreach (var author in authors)
+        FillFilesInfo(author);
       return View(authors);
     }
 
@@ -46,6 +55,8 @@ namespace BlackHoles.Controllers
     // GET: Articles/Create
     public ActionResult Create()
     {
+      //Session["uploadDirName"] = "Temp/" + Guid.NewGuid().ToString("D");
+
       var settings = Settings.Default;
       var userId = User.GetUserId();
       var other = db.Authors.Where(a => a.OwnerId == userId).ToList();
@@ -68,26 +79,136 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
     {
+      var isCreating = article.Id == 0;
+      FillPrperties(article);
+
       if (string.IsNullOrWhiteSpace(article.AuthorsIds))
       {
-        FillPrperties(article);
         article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, new int[0]);
         return View(article);
       }
 
-      FillPrperties(article);
+      if (Request.Files.Count != 3)
+        throw new ApplicationException("Invalid uploaded files count!");
+
       article.Created = article.Modified;
       article.Owner   = User.GetApplicationUser(db);
       article.Issue   = db.Issues.Find(article.IssueYear, article.IssueNumber);
       DbUtils.Revalidate(this, article);
       if (ModelState.IsValid)
       {
+
+        HttpPostedFileBase articleFile        = Request.Files[0];
+        HttpPostedFileBase additionalTextFile = Request.Files[1];
+        HttpPostedFileBase additionalImg      = Request.Files[2];
+
+        if (isCreating && articleFile.ContentLength == 0)
+        {
+          ModelState.AddModelError("articleFile", "Необходимо загрузить файл содержащий текст статьи!");
+          return ContinueEdit(article);
+        }
+
         db.Articles.Add(article);
         db.SaveChanges();
+
+        if (articleFile.ContentLength > 0)
+          SeveFile(article, articleFile, null);
+
+        if (additionalTextFile.ContentLength > 0)
+          SeveFile(article, additionalTextFile, ReviewTextPrefix);
+
+        if (additionalImg.ContentLength > 0)
+          SeveFile(article, additionalImg, ReviewImgPrefix);
+
         return RedirectToAction("Index");
       }
 
       article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, article.AuthorsIds.ParseToIntArray());
+      return View(article);
+    }
+
+    private void SeveFile(Article article, HttpPostedFileBase file, string prefix = null)
+    {
+      var fullPath = MakeFileName(article, file, prefix);
+      file.SaveAs(fullPath);
+    }
+
+    private string[] GetFileVersions(Article article, string prefix = null)
+    {
+      var settings = Settings.Default;
+      if (article.Id == 0)
+        throw new ArgumentException("Article not created yet!", nameof(article));
+
+      var authors = GetArticleAuthorsSurnames(article);
+      var filePattern = $"{prefix}{settings.Year}-{settings.Number}-id{article.Id}-v*";
+      var versions = Directory.GetFiles(GetArticleDir(article), filePattern);
+      return versions;
+    }
+
+    private string GetArticleAuthorsSurnames(Article article)
+    {
+      return string.Join("-", article.Authors.Select(a => ValidFileText(a.RusSurname)));
+    }
+
+    private string GetArticleDir(Article article)
+    {
+      var settings = Settings.Default;
+      var articleDir = Server.MapPath($"~/App_Data/UploadedFiles/{settings.Year}/{settings.Number}/{article.Id}/");
+      if (!Directory.Exists(articleDir))
+        Directory.CreateDirectory(articleDir);
+      return articleDir;
+    }
+
+    private string MakeFileName(Article article, HttpPostedFileBase file, string prefix = null)
+    {
+      var settings = Settings.Default;
+      var versions = GetFileVersions(article, prefix);
+      var rx       = new Regex(@"\d{4}-\d-id\d+-v(?<version>\d+)");
+      var version  = versions.Length + 1;
+
+      foreach (var versionFileName in versions)
+      {
+        var res = rx.Match(Path.GetFileName(versionFileName));
+        if (res.Success)
+        {
+          var ver = int.Parse(res.Groups["version"].Value);
+          if (ver + 1 > version)
+            version = ver + 1;
+        }
+      }
+
+      var authors  = GetArticleAuthorsSurnames(article);
+      var ext      = Path.GetExtension(file.FileName);
+      var fileName = $"{prefix}{settings.Year}-{settings.Number}-id{article.Id}-v{version}-{authors}-{article.ShortArtTitles}{ext}";
+      var fullPath = Path.Combine(GetArticleDir(article), fileName);
+      return fullPath;
+    }
+
+    private void FillFilesInfo(Article article)
+    {
+      article.ArticleVersions = GetFileVersions(article).Length;
+      article.ReviewTextVersions = GetFileVersions(article, ReviewTextPrefix).Length;
+      article.ReviewImgVersions = GetFileVersions(article, ReviewImgPrefix).Length;
+    }
+
+    public static string ValidFileText(string text)
+    {
+      var builder = new StringBuilder(text.Length);
+      foreach (var ch in text)
+      {
+        if (char.IsLetterOrDigit(ch))
+          builder.Append(ch);
+        else if (char.IsWhiteSpace(ch) || ch == '_')
+          builder.Append('-');
+      }
+
+      return builder.ToString();
+    }
+
+    private ActionResult ContinueEdit(Article article)
+    {
+      article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, article.AuthorsIds.ParseToIntArray());
+      FillFilesInfo(article);
       return View(article);
     }
 
@@ -111,7 +232,7 @@ namespace BlackHoles.Controllers
 
       var userId = User.GetUserId();
 
-      var article = db.Articles.Include(a => a.Authors).Where(a => a.OwnerId == userId).FirstOrDefault(a => a.Id == id);
+      var article = db.Articles.Include(a => a.Authors).Include(a => a.Messages).Where(a => a.OwnerId == userId).FirstOrDefault(a => a.Id == id);
       if (article == null)
         return HttpNotFound();
 
@@ -120,17 +241,8 @@ namespace BlackHoles.Controllers
 
       ArticleAuthorsViewModel newArticleAuthors = MakeArticleAuthorsViewModel(userId, article, authorsIds);
       article.AuthorsViewModel = newArticleAuthors;
+      FillFilesInfo(article);
       return View(article);
-    }
-
-    private ArticleAuthorsViewModel MakeArticleAuthorsViewModel(string userId, Article article, int[] authorsIds)
-    {
-      var query = db.Authors.Where(a => a.OwnerId == userId);
-      if (authorsIds != null && authorsIds.Length != 0)
-        query = query.Where(a => !authorsIds.Contains(a.Id));
-      var other = query.ToList();
-      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors, AvailableAuthors = other };
-      return newArticleAuthors;
     }
 
     // POST: Articles/Edit/5
@@ -148,14 +260,14 @@ namespace BlackHoles.Controllers
 
       Mapper.Initialize(cfg =>
         cfg.CreateMap<Article, Article>()
-           .ForMember(dest => dest.Created,     opt => opt.Ignore())
-           .ForMember(dest => dest.Owner,       opt => opt.Ignore())
-           .ForMember(dest => dest.OwnerId,     opt => opt.Ignore())
-           .ForMember(dest => dest.Issue,       opt => opt.Ignore())
-           .ForMember(dest => dest.IssueYear,   opt => opt.Ignore())
+           .ForMember(dest => dest.Created, opt => opt.Ignore())
+           .ForMember(dest => dest.Owner, opt => opt.Ignore())
+           .ForMember(dest => dest.OwnerId, opt => opt.Ignore())
+           .ForMember(dest => dest.Issue, opt => opt.Ignore())
+           .ForMember(dest => dest.IssueYear, opt => opt.Ignore())
            .ForMember(dest => dest.IssueNumber, opt => opt.Ignore())
-           .ForMember(dest => dest.Authors,     opt => opt.Ignore())
-           .ForMember(dest => dest.Modified,    opt => opt.Ignore())
+           .ForMember(dest => dest.Authors, opt => opt.Ignore())
+           .ForMember(dest => dest.Modified, opt => opt.Ignore())
            );
 
       Mapper.Map(article, orig);
@@ -169,7 +281,19 @@ namespace BlackHoles.Controllers
 
       if (ModelState.IsValid)
       {
-        //db.Entry(article).State = EntityState.Modified;
+        HttpPostedFileBase articleFile = Request.Files[0];
+        HttpPostedFileBase additionalTextFile = Request.Files[1];
+        HttpPostedFileBase additionalImg = Request.Files[2];
+
+        if (articleFile.ContentLength > 0)
+          SeveFile(orig, articleFile, null);
+
+        if (additionalTextFile.ContentLength > 0)
+          SeveFile(orig, additionalTextFile, ReviewTextPrefix);
+
+        if (additionalImg.ContentLength > 0)
+          SeveFile(orig, additionalImg, ReviewImgPrefix);
+
         db.SaveChanges();
         return RedirectToAction("Index");
       }
@@ -189,6 +313,16 @@ namespace BlackHoles.Controllers
         return HttpNotFound();
       }
       return View(article);
+    }
+
+    private ArticleAuthorsViewModel MakeArticleAuthorsViewModel(string userId, Article article, int[] authorsIds)
+    {
+      var query = db.Authors.Where(a => a.OwnerId == userId);
+      if (authorsIds != null && authorsIds.Length != 0)
+        query = query.Where(a => !authorsIds.Contains(a.Id));
+      var other = query.ToList();
+      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors, AvailableAuthors = other };
+      return newArticleAuthors;
     }
 
     // POST: Articles/Delete/5
@@ -219,19 +353,25 @@ namespace BlackHoles.Controllers
       return PartialView("AuthorList", model);
     }
 
-    [HttpPost]
-    public ActionResult UploadArticle(HttpPostedFileBase fileInput)
-    {
-      if (fileInput == null)
-        return View();
-
-      var dir = Server.MapPath("~/App_Data/UploadedFiles/");
-      if (!System.IO.Directory.Exists(dir))
-        System.IO.Directory.CreateDirectory(dir);
-      var path = System.IO.Path.Combine(dir, fileInput.FileName);
-      fileInput.SaveAs(path);
-      return View();
-    }
+    //[HttpPost]
+    //public ActionResult UploadArticle(HttpPostedFileBase[] files)
+    //{
+    //  if (files == null)
+    //    return View();
+    //
+    //  var settings = Settings.Default;
+    //  var uploadDirName = (string)Session["uploadDirName"];
+    //
+    //  if (uploadDirName == null)
+    //    return HttpNotFound();
+    //
+    //  var dir = Server.MapPath("~/App_Data/UploadedFiles/" + settings.Year + "/" + settings.Number + "/" + uploadDirName);
+    //  if (!System.IO.Directory.Exists(dir))
+    //    System.IO.Directory.CreateDirectory(dir);
+    //  var path = System.IO.Path.Combine(dir, fileInput.FileName);
+    //  fileInput.SaveAs(path);
+    //  return View();
+    //}
 
     //[HttpPost]
     //public ActionResult UploadArticle()

@@ -64,10 +64,21 @@ namespace BlackHoles.Entities
     [Required, Display(Name = "Автор(ы)")]
     public List<Author> Authors { get; set; }
 
+    public List<Message> Messages { get; set; }
+
     [NotMapped]
     public string AuthorsIds { get; set; }
 
     [NotMapped]
     public ArticleAuthorsViewModel AuthorsViewModel { get; set; }
+
+    [NotMapped]
+    public int ArticleVersions { get; set; }
+
+    [NotMapped]
+    public int ReviewTextVersions { get; set; }
+
+    [NotMapped]
+    public int ReviewImgVersions { get; set; }
   }
 }

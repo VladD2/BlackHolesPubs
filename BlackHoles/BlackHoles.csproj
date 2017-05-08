@@ -308,6 +308,7 @@
     <Content Include="Views\Shared\EditorTemplates\StringOpt.cshtml" />
     <Content Include="Views\Articles\AuthorList.cshtml" />
     <Content Include="Views\Articles\ArticleView.cshtml" />
+    <Content Include="Views\Articles\MessageTree.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

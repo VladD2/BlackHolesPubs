@@ -1,0 +1,21 @@
+﻿@model IEnumerable<BlackHoles.Entities.Message>
+
+@{
+  var articleId = (int)@ViewBag.ArticleId;
+}
+
+<ul id="comments">
+  @foreach (var msg in Model)
+  {
+    <li id="comment_@msg.Id" data-id="@msg.Id">
+      <div><b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b></div>
+      <div>@Html.DisplayFor(modelItem => msg.Text)</div>
+      <textarea cols="30" rows="3" name="text_@(msg.Id)" id="replyText_@(msg.Id)" placeholder="Введите текст коментария..."></textarea>
+      <input type="submit" id="replyButton_@(msg.Id)" value="Ответить" class="btn btn-primary" onclick="addReply(@articleId, @msg.Id)" />
+      @if (msg.Messages?.Count > 0)
+      {
+        @Html.Partial("MessageTree", msg.Messages)
+      }
+    </li>
+  }
+</ul>
