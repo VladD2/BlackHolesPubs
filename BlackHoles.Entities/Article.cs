@@ -80,5 +80,11 @@ namespace BlackHoles.Entities
 
     [NotMapped]
     public int ReviewImgVersions { get; set; }
+
+    public override string ToString()
+    {
+      var authors = Authors != null ? string.Join(", ", Authors.Select(a => a.RusSurname)) : "";
+      return $"Id={Id} {authors}: {ShortArtTitles}";
+    }
   }
 }

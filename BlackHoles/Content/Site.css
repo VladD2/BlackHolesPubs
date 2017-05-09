@@ -20,5 +20,24 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 780px;
+}
+
+.comment-li {
+  list-style-type: none;
+}
+.comment-ul {
+  margin-left:  0px; /* Отступ слева в браузере IE и Opera */
+  padding-left: 20px; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+
+a.reply {
+  cursor: pointer;
+  border-bottom: 1px dashed;
+  font-size: 11px;
+}
+
+.message-header {
+  font-size: 11px;
+  background-color: lavender;
 }

@@ -25,5 +25,10 @@ namespace BlackHoles.Entities
 
     [Display(Name = "Ответы")]
     public List<Message> Messages { get; set; }
+
+    public override string ToString()
+    {
+      return $"Id={Id}; Writer={Writer.Email} Text={Text}";
+    }
   }
 }

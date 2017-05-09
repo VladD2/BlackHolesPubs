@@ -224,6 +224,14 @@ namespace BlackHoles.Controllers
       article.Modified = DateTime.UtcNow;
     }
 
+    void loadNestedMessage(Message msg)
+    {
+      if (msg.Messages == null)
+        db.Entry(msg).Collection(m => m.Messages).Load();
+      foreach (var subMsg in msg.Messages)
+        loadNestedMessage(subMsg);
+    }
+
     // GET: Articles/Edit/5
     public ActionResult Edit(int? id)
     {
@@ -232,9 +240,15 @@ namespace BlackHoles.Controllers
 
       var userId = User.GetUserId();
 
-      var article = db.Articles.Include(a => a.Authors).Include(a => a.Messages).Where(a => a.OwnerId == userId).FirstOrDefault(a => a.Id == id);
+      var article = db.Articles
+        .Include(a => a.Authors)
+        .Include(a => a.Messages.Select(m => m.Writer))
+        .Where(a => a.OwnerId == userId).FirstOrDefault(a => a.Id == id);
       if (article == null)
         return HttpNotFound();
+
+      foreach (var msg in article.Messages)
+        loadNestedMessage(msg);
 
       var authorsIds = article.Authors.Select(a => a.Id).ToArray();
       article.AuthorsIds = string.Join(", ", authorsIds);

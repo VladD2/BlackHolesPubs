@@ -162,8 +162,8 @@
     <div>
       <h4>Комментарии:</h4>
       @{ ViewBag.ArticleId = Model.Id; }
-      <textarea cols="30" rows="3" name="commentText_@(Model.Id)" id="commentText_@(Model.Id)" placeholder="Введите текст коментария..."></textarea>
-      <input type="submit" id="addComment" value="Добавить комментарий" class="btn btn-primary" onclick="addComment(@Model.Id)" />
+      <textarea cols="70" rows="2" name="commentText_@(Model.Id)" id="commentText_@(Model.Id)" placeholder="Введите текст коментария..."></textarea>
+      <input type="button" id="addCommentButton" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" value="Комментировать" class="btn btn-primary" onclick="return addComment(@Model.Id);" />
       @Html.Partial("MessageTree", Model.Messages)
     </div>
 

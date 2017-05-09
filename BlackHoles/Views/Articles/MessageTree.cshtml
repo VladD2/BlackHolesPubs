@@ -4,14 +4,17 @@
   var articleId = (int)@ViewBag.ArticleId;
 }
 
-<ul id="comments">
+<ul id="comments" class="comment-ul">
   @foreach (var msg in Model)
   {
-    <li id="comment_@msg.Id" data-id="@msg.Id">
-      <div><b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b></div>
+    <li id="comment_@msg.Id" data-id="@msg.Id" class="comment-li">
+      <div class="message-header">Сообщение от <b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b>:</div>
       <div>@Html.DisplayFor(modelItem => msg.Text)</div>
-      <textarea cols="30" rows="3" name="text_@(msg.Id)" id="replyText_@(msg.Id)" placeholder="Введите текст коментария..."></textarea>
-      <input type="submit" id="replyButton_@(msg.Id)" value="Ответить" class="btn btn-primary" onclick="addReply(@articleId, @msg.Id)" />
+      <div id="replyForm_@(msg.Id)" style="display:none">
+        <textarea cols="60" rows="2" name="text_@(msg.Id)" id="replyText_@(msg.Id)" placeholder="Введите текст коментария..."></textarea>
+        <input type="button" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" id="replyButton_@(msg.Id)" value="Комментировать" class="btn btn-primary" onclick="return addReply(@articleId, @msg.Id);" />
+      </div>
+      <a onclick='$("#replyForm_@(msg.Id)").show();$(this).hide();' class="reply">Ответить</a>
       @if (msg.Messages?.Count > 0)
       {
         @Html.Partial("MessageTree", msg.Messages)

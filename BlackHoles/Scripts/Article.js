@@ -83,11 +83,13 @@ function addComment(articleId)
 {
   var val = document.getElementById("commentText_" + articleId).value;
   alert(val);
+  return false;
 }
 
 function addReply(articleId, parentId)
 {
   var val = document.getElementById("replyText_" + parentId).value;
   alert(val);
+  return false;
 }
 $(attachEvents);
