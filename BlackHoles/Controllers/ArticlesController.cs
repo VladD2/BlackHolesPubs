@@ -224,12 +224,12 @@ namespace BlackHoles.Controllers
       article.Modified = DateTime.UtcNow;
     }
 
-    void loadNestedMessage(Message msg)
+    void LoadNestedMessage(Message msg)
     {
       if (msg.Messages == null)
         db.Entry(msg).Collection(m => m.Messages).Load();
       foreach (var subMsg in msg.Messages)
-        loadNestedMessage(subMsg);
+        LoadNestedMessage(subMsg);
     }
 
     // GET: Articles/Edit/5
@@ -247,8 +247,7 @@ namespace BlackHoles.Controllers
       if (article == null)
         return HttpNotFound();
 
-      foreach (var msg in article.Messages)
-        loadNestedMessage(msg);
+      LoadNestedMessage(article);
 
       var authorsIds = article.Authors.Select(a => a.Id).ToArray();
       article.AuthorsIds = string.Join(", ", authorsIds);
@@ -257,6 +256,12 @@ namespace BlackHoles.Controllers
       article.AuthorsViewModel = newArticleAuthors;
       FillFilesInfo(article);
       return View(article);
+    }
+
+    private void LoadNestedMessage(Article article)
+    {
+      foreach (var msg in article.Messages)
+        LoadNestedMessage(msg);
     }
 
     // POST: Articles/Edit/5
@@ -367,31 +372,43 @@ namespace BlackHoles.Controllers
       return PartialView("AuthorList", model);
     }
 
-    //[HttpPost]
-    //public ActionResult UploadArticle(HttpPostedFileBase[] files)
-    //{
-    //  if (files == null)
-    //    return View();
-    //
-    //  var settings = Settings.Default;
-    //  var uploadDirName = (string)Session["uploadDirName"];
-    //
-    //  if (uploadDirName == null)
-    //    return HttpNotFound();
-    //
-    //  var dir = Server.MapPath("~/App_Data/UploadedFiles/" + settings.Year + "/" + settings.Number + "/" + uploadDirName);
-    //  if (!System.IO.Directory.Exists(dir))
-    //    System.IO.Directory.CreateDirectory(dir);
-    //  var path = System.IO.Path.Combine(dir, fileInput.FileName);
-    //  fileInput.SaveAs(path);
-    //  return View();
-    //}
+    [HttpPost]
+    public ActionResult AddCommentAjax(Comment comment)
+    {
+      var userId = User.GetUserId();
+      var writer = db.Users.Find(userId);
+      if (writer == null)
+        ModelState.AddModelError("commentsValidation", "Невозможно добавить комментарий, так как автор не вошел в систему!");
+      else if (string.IsNullOrWhiteSpace(comment.Text))
+        ModelState.AddModelError("commentsValidation", "Комментарий должен содержать текст!");
+      else
+      {
+        var msg = new Message()
+        {
+          Created = DateTime.UtcNow,
+          Text = comment.Text,
+          Writer = writer,
+          WriterId = userId,
+        };
 
-    //[HttpPost]
-    //public ActionResult UploadArticle()
-    //{
-    //  return PartialView("AuthorList");
-    //}
+        var article = db.Articles
+          .Include(a => a.Messages)
+          .FirstOrDefault(a => a.Id == comment.ArticleId && a.OwnerId == userId);
+
+        if (article == null)
+          ModelState.AddModelError("commentsValidation", "Статья не найдена!");
+        else
+        {
+          LoadNestedMessage(article);
+          article.Messages.Add(msg);
+          db.SaveChanges();
+          ViewBag.ArticleId = comment.ArticleId;
+          return PartialView("MessageTree", article.Messages.OrderByDescending(m => m.Created));
+        }
+      }
+      Response.ContentEncoding = Encoding.UTF8;
+      return HttpNotFound("Не выерные номера сообщения или статьи!");
+    }
 
     protected override void Dispose(bool disposing)
     {

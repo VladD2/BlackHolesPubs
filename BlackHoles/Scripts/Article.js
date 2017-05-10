@@ -81,8 +81,24 @@ function onUploadArticle(e)
 
 function addComment(articleId)
 {
-  var val = document.getElementById("commentText_" + articleId).value;
-  alert(val);
+  var text = document.getElementById("commentText_" + articleId).value;
+  var data = { ArticleId: articleId, Text: text };
+
+  $.ajax({
+    traditional: true,
+    url: "/Articles/AddCommentAjax",
+    type: "POST",
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(data),
+    success: function (data) {
+      $('#comments').html(data);
+      //attachEvents();
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+      alert('Не удается добавить комментарий! ' + errorThrown);
+    }
+  });
+
   return false;
 }
 
