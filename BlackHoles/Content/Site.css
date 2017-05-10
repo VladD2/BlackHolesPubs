@@ -41,3 +41,7 @@ a.reply {
   font-size: 11px;
   background-color: lavender;
 }
+
+.message-body {
+  background-color: aliceblue;
+}

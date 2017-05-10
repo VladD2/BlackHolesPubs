@@ -14,7 +14,11 @@ namespace BlackHoles.Entities
     [Key]
     public int Id { get; set; }
 
-    [ForeignKey("Writer")]
+    [Required]
+    public DateTime Created { get; set; }
+
+
+    [Display(Name = "Дата"), ForeignKey("Writer")]
     public string WriterId { get; set; }
 
     [Required]

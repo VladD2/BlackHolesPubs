@@ -8,16 +8,18 @@
   @foreach (var msg in Model)
   {
     <li id="comment_@msg.Id" data-id="@msg.Id" class="comment-li">
-      <div class="message-header">Сообщение от <b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b>:</div>
-      <div>@Html.DisplayFor(modelItem => msg.Text)</div>
-      <div id="replyForm_@(msg.Id)" style="display:none">
-        <textarea cols="60" rows="2" name="text_@(msg.Id)" id="replyText_@(msg.Id)" placeholder="Введите текст коментария..."></textarea>
-        <input type="button" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" id="replyButton_@(msg.Id)" value="Комментировать" class="btn btn-primary" onclick="return addReply(@articleId, @msg.Id);" />
+      <div style="margin-bottom: 10px;" class="message-body">
+        <div class="message-header">Сообщение <b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b> от @Html.DisplayFor(modelItem => msg.Created):</div>
+        <div>@Html.DisplayFor(modelItem => msg.Text)</div>
+        <div id="replyForm_@(msg.Id)" style="display:none">
+          <textarea cols="60" rows="2" name="text_@(msg.Id)" id="replyText_@(msg.Id)" placeholder="Введите текст коментария..."></textarea>
+          <input type="button" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" id="replyButton_@(msg.Id)" value="Комментировать" class="btn btn-primary" onclick="return addReply(@articleId, @msg.Id);" />
+        </div>
+        <a onclick='$("#replyForm_@(msg.Id)").show();$(this).hide();' class="reply">Ответить</a>
       </div>
-      <a onclick='$("#replyForm_@(msg.Id)").show();$(this).hide();' class="reply">Ответить</a>
       @if (msg.Messages?.Count > 0)
       {
-        @Html.Partial("MessageTree", msg.Messages)
+        @Html.Partial("MessageTree", msg.Messages.OrderBy(m => m.Created))
       }
     </li>
   }

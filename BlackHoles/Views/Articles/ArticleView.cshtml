@@ -121,7 +121,7 @@
     @if (!isCreating)
     {
       <div class="form-group">
-        @Html.Label("файлы прилагаемые к статье", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("Файлы прилагаемые к статье", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
           <div class="@dangerIfZero(Model.ArticleVersions)">Загружено версий текста статьи: @Model.ArticleVersions.@filePrompt(Model.ArticleVersions)</div>
           <div class="@dangerIfZero(Model.ReviewTextVersions)">Загружено версий текста рецензии/решения ученого совета: @Model.ReviewTextVersions.@filePrompt(Model.ReviewTextVersions)</div>
@@ -162,9 +162,9 @@
     <div>
       <h4>Комментарии:</h4>
       @{ ViewBag.ArticleId = Model.Id; }
-      <textarea cols="70" rows="2" name="commentText_@(Model.Id)" id="commentText_@(Model.Id)" placeholder="Введите текст коментария..."></textarea>
+      <textarea cols="70" rows="2" name="commentText_@(Model.Id)" id="commentText_@(Model.Id)" placeholder="Введите текст коментария..." style="margin-left: 20px;margin-bottom: 20px;"></textarea>
       <input type="button" id="addCommentButton" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" value="Комментировать" class="btn btn-primary" onclick="return addComment(@Model.Id);" />
-      @Html.Partial("MessageTree", Model.Messages)
+      @Html.Partial("MessageTree", Model.Messages.OrderByDescending(m => m.Created))
     </div>
 
     <div class="form-group">
