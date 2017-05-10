@@ -228,6 +228,10 @@ namespace BlackHoles.Controllers
     {
       if (msg.Messages == null)
         db.Entry(msg).Collection(m => m.Messages).Load();
+
+      if (msg.Writer == null)
+        db.Entry(msg).Reference(m => m.Writer).Load();
+
       foreach (var subMsg in msg.Messages)
         LoadNestedMessage(subMsg);
     }
@@ -400,15 +404,61 @@ namespace BlackHoles.Controllers
         else
         {
           LoadNestedMessage(article);
-          article.Messages.Add(msg);
+
+          if (comment.ParentMsgId > 0)
+          {
+            var parentMsg = article.Messages.FindMessageOpt(comment.ParentMsgId);
+            if (parentMsg == null)
+              return HttpNotFound("Не выерные номера родительского сообщения!");
+
+            parentMsg.Messages.Add(msg);
+          }
+          else
+            article.Messages.Add(msg);
+
           db.SaveChanges();
           ViewBag.ArticleId = comment.ArticleId;
           return PartialView("MessageTree", article.Messages.OrderByDescending(m => m.Created));
         }
       }
-      Response.ContentEncoding = Encoding.UTF8;
       return HttpNotFound("Не выерные номера сообщения или статьи!");
     }
+
+    public ActionResult DeletCommentAjax(int articleId, int msgId)
+    {
+      var userId = User.GetUserId();
+      var article = db.Articles
+        .Include(a => a.Messages.Select(m => m.Writer))
+        .FirstOrDefault(a => a.Id == articleId && a.OwnerId == userId);
+
+      if (article == null)
+        ModelState.AddModelError("commentsValidation", "Статья не найдена!");
+      else
+      {
+        LoadNestedMessage(article);
+
+        var msg = article.Messages.FindMessageOpt(msgId);
+        if (msg == null)
+          return HttpNotFound("Не выерные номера родительского сообщения!");
+
+        DeleteCascad(msg);
+
+        db.SaveChanges();
+        ViewBag.ArticleId = articleId;
+        return PartialView("MessageTree", article.Messages.OrderByDescending(m => m.Created));
+      }
+      return HttpNotFound("Не выерные номера сообщения!");
+    }
+
+    void DeleteCascad(Message msg)
+    {
+      if (msg.Messages != null)
+        foreach (var subMsg in msg.Messages.ToArray())
+          DeleteCascad(subMsg);
+
+      db.Messages.Remove(msg);
+    }
+
 
     protected override void Dispose(bool disposing)
     {

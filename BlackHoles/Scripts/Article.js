@@ -43,7 +43,13 @@ function onRemoveAuthor()
   if (authorId == null)
     return false;
 
-  var authorIds2 = authorIds.filter(item => item != authorId);
+  var authorIds2 = jQuery.grep(authorIds, 
+    function (item)
+    { 
+      return item != authorId;
+    });
+
+    authorIds.filter(function (item) { return item != authorId; });
   if (authorIds2.length == authorIds.length)
     return false;
   authorIds = authorIds2;
@@ -79,33 +85,46 @@ function onUploadArticle(e)
   });
 }
 
-function addComment(articleId)
+function addComment(articleId, parentMsgId)
 {
-  var text = document.getElementById("commentText_" + articleId).value;
-  var data = { ArticleId: articleId, Text: text };
+  var areaName = parentMsgId > 0 ? "replyText_" + parentMsgId : ("commentText_" + articleId);
+  var textArea = document.getElementById(areaName);
+  var text     = textArea.value;
+  var data     = { ArticleId: articleId, Text: text };
 
+  if (parentMsgId > 0)
+    data.ParentMsgId = parentMsgId;
+
+  execCommentAjax(data, 'AddCommentAjax', 'добавить', function () { textArea.value = ''; });
+
+  return false;
+}
+
+function deleteComment(articleId, msgId)
+{
+  if (confirm('Вы уверены, что хотите удалить этот комментарий?'))
+    execCommentAjax({ articleId: articleId, msgId: msgId }, 'DeletCommentAjax', 'удалить', undefined);
+
+  return false;
+}
+
+function execCommentAjax(data, action, actionTitle, onSuccess)
+{
   $.ajax({
     traditional: true,
-    url: "/Articles/AddCommentAjax",
+    url: "/Articles/" + action,
     type: "POST",
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify(data),
     success: function (data) {
-      $('#comments').html(data);
-      //attachEvents();
+      $('#comments').replaceWith(data);
+      if (onSuccess != undefined)
+        onSuccess();
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
-      alert('Не удается добавить комментарий! ' + errorThrown);
+      alert('Не удается ' + actionTitle + ' комментарий!');
     }
   });
-
-  return false;
 }
 
-function addReply(articleId, parentId)
-{
-  var val = document.getElementById("replyText_" + parentId).value;
-  alert(val);
-  return false;
-}
 $(attachEvents);

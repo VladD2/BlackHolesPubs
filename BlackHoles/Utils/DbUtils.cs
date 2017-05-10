@@ -14,6 +14,22 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
+    public static Message FindMessageOpt(this List<Message> messages, int id)
+    {
+      foreach (var message in messages)
+      {
+        if (message.Id == id)
+          return message;
+
+        var foundOpt = FindMessageOpt(message.Messages, id);
+
+        if (foundOpt != null)
+          return foundOpt;
+      }
+
+      return null;
+    }
+
     public static string MakeBriefFio(this Author author)
     {
       return author.RusSurname + " " + author.RusInitials.MakeBriefInitials();

@@ -1,7 +1,9 @@
-﻿@model IEnumerable<BlackHoles.Entities.Message>
+﻿@using BlackHoles.Utils;
+@model IEnumerable<BlackHoles.Entities.Message>
 
 @{
   var articleId = (int)@ViewBag.ArticleId;
+  var userId = User.GetUserId();
 }
 
 <ul id="comments" class="comment-ul">
@@ -10,12 +12,16 @@
     <li id="comment_@msg.Id" data-id="@msg.Id" class="comment-li">
       <div style="margin-bottom: 10px;" class="message-body">
         <div class="message-header">Сообщение <b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b> от @Html.DisplayFor(modelItem => msg.Created):</div>
-        <div>@Html.DisplayFor(modelItem => msg.Text)</div>
+        <div class="message-text">@Html.DisplayFor(modelItem => msg.Text)</div>
         <div id="replyForm_@(msg.Id)" style="display:none">
-          <textarea cols="60" rows="2" name="text_@(msg.Id)" id="replyText_@(msg.Id)" placeholder="Введите текст коментария..."></textarea>
-          <input type="button" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" id="replyButton_@(msg.Id)" value="Комментировать" class="btn btn-primary" onclick="return addReply(@articleId, @msg.Id);" />
+          <textarea cols="60" rows="2" name="replyText_@(msg.Id)" id="replyText_@(msg.Id)" contenteditable="true" spellcheck="true" placeholder="Введите текст коментария..."></textarea>
+          <input type="button" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" id="replyButton_@(msg.Id)" value="Комментировать" class="btn btn-primary" onclick="return addComment(@articleId, @msg.Id);" />
         </div>
         <a onclick='$("#replyForm_@(msg.Id)").show();$(this).hide();' class="reply">Ответить</a>
+        @if (msg.Writer.Id == userId)
+        {
+          @:| <a onclick='return deleteComment(@articleId, @(msg.Id));' class="reply">Удалить</a>
+        }
       </div>
       @if (msg.Messages?.Count > 0)
       {

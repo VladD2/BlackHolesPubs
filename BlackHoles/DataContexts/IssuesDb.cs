@@ -36,11 +36,6 @@ namespace BlackHoles.DataContexts
         .WithMany()
         .WillCascadeOnDelete(false);
 
-      //modelBuilder.Entity<Article>()
-      //  .HasRequired(c => c.Authors)
-      //  .WithMany()
-      //  .WillCascadeOnDelete(false);
-
       base.OnModelCreating(modelBuilder);
     }
 
