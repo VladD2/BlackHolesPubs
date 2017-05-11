@@ -306,12 +306,12 @@
     <Content Include="Views\Articles\Edit.cshtml" />
     <Content Include="Views\Articles\Index.cshtml" />
     <Content Include="Views\Authors\AuthorView.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\StringOpt.cshtml" />
     <Content Include="Views\Articles\AuthorList.cshtml" />
     <Content Include="Views\Articles\ArticleView.cshtml" />
     <Content Include="Views\Articles\MessageTree.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Shared\EditorTemplates\" />
     <Folder Include="Views\Shared\Helpers\" />
   </ItemGroup>
   <ItemGroup>
