@@ -93,6 +93,10 @@ namespace BlackHoles.Controllers
       article.Created = article.Modified;
       article.Owner   = User.GetApplicationUser(db);
       article.Issue   = db.Issues.Find(article.IssueYear, article.IssueNumber);
+
+      if (article.Issue == null)
+        throw new ApplicationException("Незаполнен список изданий!");
+
       DbUtils.Revalidate(this, article);
       if (ModelState.IsValid)
       {
@@ -119,17 +123,6 @@ namespace BlackHoles.Controllers
         if (additionalImg.ContentLength > 0)
           SeveFile(article, additionalImg, ReviewImgPrefix);
 
-
-        //var msg = new Message()
-        //{
-        //  Created = DateTime.UtcNow,
-        //  Text = comment.Text,
-        //  Writer = writer,
-        //  WriterId = userId,
-        //};
-        //
-        //article.Messages.Add(msg);
-
         return RedirectToAction("Index");
       }
 
@@ -145,10 +138,10 @@ namespace BlackHoles.Controllers
 
     private string[] GetFileVersions(Article article, string prefix = null)
     {
-      var settings = Settings.Default;
-      if (article.Id == 0)
-        throw new ArgumentException("Article not created yet!", nameof(article));
+      if (article.Id <= 0)
+        return new string[0];
 
+      var settings = Settings.Default;
       var authors = GetArticleAuthorsSurnames(article);
       var filePattern = $"{prefix}{settings.Year}-{settings.Number}-id{article.Id}-v*";
       var versions = Directory.GetFiles(GetArticleDir(article), filePattern);

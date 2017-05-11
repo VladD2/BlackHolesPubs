@@ -1,10 +1,18 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 
 @{
-  var title = "Error";
+  var title = "Ошибка";
   ViewBag.Title = title;
 }
 
-<h1 class="text-danger">@title</h1>
-<h2 class="text-danger">В процессе обработки запроса возникла ошибка!</h2>
-
+@if (@Model.Exception != null)
+{
+  <h2 class="text-danger">
+    При выполнении действия "@Model.ActionName" в контроллере "@Model.ControllerName" возникло исключение: <b>@Model.Exception.Message</b>
+  </h2>
+  <p>Обратитесь по адресу <a href="mailto:vladdq@yandex.ru">vladdq@yandex.ru</a> </p>
+}
+else
+{
+  <h2 class="text-danger">В процессе обработки запроса возникла ошибка!</h2>
+}
