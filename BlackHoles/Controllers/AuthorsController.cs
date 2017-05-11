@@ -21,8 +21,7 @@ namespace BlackHoles.Controllers
     // GET: Authors
     public ActionResult Index()
     {
-      var userId = User.GetUserId();
-      return View(db.Authors.Where(a => a.Owner.Id == userId).ToList());
+      return View(db.Authors.FilterByOwner(User).ToList());
     }
 
     // GET: Authors/Details/5
@@ -32,10 +31,8 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author2 = db.Authors.Include(x => x.Owner).First(a => a.Id == id);
-      Author author = db.Authors.Find(id);
-      db.Entry(author).Reference(x => x.Owner).Load();
-      if (author == null || author.Owner.Id != User.GetUserId())
+      Author author = db.Authors.Include(x => x.Owner).FilterByOwner(User).First(a => a.Id == id);
+      if (author == null)
       {
         return HttpNotFound();
       }
@@ -78,7 +75,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author = db.Authors.Find(id);
+      Author author = db.Authors.FilterByOwner(User).FirstOrDefault(a => a.Id == id);
       if (author == null)
       {
         return HttpNotFound();
@@ -94,7 +91,7 @@ namespace BlackHoles.Controllers
     public ActionResult Edit([Bind(Include = "Id,Email,RusSurname,RusInitials,RusOrgName,RusSubdivision,RusPosition,EnuSurname,EnuInitials,EnuOrgName,ScienceDegree,Phone")] Author author)
     {
       var userId = User.GetUserId();
-      var orig = db.Authors.Include(a => a.Owner).FirstOrDefault(a => a.Id == author.Id && a.OwnerId == userId);
+      var orig = db.Authors.Include(a => a.Owner).FilterByOwner(User).FirstOrDefault(a => a.Id == author.Id);
       if (orig == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -126,7 +123,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author = db.Authors.Find(id);
+      Author author = db.Authors.FilterByOwner(User).First(a => a.Id == id);
       if (author == null)
       {
         return HttpNotFound();
@@ -139,7 +136,7 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult DeleteConfirmed(int id)
     {
-      Author author = db.Authors.Find(id);
+      Author author = db.Authors.FilterByOwner(User).First(a => a.Id == id);
       db.Authors.Remove(author);
       db.SaveChanges();
       return RedirectToAction("Index");

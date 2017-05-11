@@ -31,7 +31,7 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      var authors = db.Articles.Include(a => a.Authors).Where(a => a.OwnerId == userId).ToList();
+      var authors = db.Articles.Include(a => a.Authors).FilterByOwner(User).ToList();
       foreach (var author in authors)
         FillFilesInfo(author);
       return View(authors);
@@ -58,8 +58,7 @@ namespace BlackHoles.Controllers
       //Session["uploadDirName"] = "Temp/" + Guid.NewGuid().ToString("D");
 
       var settings = Settings.Default;
-      var userId = User.GetUserId();
-      var other = db.Authors.Where(a => a.OwnerId == userId).ToList();
+      var other = db.Authors.FilterByOwner(User).ToList();
       var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = new List<Author>(), AvailableAuthors = other };
       var now = DateTime.UtcNow;
       var newArticle = new Article()
@@ -84,7 +83,7 @@ namespace BlackHoles.Controllers
 
       if (string.IsNullOrWhiteSpace(article.AuthorsIds))
       {
-        article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, new int[0]);
+        article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, new int[0]);
         return View(article);
       }
 
@@ -120,10 +119,21 @@ namespace BlackHoles.Controllers
         if (additionalImg.ContentLength > 0)
           SeveFile(article, additionalImg, ReviewImgPrefix);
 
+
+        //var msg = new Message()
+        //{
+        //  Created = DateTime.UtcNow,
+        //  Text = comment.Text,
+        //  Writer = writer,
+        //  WriterId = userId,
+        //};
+        //
+        //article.Messages.Add(msg);
+
         return RedirectToAction("Index");
       }
 
-      article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, article.AuthorsIds.ParseToIntArray());
+      article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, article.AuthorsIds.ParseToIntArray());
       return View(article);
     }
 
@@ -207,7 +217,7 @@ namespace BlackHoles.Controllers
 
     private ActionResult ContinueEdit(Article article)
     {
-      article.AuthorsViewModel = MakeArticleAuthorsViewModel(User.GetUserId(), article, article.AuthorsIds.ParseToIntArray());
+      article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, article.AuthorsIds.ParseToIntArray());
       FillFilesInfo(article);
       return View(article);
     }
@@ -242,12 +252,11 @@ namespace BlackHoles.Controllers
       if (id == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-      var userId = User.GetUserId();
-
       var article = db.Articles
         .Include(a => a.Authors)
         .Include(a => a.Messages.Select(m => m.Writer))
-        .Where(a => a.OwnerId == userId).FirstOrDefault(a => a.Id == id);
+        .FilterByOwner(User)
+        .FirstOrDefault(a => a.Id == id);
       if (article == null)
         return HttpNotFound();
 
@@ -256,7 +265,7 @@ namespace BlackHoles.Controllers
       var authorsIds = article.Authors.Select(a => a.Id).ToArray();
       article.AuthorsIds = string.Join(", ", authorsIds);
 
-      ArticleAuthorsViewModel newArticleAuthors = MakeArticleAuthorsViewModel(userId, article, authorsIds);
+      ArticleAuthorsViewModel newArticleAuthors = MakeArticleAuthorsViewModel(article, authorsIds);
       article.AuthorsViewModel = newArticleAuthors;
       FillFilesInfo(article);
       return View(article);
@@ -276,7 +285,7 @@ namespace BlackHoles.Controllers
     public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
     {
       var userId = User.GetUserId();
-      var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue).FirstOrDefault(a => a.Id == article.Id && a.OwnerId == userId);
+      var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue).FilterByOwner(User).FirstOrDefault(a => a.Id == article.Id);
       if (orig == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -338,9 +347,9 @@ namespace BlackHoles.Controllers
       return View(article);
     }
 
-    private ArticleAuthorsViewModel MakeArticleAuthorsViewModel(string userId, Article article, int[] authorsIds)
+    private ArticleAuthorsViewModel MakeArticleAuthorsViewModel(Article article, int[] authorsIds)
     {
-      var query = db.Authors.Where(a => a.OwnerId == userId);
+      var query = db.Authors.FilterByOwner(User);
       if (authorsIds != null && authorsIds.Length != 0)
         query = query.Where(a => !authorsIds.Contains(a.Id));
       var other = query.ToList();
@@ -362,14 +371,15 @@ namespace BlackHoles.Controllers
     [HttpPost]
     public ActionResult AddAuthorsAjax(List<int> autorIds)
     {
-      var userId = User.GetUserId();
       autorIds = autorIds?.Distinct()?.ToList() ?? new List<int>();
       var autors = db.Authors
-                    .Where(a => autorIds.Contains(a.Id) && a.OwnerId == userId)
+                    .FilterByOwner(User)
+                    .Where(a => autorIds.Contains(a.Id))
                     .ToList();
       var autorsOrdered = (from autorId in autorIds join o in autors on autorId equals o.Id select o).ToList();
       var other = db.Authors.Include(a => a.Owner)
-                    .Where(a => !autorIds.Contains(a.Id) && a.OwnerId == userId)
+                    .FilterByOwner(User)
+                    .Where(a => !autorIds.Contains(a.Id))
                     .OrderBy(a => a.RusSurname).ThenBy(a => a.RusInitials)
                     .ToList();
       var model = new ArticleAuthorsViewModel() { ArticleAuthors = autorsOrdered, AvailableAuthors = other };
@@ -397,7 +407,8 @@ namespace BlackHoles.Controllers
 
         var article = db.Articles
           .Include(a => a.Messages)
-          .FirstOrDefault(a => a.Id == comment.ArticleId && a.OwnerId == userId);
+          .FilterByOwner(User)
+          .FirstOrDefault(a => a.Id == comment.ArticleId);
 
         if (article == null)
           ModelState.AddModelError("commentsValidation", "Статья не найдена!");
@@ -426,10 +437,10 @@ namespace BlackHoles.Controllers
 
     public ActionResult DeletCommentAjax(int articleId, int msgId)
     {
-      var userId = User.GetUserId();
       var article = db.Articles
         .Include(a => a.Messages.Select(m => m.Writer))
-        .FirstOrDefault(a => a.Id == articleId && a.OwnerId == userId);
+        .FilterByOwner(User)
+        .FirstOrDefault(a => a.Id == articleId);
 
       if (article == null)
         ModelState.AddModelError("commentsValidation", "Статья не найдена!");
@@ -458,7 +469,6 @@ namespace BlackHoles.Controllers
 
       db.Messages.Remove(msg);
     }
-
 
     protected override void Dispose(bool disposing)
     {

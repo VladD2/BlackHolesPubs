@@ -47,7 +47,9 @@ namespace BlackHoles
       {
         var role = new IdentityRole() { Name = roleName };
         roleManager.Create(role);
-
+      }
+      if (!UserManager.IsInRole(user.Id, roleName))
+      {
         var result = UserManager.AddToRole(user.Id, roleName);
       }
     }

@@ -29,9 +29,9 @@
       <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
       <td>@Html.DisplayFor(modelItem => article.Created)</td>
       <td>@Html.DisplayFor(modelItem => article.Modified)</td>
-      <td>@Html.CheckBox("ArticleVersions",    article.ArticleVersions    > 0, new { Title = $"Загружено версий статьи:  {article.ArticleVersions}" })  
-          @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}" })
-          @Html.CheckBox("ReviewImgVersions",  article.ReviewImgVersions  > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}" })
+      <td>@Html.CheckBox("ArticleVersions",    article.ArticleVersions    > 0, new { Title = $"Загружено версий статьи:  {article.ArticleVersions}", @readonly = "readonly", disabled = "disabled" })  
+          @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}", @readonly = "readonly", disabled = "disabled" })
+          @Html.CheckBox("ReviewImgVersions",  article.ReviewImgVersions  > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}", @readonly = "readonly", disabled = "disabled" })
       </td>
       @Shared.TableRowButtons(new { id = article.Id })
     </tr>

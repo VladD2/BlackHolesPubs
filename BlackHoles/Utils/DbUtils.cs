@@ -14,6 +14,26 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
+    public static IQueryable<Article> FilterByOwner(this IQueryable<Article> query, IPrincipal user)
+    {
+      var userId = user.GetUserId();
+
+      if (!user.IsInRole(Constants.AdminRole))
+        query = query.Where(a => a.OwnerId == userId);
+
+      return query;
+    }
+
+    public static IQueryable<Author> FilterByOwner(this IQueryable<Author> query, IPrincipal user)
+    {
+      var userId = user.GetUserId();
+
+      if (!user.IsInRole(Constants.AdminRole))
+        query = query.Where(a => a.OwnerId == userId);
+
+      return query;
+    }
+
     public static Message FindMessageOpt(this List<Message> messages, int id)
     {
       foreach (var message in messages)

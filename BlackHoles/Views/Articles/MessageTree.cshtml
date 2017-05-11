@@ -11,7 +11,7 @@
   {
     <li id="comment_@msg.Id" data-id="@msg.Id" class="comment-li">
       <div style="margin-bottom: 10px;" class="message-body">
-        <div class="message-header">Сообщение <b>@Html.DisplayFor(modelItem => msg.Writer.Email)</b> от @Html.DisplayFor(modelItem => msg.Created):</div>
+        <div class="message-header">Сообщение <b>@Mail(msg.Writer.Email)</b> от @Html.DisplayFor(modelItem => msg.Created):</div>
         <div class="message-text">@Html.DisplayFor(modelItem => msg.Text)</div>
         <div id="replyForm_@(msg.Id)" style="display:none">
           <textarea cols="60" rows="2" name="replyText_@(msg.Id)" id="replyText_@(msg.Id)" contenteditable="true" spellcheck="true" placeholder="Введите текст коментария..."></textarea>
@@ -30,3 +30,12 @@
     </li>
   }
 </ul>
+
+@helper Mail(string mail)
+{
+switch (mail)
+{
+  case "vc@rsdn.ru": <font color="#EB256E">Редактора (vc@rsdn.ru)</font> break;
+  default: @mail break;
+}
+}
