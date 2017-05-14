@@ -109,7 +109,6 @@ namespace BlackHoles.Controllers
 
       if (ModelState.IsValid)
       {
-        //db.Entry(author).State = EntityState.Modified;
         db.SaveChanges();
         return RedirectToAction("Index");
       }

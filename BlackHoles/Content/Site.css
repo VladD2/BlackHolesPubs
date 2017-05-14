@@ -1,12 +1,13 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 60px;
     padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    max-width: none;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -20,7 +21,7 @@
 input,
 select,
 textarea {
-    max-width: 780px;
+  /*max-width: 600px;*/
 }
 
 .comment-li {
@@ -50,3 +51,54 @@ a.reply {
   white-space: pre-line;
 }
 
+
+.fixed-width {
+  max-width: 350px;
+}
+
+.labelx {
+  display: inline;
+  padding: .1em .4em .2em;
+  font-size: 90%;
+  font-weight: bold;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+
+.labelx[href]:hover,
+.labelx[href]:focus {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.label2:empty {
+  display: none;
+}
+
+.label2-default {
+  background-color: #999999;
+}
+
+
+.label2-important {
+  background-color: #E92620;
+}
+
+.label2-important[href]:hover,
+.label2-important[href]:focus {
+  background-color: #C11B15;
+}
+
+.label2-agree {
+  background-color: #5cb85c;
+}
+
+.label2-agree[href]:hover,
+.label2-agree[href]:focus {
+  background-color: #449d44;
+}

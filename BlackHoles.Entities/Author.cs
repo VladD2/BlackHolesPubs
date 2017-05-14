@@ -17,40 +17,41 @@ namespace BlackHoles.Entities
     [ForeignKey("Owner")]
     public string OwnerId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = Error.NotSet)]
     public ApplicationUser Owner { get; set; }
 
-    [Required, StringLength(100)]
+    [Required(ErrorMessage = "Адрес электронной почты должен быть заполнен!"), StringLength(100, ErrorMessage = Error.ToLong)]
     public string Email         { get; set; }
 
-    [Required, StringLength(100), Display(Name = "Фамилия")]
+    [Required(ErrorMessage = Error.NotSet), StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Фамилия")]
     public string RusSurname       { get; set; }
 
-    [Required, StringLength(100), Display(Name = "Имя Отчество")]
+    [Required(ErrorMessage = Error.NotSet), StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Имя Отчество")]
     public string RusInitials { get; set; }
 
-    [Required, StringLength(1000), Display(Name = "Место работы/учебы")]
+    [Required(ErrorMessage = Error.NotSet), StringLength(1000, ErrorMessage = Error.ToLong), Display(Name = "Место работы/учебы")]
     public string RusOrgName { get; set; }
 
-    [StringLength(100), Display(Name = "Подразделение")]
+    [StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Подразделение")]
     public string RusSubdivision { get; set; }
 
-    [StringLength(255), Display(Name = "Должность")]
+    [StringLength(255, ErrorMessage = Error.ToLong), Display(Name = "Должность")]
     public string RusPosition { get; set; }
 
-    [Required, StringLength(100), Display(Name = "Фамилия")]
+    [Required(ErrorMessage = Error.NotSet), StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Фамилия")]
     public string EnuSurname { get; set; }
 
-    [Required, StringLength(100), Display(Name = "Имя")]
+    [Required(ErrorMessage = Error.NotSet), StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Имя")]
     public string EnuInitials { get; set; }
 
-    [Required, StringLength(1000), Display(Name = "Место работы/учебы")]
+    [Required(ErrorMessage = Error.NotSet), StringLength(1000, ErrorMessage = Error.ToLong), Display(Name = "Место работы/учебы")]
     public string EnuOrgName { get; set; }
 
-    [StringLength(100), Display(Name = "Звание/Степень")]
+    [StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Звание/Степень")]
     public string ScienceDegree { get; set; }
 
-    [StringLength(100), Display(Name = "Телефон")]
+    [StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Телефон")]
+    [DataType(DataType.PhoneNumber)]
     public string Phone         { get; set; }
 
     public List<Article> Articles { get; set; }

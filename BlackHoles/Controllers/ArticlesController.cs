@@ -55,20 +55,8 @@ namespace BlackHoles.Controllers
     // GET: Articles/Create
     public ActionResult Create()
     {
-      //Session["uploadDirName"] = "Temp/" + Guid.NewGuid().ToString("D");
-
-      var settings = Settings.Default;
-      var other = db.Authors.FilterByOwner(User).ToList();
-      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = new List<Author>(), AvailableAuthors = other };
-      var now = DateTime.UtcNow;
-      var newArticle = new Article()
-      {
-        AuthorsViewModel = newArticleAuthors,
-        IssueYear        = settings.Year,
-        IssueNumber      = settings.Number,
-        Created          = now,
-      };
-      return View(newArticle);
+      var newArticle = new Article();
+      return ContinueEdit(newArticle);
     }
 
     // POST: Articles/Create
@@ -76,23 +64,21 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
+    public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed")] Article article)
     {
+      var settings = Settings.Default;
       var isCreating = article.Id == 0;
       FillPrperties(article);
 
       if (string.IsNullOrWhiteSpace(article.AuthorsIds))
-      {
-        article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, new int[0]);
-        return View(article);
-      }
+        return ContinueEdit(article);
 
       if (Request.Files.Count != 3)
         throw new ApplicationException("Invalid uploaded files count!");
 
       article.Created = article.Modified;
       article.Owner   = User.GetApplicationUser(db);
-      article.Issue   = db.Issues.Find(article.IssueYear, article.IssueNumber);
+      article.Issue   = db.Issues.Find(settings.Year, settings.Number);
 
       if (article.Issue == null)
         throw new ApplicationException("Незаполнен список изданий!");
@@ -100,16 +86,17 @@ namespace BlackHoles.Controllers
       DbUtils.Revalidate(this, article);
       if (ModelState.IsValid)
       {
-
-        HttpPostedFileBase articleFile        = Request.Files[0];
+        HttpPostedFileBase articleFile = Request.Files[0];
         HttpPostedFileBase additionalTextFile = Request.Files[1];
-        HttpPostedFileBase additionalImg      = Request.Files[2];
+        HttpPostedFileBase additionalImg = Request.Files[2];
 
         if (isCreating && articleFile.ContentLength == 0)
         {
           ModelState.AddModelError("articleFile", "Необходимо загрузить файл содержащий текст статьи!");
           return ContinueEdit(article);
         }
+
+        TryAddMessage(article);
 
         db.Articles.Add(article);
         db.SaveChanges();
@@ -128,6 +115,18 @@ namespace BlackHoles.Controllers
 
       article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, article.AuthorsIds.ParseToIntArray());
       return View(article);
+    }
+
+    private void TryAddMessage(Article article)
+    {
+      if (!string.IsNullOrWhiteSpace(article.CurrentMessageText))
+      {
+        var user = User.GetApplicationUser(db);
+        var msg = new Message { Created = DateTime.UtcNow, Text = article.CurrentMessageText, WriterId = user.Id, Writer = user, Messages = new List<Message>() };
+        if (article.Messages == null)
+          article.Messages = new List<Message>();
+        article.Messages.Add(msg);
+      }
     }
 
     private void SeveFile(Article article, HttpPostedFileBase file, string prefix = null)
@@ -225,6 +224,8 @@ namespace BlackHoles.Controllers
       var authors = db.Authors.Where(a => authorsIds.Contains(a.Id)).ToList();
       article.Authors.AddRange(authors);
       article.Modified = DateTime.UtcNow;
+      if (article.References != null)
+        article.References = article.References.Trim(' ', '\t', '\r', '\n');
     }
 
     void LoadNestedMessage(Message msg)
@@ -275,7 +276,7 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds")] Article article)
+    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed")] Article article)
     {
       var userId = User.GetUserId();
       var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue).FilterByOwner(User).FirstOrDefault(a => a.Id == article.Id);
@@ -285,23 +286,20 @@ namespace BlackHoles.Controllers
 
       Mapper.Initialize(cfg =>
         cfg.CreateMap<Article, Article>()
-           .ForMember(dest => dest.Created, opt => opt.Ignore())
-           .ForMember(dest => dest.Owner, opt => opt.Ignore())
-           .ForMember(dest => dest.OwnerId, opt => opt.Ignore())
-           .ForMember(dest => dest.Issue, opt => opt.Ignore())
-           .ForMember(dest => dest.IssueYear, opt => opt.Ignore())
+           .ForMember(dest => dest.Created,     opt => opt.Ignore())
+           .ForMember(dest => dest.Owner,       opt => opt.Ignore())
+           .ForMember(dest => dest.OwnerId,     opt => opt.Ignore())
+           .ForMember(dest => dest.Issue,       opt => opt.Ignore())
+           .ForMember(dest => dest.IssueYear,   opt => opt.Ignore())
            .ForMember(dest => dest.IssueNumber, opt => opt.Ignore())
-           .ForMember(dest => dest.Authors, opt => opt.Ignore())
-           .ForMember(dest => dest.Modified, opt => opt.Ignore())
+           .ForMember(dest => dest.Authors,     opt => opt.Ignore())
+           .ForMember(dest => dest.Modified,    opt => opt.Ignore())
            );
 
       Mapper.Map(article, orig);
 
       FillPrperties(orig);
 
-      //var entry = db.Entry(orog);
-      //entry.Reference(a => a.Owner).Load();
-      //entry.Reference(a => a.Issue).Load();
       DbUtils.Revalidate(this, orig);
 
       if (ModelState.IsValid)
@@ -319,9 +317,12 @@ namespace BlackHoles.Controllers
         if (additionalImg.ContentLength > 0)
           SeveFile(orig, additionalImg, ReviewImgPrefix);
 
+        TryAddMessage(orig);
+
         db.SaveChanges();
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Home");
       }
+
       return View(article);
     }
 
@@ -346,7 +347,7 @@ namespace BlackHoles.Controllers
       if (authorsIds != null && authorsIds.Length != 0)
         query = query.Where(a => !authorsIds.Contains(a.Id));
       var other = query.ToList();
-      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors, AvailableAuthors = other };
+      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors ?? new List<Author>(), AvailableAuthors = other };
       return newArticleAuthors;
     }
 

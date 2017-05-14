@@ -1,0 +1,48 @@
+   <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Insert title here</title>
+
+<script
+    src="http://www.google.com/jsapi?key=xxxxxxxxxxxxxxx>" type="text/javascript"></script>
+
+<script type="text/javascript">
+    /*
+     *  How to detect the language of text.
+     */
+
+
+    google.load("language", "1");
+
+    function initialize()
+    {
+      var content = document.getElementById('content');
+      // Setting the text in the div.
+      content.innerHTML = '<div id="text">You are not actually calling translate within the callback of detect.<\/div><div id="transtext"/>';
+
+      // Grabbing the text to translate
+      var text = document.getElementById("text").innerHTML;
+
+      // If there wasn't an error in the request
+      var langCode = "en";
+      var translated = document.getElementById("transtext");
+      google.language.translate(text, "en", "ru",
+        function(result)
+        {
+          if (result.translation)
+          {
+            translated.innerHTML = result.translation;
+          }
+        }
+      );
+    }
+
+    google.setOnLoadCallback(initialize);
+</script>
+</head>
+<body style="font-family: Arial; border: 0 none;">
+    <div id="content">Loading...</div>
+
+</body>
+</html>

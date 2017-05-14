@@ -14,14 +14,14 @@ namespace BlackHoles.Entities
     [Key]
     public int Id { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Поле должно быть заполнено!")]
     public DateTime Created { get; set; }
 
 
     [Display(Name = "Дата"), ForeignKey("Writer")]
     public string WriterId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Поле должно быть заполнено!")]
     public ApplicationUser Writer { get; set; }
 
     [Display(Name = "Текст сообщения"), Required(ErrorMessage = "Сообщение должно быть задано!"), DataType(DataType.MultilineText), StringLength(8000, MinimumLength = 3)]

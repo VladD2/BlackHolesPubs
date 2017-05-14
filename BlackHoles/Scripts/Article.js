@@ -1,6 +1,7 @@
 ﻿var authorIds = [];
 
-function attachEvents() {
+function attachEvents()
+{
   var value = "[" + $('#AuthorsIds').val() + "]";
   authorIds = eval(value);
 
@@ -9,7 +10,8 @@ function attachEvents() {
   $('#uploadArticle').on('click', onUploadArticle);
 }
 
-function updateAuthors(authorIds) {
+function updateAuthors(authorIds)
+{
   $('#AuthorsIds').val(authorIds);
   $.ajax({
     traditional: true,
@@ -24,14 +26,16 @@ function updateAuthors(authorIds) {
   });
 }
 
-function onChange() {
+function onChange()
+{
   var authorId = this.value;
   authorIds.push(authorId);
   updateAuthors(authorIds);
   return false;
 }
 
-function onRemoveAuthor() {
+function onRemoveAuthor()
+{
   console.log(">>> onRemoveAuthor");
 
   var authorId = $(this).data("id");
@@ -53,7 +57,8 @@ function onRemoveAuthor() {
   return false;
 }
 
-function onUploadArticle(e) {
+function onUploadArticle(e)
+{
   e.preventDefault();
   var formData = new FormData();
 
@@ -78,8 +83,9 @@ function onUploadArticle(e) {
   });
 }
 
-function addComment(articleId, parentMsgId) {
-  var areaName = parentMsgId > 0 ? "replyText_" + parentMsgId : ("commentText_" + articleId);
+function addComment(articleId, parentMsgId)
+{
+  var areaName = parentMsgId > 0 ? "replyText_" + parentMsgId : "CurrentMessageText";
   var textArea = document.getElementById(areaName);
   var text = textArea.value;
   var data = { ArticleId: articleId, Text: text };
@@ -92,14 +98,16 @@ function addComment(articleId, parentMsgId) {
   return false;
 }
 
-function deleteComment(articleId, msgId) {
+function deleteComment(articleId, msgId)
+{
   if (confirm('Вы уверены, что хотите удалить этот комментарий?'))
     execCommentAjax({ articleId: articleId, msgId: msgId }, 'DeletCommentAjax', 'удалить', undefined);
 
   return false;
 }
 
-function execCommentAjax(data, action, actionTitle, onSuccess) {
+function execCommentAjax(data, action, actionTitle, onSuccess)
+{
   $.ajax({
     traditional: true,
     url: urlPrefix + "Articles/" + action,
@@ -115,6 +123,22 @@ function execCommentAjax(data, action, actionTitle, onSuccess) {
       alert('Не удается ' + actionTitle + ' комментарий!');
     }
   });
+}
+
+function onTranslate(from, to)
+{
+  var text = $('#' + from).val();
+
+  var link = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20170511T234904Z.3cea83a2432cfe03.096f00d41d65407999dea5be124a39c5c08fa188&text='
+    + text + '&lang=ru-en';
+
+  $.ajax({
+    type: 'GET',
+    url: link,
+    success: function (response) { $('#' + to).val(response.text[0]); }
+  });
+
+  return false;
 }
 
 $(attachEvents);

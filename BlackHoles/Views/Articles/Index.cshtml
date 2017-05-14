@@ -6,34 +6,38 @@
   ViewBag.Title = title;
 }
 
-<h2>@title</h2>
+<div style="max-width: 1200px; margin: auto;">
+  <h2>@title</h2>
 
-<p>
-  @Html.ActionLink("Доабавить статью", "Create", null, new { @class = "btn btn-primary btn-lg" })
-</p>
-<table class="table">
-  <tr>
-    <th>@Html.DisplayNameFor(model => model.Authors)</th>
-    <th>@Html.DisplayNameFor(model => model.ShortArtTitles)</th>
-    <th>@Html.DisplayNameFor(model => model.Created)</th>
-    <th>@Html.DisplayNameFor(model => model.Modified)</th>
-    <th>@Html.Label("Файлы")</th>
-  </tr>
-
-  @foreach (var article in Model)
-  {
+  <p>
+    @Html.ActionLink("Доабавить статью", "Create", null, new { @class = "btn btn-primary" })
+  </p>
+  <table class="table">
     <tr>
-      <td>
-        @string.Join(", ", article.Authors.Select(DbUtils.MakeBriefFio))
-      </td>
-      <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
-      <td>@Html.DisplayFor(modelItem => article.Created)</td>
-      <td>@Html.DisplayFor(modelItem => article.Modified)</td>
-      <td>@Html.CheckBox("ArticleVersions",    article.ArticleVersions    > 0, new { Title = $"Загружено версий статьи:  {article.ArticleVersions}", @readonly = "readonly", disabled = "disabled" })  
-          @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}", @readonly = "readonly", disabled = "disabled" })
-          @Html.CheckBox("ReviewImgVersions",  article.ReviewImgVersions  > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}", @readonly = "readonly", disabled = "disabled" })
+      <th>@Html.DisplayNameFor(model => model.Authors)</th>
+      <th>@Html.DisplayNameFor(model => model.ShortArtTitles)</th>
+      <th>@Html.DisplayNameFor(model => model.Created)</th>
+      <th>@Html.DisplayNameFor(model => model.Modified)</th>
+      <th>@Html.Label("Файлы")</th>
+      <th></th>
+    </tr>
+
+    @foreach (var article in Model)
+    {
+      <tr>
+        <td>
+          @string.Join(", ", article.Authors.Select(DbUtils.MakeBriefFio))
+        </td>
+        <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
+        <td>@Html.DisplayFor(modelItem => article.Created)</td>
+        <td>@Html.DisplayFor(modelItem => article.Modified)</td>
+        <td>
+          @Html.CheckBox("ArticleVersions", article.ArticleVersions > 0, new { Title = $"Загружено версий статьи:  {article.ArticleVersions}", @readonly = "readonly", disabled = "disabled" })
+        @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}", @readonly = "readonly", disabled = "disabled" })
+        @Html.CheckBox("ReviewImgVersions", article.ReviewImgVersions > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}", @readonly = "readonly", disabled = "disabled" })
       </td>
       @Shared.TableRowButtons(new { id = article.Id })
     </tr>
-  }
-</table>
+    }
+  </table>
+</div>
