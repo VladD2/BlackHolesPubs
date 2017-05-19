@@ -26,7 +26,7 @@
     {
       <tr>
         <td>
-          @string.Join(", ", article.Authors.Select(DbUtils.MakeBriefFio))
+          @article.GetAuthorsBriefFios()
         </td>
         <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
         <td>@Html.DisplayFor(modelItem => article.Created)</td>

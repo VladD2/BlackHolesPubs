@@ -68,7 +68,7 @@
           @Html.HiddenFor(model => model.AuthorsIds)
           @Html.Partial("AuthorList", Model.AuthorsViewModel)
         </td>
-        <td>Выбирите автора из выпадающего списка, чтобы добавить его в статью. Добавить описание авторов можно на странице @Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary btn-xs" }).</td>
+        <td>Выбирите автора из выпадающего списка, чтобы добавить его в статью. Добавить описание авторов можно на странице @Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary btn-xs", target = "_blank" }).</td>
       </tr>
 
       <tr>
@@ -88,10 +88,11 @@
           @Html.EditorFor(model => model.RusAbstract, new { htmlAttributes = new { @class = "form-control", rows = "5" } })
           @Html.ValidationMessageFor(model => model.RusAbstract, "", new { @class = "text-danger" })
         </td>
-        <td>Краткое описание статьи. В среднем 500 печатных символов (ГОСТ 7.9-95 СИБИД). Максимум @Html.MaximumLengthFor(model => model.RusAbstract) символов (включая непечатеные).
-          Аннотация должна отражать: предмет, тему, цель работы, метод или методологию, область применения результатов. Может содержать в выводы.
+        <td>Краткое описание статьи. В среднем 500 печатных символов (ГОСТ 7.9-95 СИБИД). Максимум @Html.MaximumLengthFor(model => model.RusAbstract) 
+          символов (включая непечатные).
+          Аннотация должна отражать: предмет, тему, цель работы, метод или методологию, область применения результатов. Может содержать выводы.
           Помните, что аннотация доступна в Интернет и, что она является рекламой вашей работы!
-          <a href="http://cyberleninka.ru/article/n/kakoy-dolzhna-byt-annotatsiya-k-nauchnoy-statie">Подробнее</a>.</td>
+          <a href="http://cyberleninka.ru/article/n/kakoy-dolzhna-byt-annotatsiya-k-nauchnoy-statie" target="_blank">Подробнее</a>.</td>
       </tr>
 
       <tr>
@@ -100,7 +101,7 @@
           @Html.EditorFor(model => model.RusKeywords, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.RusKeywords, "", new { @class = "text-danger" })
         </td>
-        <td>2-6 слов/словосочетаний) разделенные точкой с запятой или запятой (не смешивать!). Ключевые слова не должны быть предложениями содержащими множество слов. Оптимально 1-3 слова. <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati">Подробнее</a>.
+        <td>2-6 слов/словосочетаний) разделенные точкой с запятой или запятой (не смешивать!). Ключевые слова не должны быть предложениями содержащими множество слов. Оптимально 1-3 слова. <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati" target="_blank">Подробнее</a>.
         </td>
       </tr>
 
@@ -112,7 +113,7 @@
         </td>
         <td>
           Каждое вхождение в списке должно отделяться новой строкой. Список должен быть пронумерован с еденицы. 
-          <a href="http://www.k-press.ru/bh/requirements.htm#citation">Рекомендации</a> по цитированию и сноскам.
+          <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Рекомендации</a> по цитированию и сноскам.
         </td> 
       </tr>
 
@@ -126,7 +127,7 @@
           @Html.EditorFor(model => model.EnuArtTitles, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.EnuArtTitles, "", new { @class = "text-danger" })
         </td>
-        <td>@autoTranslate("ArtTitles")</td>
+        <td>@Shared.AutoTranslate("ArtTitles")</td>
       </tr>
 
       <tr>
@@ -135,7 +136,7 @@
           @Html.EditorFor(model => model.EnuAbstract, new { htmlAttributes = new { @class = "form-control", rows = "5" } })
           @Html.ValidationMessageFor(model => model.EnuAbstract, "", new { @class = "text-danger" })
         </td>
-        <td>@autoTranslate("Abstract")</td>
+        <td>@Shared.AutoTranslate("Abstract")</td>
       </tr>
 
       <tr>
@@ -144,7 +145,7 @@
           @Html.EditorFor(model => model.EnuKeywords, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.EnuKeywords, "", new { @class = "text-danger" })
         </td>
-        <td>@autoTranslate("Keywords")</td>
+        <td>@Shared.AutoTranslate("Keywords")</td>
       </tr>
 
       @if (!isCreating)
@@ -169,21 +170,21 @@
         </td>
         <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литераруры, информации об авторах и т.п.). 
         Допустимые форматы: <code>.doc</code> - MS Word 97-2003 (предпочтительный формат), <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. 
-        <a href="http://www.k-press.ru/bh/requirements.htm#citation">Рекомендации</a> по сноскам/цитатам.</td>
+        <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Рекомендации</a> по сноскам/цитатам.</td>
       </tr>
       <tr>
         <td>@Html.Label("Текст рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
         <input type="file" name="additionalTextFile" id="additionalText" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (текст)..." />
         </td>
-        <td>Рецензия в текстовом виде: <code>.doc</code>, <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. Это не должно быть изображение помещенная в .doc.</td>
+        <td>Рецензия в текстовом виде: <code>.doc</code>, <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. Это не должно быть изображение помещенное в .doc.</td>
       </tr>
       <tr>
         <td>@Html.Label("Фото/скан рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
         <input type="file" name="additionalImg" id="additionalImg" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (фото/скан)..." />
         </td>
-        <td>Тецензия в виде изобраения: <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. </td>
+        <td>Рецензия в виде изобраения: <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. </td>
       </tr>
 
       <tr>
@@ -191,12 +192,13 @@
           <div class="checkbox lead">
             <label>
               @Html.CheckBoxFor(m => m.Agreed) Авторы статьи <span class="labelx label2-important">ознакомились</span> 
-              с <a href="http://www.k-press.ru/bh/requirements.htm">требованиями к статьям</a>,
-              <a href="http://www.k-press.ru/bh/conditions.htm">порядком и условиями публикации статей, правами и обязанностями авторов</a>,
-              <a href="http://www.k-press.ru/bh/oferta.html">публичнаой офертой</a>, 
+              с <a href="http://www.k-press.ru/bh/requirements.htm" target="_blank">требованиями к статьям</a>,
+              <a href="http://www.k-press.ru/bh/conditions.htm" target="_blank">порядком и условиями публикации статей, правами и обязанностями авторов</a>,
+              <a href="http://www.k-press.ru/bh/oferta.html" target="_blank">публичнаой офертой</a>, 
               <span class="labelx label2-agree">согласны</span> с описанными по приведенным ссылкам уловиями. 
-              Устанавливая этот флажок <span class="labelx label2-important">авторы производят акцепт</span> публичной 
-              <a href="http://www.k-press.ru/bh/oferta.html">оферты</a> и <span class="labelx label2-agree">соглашаются</span> на обработку своих персональных.
+              Устанавливая этот флажок, <span class="labelx label2-important">авторы производят акцепт</span> публичной 
+              <a href="http://www.k-press.ru/bh/oferta.html" target="_blank">оферты</a>, и <span class="labelx label2-agree">соглашаются</span> 
+              на обработку своих персональных данных.
             </label>
           </div>
           @Html.ValidationMessageFor(m => m.Agreed, "", new { @class = "text-danger alert" })
@@ -237,10 +239,6 @@
   </table>
 }
 
-@helper autoTranslate(string fieldName)
-{
-  @:Перевод на английский язык. <a style="cursor: pointer;" onclick="return onTranslate('Rus@(fieldName)', 'Enu@(fieldName)');">Перевести соответствующее русскоязычное поле Яндекс Переводчиком</a>.
-}
 @helper dangerIfZero(int count)
 {
   @(count == 0 ? "text-danger" : "text-success")

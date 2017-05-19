@@ -9,5 +9,6 @@ namespace BlackHoles
   {
     public const string AdminRole = "Admin";
     public const string EditorRole = "Editor";
+    public const string SiteUrl    = "www.k-press.ru/bh/pubs";
   }
 }

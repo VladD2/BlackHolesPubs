@@ -50,14 +50,20 @@ namespace BlackHoles.Utils
       return null;
     }
 
-    public static string MakeBriefFio(this Author author)
+    public static Message FindParentMessageOpt(this List<Message> messages, Message msg, Message parent = null)
     {
-      return author.RusSurname + " " + author.RusInitials.MakeBriefInitials();
-    }
+      foreach (var message in messages)
+      {
+        if (message.Id == msg.Id)
+          return parent;
 
-    public static string MakeBriefInitials(this string fullInitials)
-    {
-      return string.Concat(fullInitials.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x[0] + "."));
+        var foundOpt = FindParentMessageOpt(message.Messages, msg, message);
+
+        if (foundOpt != null)
+          return foundOpt;
+      }
+
+      return null;
     }
 
     public static int[] ParseToIntArray(this string authorsIds)

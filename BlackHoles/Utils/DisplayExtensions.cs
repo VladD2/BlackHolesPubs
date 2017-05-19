@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace BlackHoles.Utils
 {
@@ -43,5 +44,17 @@ namespace BlackHoles.Utils
       var attr = (StringLengthAttribute)prop.GetCustomAttributes(typeof(StringLengthAttribute), true).Single();
       return attr;
     }
-  }
-}
+
+    public static string Action(this Controller controller, string actionName, string controllerName, object routeValue = null)
+    {
+      var dict = routeValue == null ? new RouteValueDictionary() : new RouteValueDictionary(routeValue);
+      var referrer = controller.Request.UrlReferrer;
+      var host = referrer.Host;
+      var port = referrer.Port == 80 ? "" : (":" + referrer.Port);
+      var protocol = referrer.Scheme;
+      var localUrl = controller.Url.Action(actionName, controllerName, dict);
+      var result = $"{protocol}://{host}{localUrl}";
+      return result;
+    }
+  } // class
+} // namespace

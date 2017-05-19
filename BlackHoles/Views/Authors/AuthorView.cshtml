@@ -111,7 +111,7 @@
             @Html.ValidationMessageFor(model => model.EnuSurname, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>В именительном подеже. С прописной буквы. Например: Ivanov</td>
+        <td>В именительном подеже. С прописной буквы. Например: Ivanov. @Shared.AutoTranslate("Surname")</td>
       </tr>
 
       <tr>
@@ -122,7 +122,7 @@
             @Html.ValidationMessageFor(model => model.EnuInitials, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>Имя. С прописной буквы. Например: Peter</td>
+        <td>Имя. С прописной буквы. Например: Peter. @Shared.AutoTranslate("Initials")</td>
       </tr>
 
       <tr>
@@ -133,7 +133,7 @@
             @Html.ValidationMessageFor(model => model.EnuOrgName, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>В именительном подеже. Это поле не должно содержать ничего кроме названия учебного заведения или компании.</td>
+        <td>В именительном подеже. Это поле не должно содержать ничего кроме названия учебного заведения или компании. . @Shared.AutoTranslate("OrgName")</td>
       </tr>
     </table>
     <div class="form-group">

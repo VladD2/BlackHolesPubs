@@ -110,6 +110,8 @@ namespace BlackHoles.Controllers
         if (additionalImg.ContentLength > 0)
           SeveFile(article, additionalImg, ReviewImgPrefix);
 
+        TrySendMessage(article);
+
         return RedirectToAction("Index");
       }
 
@@ -127,6 +129,46 @@ namespace BlackHoles.Controllers
           article.Messages = new List<Message>();
         article.Messages.Add(msg);
       }
+    }
+
+    private void TrySendMessage(Article article)
+    {
+      if (article.CurrentMessageText == null)
+        return;
+
+      MailMessageService.SendMail(MailMessageService.MainEmail, $"Коментраий к статье '{article.ShortArtTitles}'",
+        $@"<html>
+<body>
+</body>
+<p><i>Это автоматическое уведомление. <b>Не отвечайте</b> на него.</i> Для ответа перейдите по ссылке ниже.</p>
+<p>Добавлен коментарий к статье <a href='{this.Action("Edit", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}.</p>
+
+<p>Текст сообщения:<br />
+{article.CurrentMessageText.Replace(Environment.NewLine, "<br />\r\n")}
+</p>
+</html>");
+    }
+
+    private void TrySendMessage(Article article, Message msg)
+    {
+      var parent = article.Messages.FindParentMessageOpt(msg);
+
+      ApplicationUser parentWriter = parent == null ? article.Owner : parent.Writer;
+      ApplicationUser writer = User.GetApplicationUser(db);
+
+      MailMessageService.SendMail(parentWriter.Email, $"Коментраий к статье {article.GetAuthorsBriefFios()} '{article.ShortArtTitles}'",
+        $@"<html>
+<body>
+</body>
+<p><i>Это автоматическое уведомление. <b>Не отвечайте</b> на него.</i> Для ответа перейдите по ссылке ниже.</p>
+<p>Добавлен коментарий к статье <a href='{this.Action("Edit", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}.</p>
+<p>Автор: {writer.UserName} ({writer.Email})<br />
+В ответ: {parentWriter.UserName} ({parentWriter.Email})</p>
+
+<p>Текст сообщения:<br />
+{msg.Text.Replace(Environment.NewLine, "<br />\r\n")}
+</p>
+</html>");
     }
 
     private void SeveFile(Article article, HttpPostedFileBase file, string prefix = null)
@@ -320,6 +362,9 @@ namespace BlackHoles.Controllers
         TryAddMessage(orig);
 
         db.SaveChanges();
+
+        TrySendMessage(orig);
+
         return RedirectToAction("Index", "Home");
       }
 
@@ -401,6 +446,7 @@ namespace BlackHoles.Controllers
 
         var article = db.Articles
           .Include(a => a.Messages)
+          .Include(a => a.Authors)
           .FilterByOwner(User)
           .FirstOrDefault(a => a.Id == comment.ArticleId);
 
@@ -420,6 +466,8 @@ namespace BlackHoles.Controllers
           }
           else
             article.Messages.Add(msg);
+
+          TrySendMessage(article, msg);
 
           db.SaveChanges();
           ViewBag.ArticleId = comment.ArticleId;

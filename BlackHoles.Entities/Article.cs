@@ -94,6 +94,11 @@ namespace BlackHoles.Entities
     //[RegularExpression("true", ErrorMessage = "Вы обязаны принять условия, чтобы добавить запрос на публикацию статьи!")]
     public bool Agreed { get; set; }
 
+    public string GetAuthorsBriefFios()
+    {
+      return string.Join(", ", this.Authors.Select(a => a.MakeBriefFio()));
+    }
+
     public override string ToString()
     {
       var authors = Authors != null ? string.Join(", ", Authors.Select(a => a.RusSurname)) : "";

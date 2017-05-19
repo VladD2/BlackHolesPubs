@@ -8,14 +8,33 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System;
+using System.Reflection;
+using System.Resources;
+using System.Globalization;
 
 [assembly: OwinStartupAttribute(typeof(BlackHoles.Startup))]
 namespace BlackHoles
 {
   public partial class Startup
   {
+    static Assembly GetAssemblyByName(string name)
+    {
+      return AppDomain.CurrentDomain.GetAssemblies().
+             SingleOrDefault(assembly => assembly.GetName().Name == name);
+    }
+
     public void Configuration(IAppBuilder app)
     {
+      //var resAsm               = Assembly.Load("Microsoft.AspNet.Identity.EntityFramework.resources, Version=2.0.0.0, Culture=ru, PublicKeyToken=31bf3856ad364e35");
+      //var asm                  = Assembly.Load("Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+      //var t                    = asm.GetType("Microsoft.AspNet.Identity.Resources");
+      //var resourceManField     = t.GetField("resourceMan", BindingFlags.Static | BindingFlags.NonPublic);
+      //var resourceManagerRu    = new ResourceManager("Microsoft.AspNet.Identity.EntityFramework.IdentityResources.ru.resources", resAsm);
+      //var ruCulture            = CultureInfo.CurrentCulture;
+      //var resourceCultureField = t.GetField("resourceCulture", BindingFlags.Static | BindingFlags.NonPublic);
+      //resourceManField.SetValue(null, resourceManagerRu);
+      //resourceCultureField.SetValue(null, ruCulture);
+
       ConfigureAuth(app);
       CreateRolesandUsers();
     }
