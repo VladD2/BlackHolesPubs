@@ -33,3 +33,4 @@ packages/
 *.mdf
 *.ldf
 App_Data/
+PrivateSettings.config
