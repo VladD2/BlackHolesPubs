@@ -31,7 +31,7 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      var authors = db.Articles.Include(a => a.Authors).FilterByOwner(User).ToList();
+      var authors = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User).ToList();
       foreach (var author in authors)
         FillFilesInfo(author);
       return View(authors);
@@ -44,8 +44,10 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Article article = db.Articles.Find(id);
-      if (article == null || article.OwnerId != User.GetUserId())
+      Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors).Include(a => a.Owner)
+        .FilterByOwner(User)
+        .SingleOrDefault(a => a.Id == id);
+      if (article == null)
       {
         return HttpNotFound();
       }
@@ -73,7 +75,7 @@ namespace BlackHoles.Controllers
       if (string.IsNullOrWhiteSpace(article.AuthorsIds))
         return ContinueEdit(article);
 
-      if (Request.Files.Count != 3)
+      if (Request.Files.Count != 4)
         throw new ApplicationException("Invalid uploaded files count!");
 
       article.Created = article.Modified;
@@ -88,13 +90,17 @@ namespace BlackHoles.Controllers
       {
         HttpPostedFileBase articleFile = Request.Files[0];
         HttpPostedFileBase additionalTextFile = Request.Files[1];
-        HttpPostedFileBase additionalImg = Request.Files[2];
+        HttpPostedFileBase additionalImg1 = Request.Files[2];
+        HttpPostedFileBase additionalImg2 = Request.Files[3];
 
         if (isCreating && articleFile.ContentLength == 0)
         {
           ModelState.AddModelError("articleFile", "Необходимо загрузить файл содержащий текст статьи!");
           return ContinueEdit(article);
         }
+
+        if (!CheckFiles(additionalImg1, additionalImg2))
+          return ContinueEdit(article);
 
         TryAddMessage(article);
 
@@ -107,8 +113,7 @@ namespace BlackHoles.Controllers
         if (additionalTextFile.ContentLength > 0)
           SeveFile(article, additionalTextFile, ReviewTextPrefix);
 
-        if (additionalImg.ContentLength > 0)
-          SeveFile(article, additionalImg, ReviewImgPrefix);
+        TrySeveFiles(article, additionalImg1, additionalImg2, ReviewImgPrefix);
 
         TrySendMessage(article);
 
@@ -169,6 +174,29 @@ namespace BlackHoles.Controllers
 {msg.Text.Replace(Environment.NewLine, "<br />\r\n")}
 </p>
 </html>");
+    }
+
+    private bool CheckFiles(HttpPostedFileBase file1, HttpPostedFileBase file2)
+    {
+      if (file1.ContentLength == 0 && file2.ContentLength > 0)
+      {
+        ModelState.AddModelError("additionalImg", "Если задан дополнительный файл первый файл так же должен быть задан!");
+        return false;
+      }
+
+      return true;
+    }
+
+
+    private void TrySeveFiles(Article article, HttpPostedFileBase file1, HttpPostedFileBase file2, string prefix = null)
+    {
+      if (file1.ContentLength > 0 && file2.ContentLength == 0)
+        SeveFile(article, file1, prefix);
+      else
+      {
+        SeveFile(article, file1, prefix);
+        SeveFile(article, file2, prefix + "2-");
+      }
     }
 
     private void SeveFile(Article article, HttpPostedFileBase file, string prefix = null)
@@ -321,7 +349,8 @@ namespace BlackHoles.Controllers
     public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed")] Article article)
     {
       var userId = User.GetUserId();
-      var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue).FilterByOwner(User).FirstOrDefault(a => a.Id == article.Id);
+      var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue)
+                   .FilterByOwner(User).SingleOrDefault(a => a.Id == article.Id);
       if (orig == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -340,6 +369,11 @@ namespace BlackHoles.Controllers
 
       Mapper.Map(article, orig);
 
+      return EditImpl(orig);
+    }
+
+    private ActionResult EditImpl(Article orig)
+    {
       FillPrperties(orig);
 
       DbUtils.Revalidate(this, orig);
@@ -348,7 +382,8 @@ namespace BlackHoles.Controllers
       {
         HttpPostedFileBase articleFile = Request.Files[0];
         HttpPostedFileBase additionalTextFile = Request.Files[1];
-        HttpPostedFileBase additionalImg = Request.Files[2];
+        HttpPostedFileBase additionalImg1 = Request.Files[2];
+        HttpPostedFileBase additionalImg2 = Request.Files[3];
 
         if (articleFile.ContentLength > 0)
           SeveFile(orig, articleFile, null);
@@ -356,8 +391,10 @@ namespace BlackHoles.Controllers
         if (additionalTextFile.ContentLength > 0)
           SeveFile(orig, additionalTextFile, ReviewTextPrefix);
 
-        if (additionalImg.ContentLength > 0)
-          SeveFile(orig, additionalImg, ReviewImgPrefix);
+        if (!CheckFiles(additionalImg1, additionalImg2))
+          return ContinueEdit(orig);
+
+        TrySeveFiles(orig, additionalImg1, additionalImg2, ReviewImgPrefix);
 
         TryAddMessage(orig);
 
@@ -368,7 +405,7 @@ namespace BlackHoles.Controllers
         return RedirectToAction("Index", "Home");
       }
 
-      return View(article);
+      return ContinueEdit(orig);
     }
 
     // GET: Articles/Delete/5
@@ -401,7 +438,18 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult DeleteConfirmed(int id)
     {
-      Article article = db.Articles.Find(id);
+      Article article = db.Articles.Include(a => a.Messages).FilterByOwner(User)
+        .SingleOrDefault(a => a.Id == id);
+      if (article == null)
+        return HttpNotFound();
+
+      LoadNestedMessage(article);
+
+      foreach (var msg in article.Messages.ToArray())
+        DeleteCascad(msg);
+
+      article.Messages.Clear();
+
       db.Articles.Remove(article);
       db.SaveChanges();
       return RedirectToAction("Index");

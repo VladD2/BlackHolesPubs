@@ -10,11 +10,11 @@ namespace BlackHoles.DataContexts.IssuesMigrations
     public Configuration()
     {
       AutomaticMigrationsEnabled = true;
-      AutomaticMigrationDataLossAllowed = true;
+      AutomaticMigrationDataLossAllowed = false;
       MigrationsDirectory = @"DataContexts\IssuesMigrations";
     }
 
-    protected override void Seed(BlackHoles.DataContexts.IssuesDb context)
+    protected override void Seed(IssuesDb context)
     {
       //  This method will be called after migrating to the latest version.
 

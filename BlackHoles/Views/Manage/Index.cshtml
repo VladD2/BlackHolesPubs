@@ -1,32 +1,41 @@
-﻿@model BlackHoles.Models.IndexViewModel
+﻿@using BlackHoles.DataContexts
+@using BlackHoles.Utils
+@model BlackHoles.Models.IndexViewModel
 @{
-    ViewBag.Title = "Настройки";
+  ViewBag.Title = "Настройки";
+  var db = new IssuesDb();
+  var user = User.GetApplicationUser(db);
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Настройка учетной записи</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Пароль:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("изменить", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("задать", "SetPassword")
-            }
-            ]
-        </dd>
-        <dt>Внешняя аутентификация:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Настроить", "ManageLogins") ]
-        </dd>
-    </dl>
+  <h4>Настройка учетной записи</h4>
+  <hr />
+  <dl class="dl-horizontal">
+    <dt>Имя пользователя:</dt>
+    <dd>@user.UserName</dd>
+    <dt>Email:</dt>
+    <dd>@user.Email</dd>
+    <dt>Пароль:</dt>
+    <dd>
+      [
+      @if (Model.HasPassword)
+      {
+        @Html.ActionLink("изменить", "ChangePassword")
+      }
+      else
+      {
+        @Html.ActionLink("задать", "SetPassword")
+      }
+      ]
+    </dd>
+
+    @*<dt>Внешняя аутентификация:</dt>
+      <dd>
+          @Model.Logins.Count [
+          @Html.ActionLink("Настроить", "ManageLogins") ]
+      </dd>*@
+  </dl>
 </div>

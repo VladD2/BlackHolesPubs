@@ -19,6 +19,10 @@
       <th>@Html.DisplayNameFor(model => model.Created)</th>
       <th>@Html.DisplayNameFor(model => model.Modified)</th>
       <th>@Html.Label("Файлы")</th>
+      @if (User.IsInRole(Constants.EditorRole))
+      {
+        <th>Зарегистрировал</th>
+      }
       <th></th>
     </tr>
 
@@ -36,6 +40,10 @@
         @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}", @readonly = "readonly", disabled = "disabled" })
         @Html.CheckBox("ReviewImgVersions", article.ReviewImgVersions > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}", @readonly = "readonly", disabled = "disabled" })
       </td>
+      @if (User.IsInRole(Constants.EditorRole))
+      {
+        <td>@Html.DisplayFor(modelItem => article.Owner.UserName) (@Html.DisplayFor(modelItem => article.Owner.Email))</td>
+      }
       @Shared.TableRowButtons(new { id = article.Id })
     </tr>
     }

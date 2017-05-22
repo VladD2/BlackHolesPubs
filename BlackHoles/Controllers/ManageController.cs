@@ -56,12 +56,12 @@ namespace BlackHoles.Controllers
     public async Task<ActionResult> Index(ManageMessageId? message)
     {
       ViewBag.StatusMessage =
-          message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-          : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+          message == ManageMessageId.ChangePasswordSuccess ? "Ваш пароль был сброшен (изменен)."
+          : message == ManageMessageId.SetPasswordSuccess ? "Ваш пароль был сохранен."
           : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-          : message == ManageMessageId.Error ? "An error has occurred."
-          : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-          : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+          : message == ManageMessageId.Error ? "Произошла ошибка."
+          : message == ManageMessageId.AddPhoneSuccess ? "Добавлен номер телефона."
+          : message == ManageMessageId.RemovePhoneSuccess ? "Удален номер телефона."
           : "";
 
       var userId = User.Identity.GetUserId();

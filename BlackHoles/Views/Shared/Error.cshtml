@@ -7,8 +7,13 @@
 
 @if (@Model.Exception != null)
 {
+  @{ var ex = Model.Exception; }
   <h2 class="text-danger">
-    При выполнении действия "@Model.ActionName" в контроллере "@Model.ControllerName" возникло исключение: <b>@Model.Exception.Message</b>
+    При выполнении действия "@Model.ActionName" в контроллере "@Model.ControllerName" возникло исключение: <b>@ex.Message</b>
+    @ if (@ex.InnerException != null)
+    {
+      <br />Вложенное исключение @ex.InnerException.GetType().Name: <b>@ex.InnerException.Message</b>
+    }
   </h2>
   <p>Обратитесь по адресу <a href="mailto:vladdq@yandex.ru">vladdq@yandex.ru</a> </p>
 }

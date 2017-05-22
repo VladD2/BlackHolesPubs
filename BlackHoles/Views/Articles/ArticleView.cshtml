@@ -182,9 +182,13 @@
       <tr>
         <td>@Html.Label("Фото/скан рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
-        <input type="file" name="additionalImg" id="additionalImg" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (фото/скан)..." />
+          @Html.ValidationMessage("additionalImg", "", new { @class = "text-danger" })
+          <input type="file" name="additionalImg1" id="additionalImg1" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (фото/скан)..." />
+          <input type="file" name="additionalImg2" id="additionalImg2" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите второй файл рецензии (фото/скан)..." />
         </td>
-        <td>Рецензия в виде изобраения: <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. </td>
+        <td>Рецензия в виде изобраения: <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. 
+        Желательно, чтобы это был один файл. Если у вас два файла, добавьте второй файл в поле ниже.
+        Если файл один, не заполняйте нижнее поле.</td>
       </tr>
 
       <tr>

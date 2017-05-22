@@ -15,7 +15,10 @@
       <th>@Html.DisplayNameFor(model => model.RusInitials)</th>
       <th>@Html.DisplayNameFor(model => model.RusOrgName)</th>
       <th>@Html.DisplayNameFor(model => model.Email)</th>
-      <th>&nbsp;</th>
+      @if (User.IsInRole(Constants.EditorRole))
+      {
+        <th>Зарегистрировал</th>
+      }      <th>&nbsp;</th>
     </tr>
 
     @foreach (var item in Model)
@@ -25,6 +28,10 @@
         <td>@Html.DisplayFor(modelItem => item.RusInitials)</td>
         <td>@Html.DisplayFor(modelItem => item.RusOrgName)</td>
         <td>@Html.DisplayFor(modelItem => item.Email)</td>
+        @if (User.IsInRole(Constants.EditorRole))
+        {
+          <td>@Html.DisplayFor(modelItem => item.Owner.UserName) (@Html.DisplayFor(modelItem => item.Owner.Email))</td>
+        }
         @Shared.TableRowButtons(new { id = item.Id })
       </tr>
     }

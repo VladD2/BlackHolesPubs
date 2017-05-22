@@ -21,7 +21,7 @@ namespace BlackHoles.Controllers
     // GET: Authors
     public ActionResult Index()
     {
-      return View(db.Authors.FilterByOwner(User).ToList());
+      return View(db.Authors.Include(a => a.Owner).FilterByOwner(User).ToList());
     }
 
     // GET: Authors/Details/5
@@ -31,7 +31,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author = db.Authors.Include(x => x.Owner).FilterByOwner(User).First(a => a.Id == id);
+      Author author = db.Authors.Include(x => x.Owner).FilterByOwner(User).FirstOrDefault(a => a.Id == id);
       if (author == null)
       {
         return HttpNotFound();

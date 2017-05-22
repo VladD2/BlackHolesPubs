@@ -1,12 +1,12 @@
 ﻿@model BlackHoles.Entities.Issue
 
 @{
-  ViewBag.Title = "Delete";
+  ViewBag.Title = "Удалить номер издания";
 }
 
-<h2>Delete</h2>
+<h2>Удаление номера издания</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Вы действительно хотите удалить номер?</h3>
 <div>
   <h4>Номер</h4>
   <hr />
@@ -30,8 +30,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-actions no-color">
-      <input type="submit" value="Удалить" class="btn btn-default" /> |
-      @Html.ActionLink("К списку номеров", "Index")
+      @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Удалить" class="btn btn-default" />
     </div>
   }
 </div>
