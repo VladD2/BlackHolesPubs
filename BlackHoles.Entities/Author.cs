@@ -56,14 +56,14 @@ namespace BlackHoles.Entities
 
     public List<Article> Articles { get; set; }
 
+    public string MakeBriefInitials()
+    {
+      return string.Concat(this.RusInitials.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x[0] + "."));
+    }
+
     public string MakeBriefFio()
     {
-      string MakeBriefInitials(string fullInitials)
-      {
-        return string.Concat(fullInitials.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x[0] + "."));
-      }
-
-      return this.RusSurname + " " + MakeBriefInitials(this.RusInitials);
+      return this.RusSurname + "\u00A0" + this.MakeBriefInitials();
     }
 
     public override string ToString()

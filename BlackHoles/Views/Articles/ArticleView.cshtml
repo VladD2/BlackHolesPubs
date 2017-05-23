@@ -8,6 +8,7 @@
 @{
   IssuesDb db = new IssuesDb();
   var isCreating = ViewBag.Create;
+  var isEditor = User.IsInRole(Constants.EditorRole);
 }
 
 <h2 class="text-center"><b>@ViewBag.Title</b></h2>
@@ -19,6 +20,22 @@
   @Html.HiddenFor(model => model.Id)
   <table class="table">
     <tbody>
+      <tr>
+        <td width="5%">@Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })</td>
+        <td width="60%">
+          @if (User.IsInRole(Constants.EditorRole))
+          {
+            @Html.EnumDropDownListFor(x => x.Status, "Выберите значение статуса...", new { @class = "form-control" })
+          }
+          else
+          {
+            @Html.EnumDropDownListFor(x => x.Status, "Выберите значение статуса...", new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+          }
+          @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+        </td>
+        <td width="35%"></td>
+      </tr>
+
       <tr>
         <td>@Html.LabelFor(model => model.Specialty, htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td width="50%" colspan="2">

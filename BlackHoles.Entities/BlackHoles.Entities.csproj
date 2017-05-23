@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Article.cs" />
+    <Compile Include="ArticleStatus.cs" />
     <Compile Include="Author.cs" />
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="ArticleAuthorsViewModel.cs" />

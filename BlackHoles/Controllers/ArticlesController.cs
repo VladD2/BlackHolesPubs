@@ -346,7 +346,7 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed")] Article article)
+    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed,Status")] Article article)
     {
       var userId = User.GetUserId();
       var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue)
@@ -372,11 +372,11 @@ namespace BlackHoles.Controllers
       return EditImpl(orig);
     }
 
-    private ActionResult EditImpl(Article orig)
+    private ActionResult EditImpl(Article article)
     {
-      FillPrperties(orig);
+      FillPrperties(article);
 
-      DbUtils.Revalidate(this, orig);
+      DbUtils.Revalidate(this, article);
 
       if (ModelState.IsValid)
       {
@@ -386,26 +386,26 @@ namespace BlackHoles.Controllers
         HttpPostedFileBase additionalImg2 = Request.Files[3];
 
         if (articleFile.ContentLength > 0)
-          SeveFile(orig, articleFile, null);
+          SeveFile(article, articleFile, null);
 
         if (additionalTextFile.ContentLength > 0)
-          SeveFile(orig, additionalTextFile, ReviewTextPrefix);
+          SeveFile(article, additionalTextFile, ReviewTextPrefix);
 
         if (!CheckFiles(additionalImg1, additionalImg2))
-          return ContinueEdit(orig);
+          return ContinueEdit(article);
 
-        TrySeveFiles(orig, additionalImg1, additionalImg2, ReviewImgPrefix);
+        TrySeveFiles(article, additionalImg1, additionalImg2, ReviewImgPrefix);
 
-        TryAddMessage(orig);
+        TryAddMessage(article);
 
         db.SaveChanges();
 
-        TrySendMessage(orig);
+        TrySendMessage(article);
 
         return RedirectToAction("Index", "Home");
       }
 
-      return ContinueEdit(orig);
+      return ContinueEdit(article);
     }
 
     // GET: Articles/Delete/5

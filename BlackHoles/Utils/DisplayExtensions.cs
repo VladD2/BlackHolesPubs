@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -11,6 +12,15 @@ namespace BlackHoles.Utils
 {
   public static class DisplayExtensions
   {
+    public static string GetDisplayName(this Enum enumValue)
+    {
+      return enumValue.GetType()
+                      .GetMember(enumValue.ToString())
+                      .First()
+                      .GetCustomAttribute<DisplayAttribute>()
+                      .GetName();
+    }
+
     public static MvcHtmlString PublicationMonth(this HtmlHelper htmlHelper, int number)
     {
       switch (number)

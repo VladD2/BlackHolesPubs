@@ -14,6 +14,7 @@
   </p>
   <table class="table">
     <tr>
+      <th>@Html.DisplayNameFor(model => model.Status)</th>
       <th>@Html.DisplayNameFor(model => model.Authors)</th>
       <th>@Html.DisplayNameFor(model => model.ShortArtTitles)</th>
       <th>@Html.DisplayNameFor(model => model.Created)</th>
@@ -29,9 +30,8 @@
     @foreach (var article in Model)
     {
       <tr>
-        <td>
-          @article.GetAuthorsBriefFios()
-        </td>
+        <td><span class="@article.Status">@Html.DisplayFor(modelItem => article.Status)</span></td>
+        <td>@article.GetAuthorsBriefFios()</td>
         <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
         <td>@Html.DisplayFor(modelItem => article.Created)</td>
         <td>@Html.DisplayFor(modelItem => article.Modified)</td>

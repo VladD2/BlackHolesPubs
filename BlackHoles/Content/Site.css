@@ -102,3 +102,40 @@ a.reply {
 .label2-agree[href]:focus {
   background-color: #449d44;
 }
+
+
+.RequiresVerification {
+  display: inline;
+  background-color: plum;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.HasArrors {
+  display: inline;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.Accepted {
+  display: inline;
+  background-color: mediumseagreen;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}

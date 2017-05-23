@@ -70,6 +70,9 @@ namespace BlackHoles.Entities
 
     public List<Message> Messages { get; set; }
 
+    [Display(Name = "Статус")]
+    public ArticleStatus Status { get; set; }
+
     /// <summary>Используется для хранения текста сообщения при создании или записи статить.</summary>
     [NotMapped, DataType(DataType.MultilineText)]
     public string CurrentMessageText { get; set; }
