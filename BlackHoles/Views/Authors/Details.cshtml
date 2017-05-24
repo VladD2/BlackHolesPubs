@@ -1,44 +1,13 @@
 ﻿@model BlackHoles.Entities.Author
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Описание автора";
 }
 
-<h2>Список авторов</h2>
+<h2>@ViewBag.Title</h2>
 
-<div>
-  <dl class="dl-horizontal">
-    <dt>@Html.DisplayNameFor(model => model.Email)</dt>
-    <dd>@Html.DisplayFor(model => model.Email)</dd>
-    <dt>@Html.DisplayNameFor(model => model.ScienceDegree)</dt>
-    <dd>@Html.DisplayFor(model => model.ScienceDegree)</dd>
-    <dt>@Html.DisplayNameFor(model => model.Phone)</dt>
-    <dd>@Html.DisplayFor(model => model.Phone)</dd>
-  </dl>
-  <p>Атрибуты заполняемые на <b>русском</b> языке:<p/>
-  <dl class="dl-horizontal">
-    <dt>@Html.DisplayNameFor(model => model.RusSurname)</dt>
-    <dd>@Html.DisplayFor(model => model.RusSurname)</dd>
-    <dt>@Html.DisplayNameFor(model => model.RusInitials)</dt>
-    <dd>@Html.DisplayFor(model => model.RusInitials)</dd>
-    <dt>@Html.DisplayNameFor(model => model.RusOrgName)</dt>
-    <dd>@Html.DisplayFor(model => model.RusOrgName)</dd>
-    <dt>@Html.DisplayNameFor(model => model.RusSubdivision)</dt>
-    <dd>@Html.DisplayFor(model => model.RusSubdivision)</dd>
-    <dt>@Html.DisplayNameFor(model => model.RusPosition)</dt>
-    <dd>@Html.DisplayFor(model => model.RusPosition)</dd>
-  </dl>
-  <p>Атрибуты заполняемые на <b>английском</b> языке:<p />
-  <dl class="dl-horizontal">
-    <dt>@Html.DisplayNameFor(model => model.EnuSurname)</dt>
-    <dd>@Html.DisplayFor(model => model.EnuSurname)</dd>
-    <dt>@Html.DisplayNameFor(model => model.EnuInitials)</dt>
-    <dd>@Html.DisplayFor(model => model.EnuInitials)</dd>
-    <dt>@Html.DisplayNameFor(model => model.EnuOrgName)</dt>
-    <dd>@Html.DisplayFor(model => model.EnuOrgName)</dd>
-  </dl>
-</div>
-<p>
-    @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("К списку номеров", "Index")
-</p>
+@Html.Partial("AuthorDetailsRus", Model)
+
+<hr />
+
+@Html.Partial("AuthorDetailsEnu", Model)

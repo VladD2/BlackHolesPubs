@@ -1,0 +1,11 @@
+﻿@using BlackHoles.Utils
+@using BlackHoles.Entities
+@model Author
+
+<div>
+  @Html.MakeAuthorFioAndScienceDegree(Model.RusSurname, Model.RusInitials, Model.ScienceDegree)
+  <br />
+  <b>Place&nbsp;of&nbsp;employment:</b>&nbsp;@Html.EnsureEndWithDot(Model.EnuOrgName)
+  <br />
+  <b>E-mail:</b>&nbsp;@Html.EnsureEndWithDot(Model.Owner.Email)
+</div>

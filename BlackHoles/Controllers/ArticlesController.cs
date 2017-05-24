@@ -44,7 +44,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors).Include(a => a.Owner)
+      Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors.Select(x => x.Owner)).Include(a => a.Authors).Include(a => a.Owner)
         .FilterByOwner(User)
         .SingleOrDefault(a => a.Id == id);
       if (article == null)

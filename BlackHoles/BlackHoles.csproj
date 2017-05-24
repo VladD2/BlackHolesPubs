@@ -323,7 +323,6 @@
     <Content Include="Views\Issues\Index.cshtml" />
     <Content Include="Views\Articles\Create.cshtml" />
     <Content Include="Views\Articles\Delete.cshtml" />
-    <Content Include="Views\Articles\Details.cshtml" />
     <Content Include="Views\Articles\Edit.cshtml" />
     <Content Include="Views\Articles\Index.cshtml" />
     <Content Include="Views\Authors\AuthorView.cshtml" />
@@ -331,6 +330,9 @@
     <Content Include="Views\Articles\ArticleView.cshtml" />
     <Content Include="Views\Articles\MessageTree.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Enum.cshtml" />
+    <Content Include="Views\Articles\Details.cshtml" />
+    <Content Include="Views\Shared\AuthorDetailsRus.cshtml" />
+    <Content Include="Views\Shared\AuthorDetailsEnu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

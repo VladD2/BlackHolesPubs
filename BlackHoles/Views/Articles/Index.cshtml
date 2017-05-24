@@ -1,4 +1,5 @@
-﻿@using BlackHoles.Utils;
+﻿@using BlackHoles.Entities;
+@using BlackHoles.Utils;
 @model IEnumerable<BlackHoles.Entities.Article>
 
 @{
@@ -12,7 +13,7 @@
   <p>
     @Html.ActionLink("Доабавить статью", "Create", null, new { @class = "btn btn-primary" })
   </p>
-  <table class="table">
+  <table class="table table-hover">
     <tr>
       <th>@Html.DisplayNameFor(model => model.Status)</th>
       <th>@Html.DisplayNameFor(model => model.Authors)</th>
@@ -29,7 +30,13 @@
 
     @foreach (var article in Model)
     {
-      <tr>
+      var trClass = "";
+      switch (article.Status)
+      {
+        case ArticleStatus.HasArrors: trClass = "danger"; break;
+        case ArticleStatus.Accepted:  trClass = "success"; break;
+      }
+      <tr class="@trClass">
         <td><span class="@article.Status">@Html.DisplayFor(modelItem => article.Status)</span></td>
         <td>@article.GetAuthorsBriefFios()</td>
         <td>@Html.DisplayFor(modelItem => article.ShortArtTitles)</td>
@@ -37,15 +44,15 @@
         <td>@Html.DisplayFor(modelItem => article.Modified)</td>
         <td>
           @Html.CheckBox("ArticleVersions", article.ArticleVersions > 0, new { Title = $"Загружено версий статьи:  {article.ArticleVersions}", @readonly = "readonly", disabled = "disabled" })
-        @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}", @readonly = "readonly", disabled = "disabled" })
-        @Html.CheckBox("ReviewImgVersions", article.ReviewImgVersions > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}", @readonly = "readonly", disabled = "disabled" })
-      </td>
-      @if (User.IsInRole(Constants.EditorRole))
-      {
-        <td>@Html.DisplayFor(modelItem => article.Owner.UserName) (@Html.DisplayFor(modelItem => article.Owner.Email))</td>
-      }
-      @Shared.TableRowButtons(new { id = article.Id })
-    </tr>
+          @Html.CheckBox("ReviewTextVersions", article.ReviewTextVersions > 0, new { Title = $"Загружено текстовых версий рецензий или отзывов ученого совета: {article.ReviewTextVersions}", @readonly = "readonly", disabled = "disabled" })
+          @Html.CheckBox("ReviewImgVersions", article.ReviewImgVersions > 0, new { Title = $"Загружено фото-версий рецензий или отзывов ученого совета: {article.ReviewImgVersions}", @readonly = "readonly", disabled = "disabled" })
+        </td>
+        @if (User.IsInRole(Constants.EditorRole))
+        {
+          <td>@Html.DisplayFor(modelItem => article.Owner.UserName) (@Html.DisplayFor(modelItem => article.Owner.Email))</td>
+        }
+        @Shared.TableRowButtons(new { id = article.Id })
+      </tr>
     }
   </table>
 </div>

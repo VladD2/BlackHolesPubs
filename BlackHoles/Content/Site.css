@@ -139,3 +139,16 @@ a.reply {
   white-space: nowrap;
   text-align: center;
 }
+
+.bold {
+  font-weight: bold;
+}
+
+.no-line-break {
+  white-space: pre-line;
+}
+
+.with-spasing {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

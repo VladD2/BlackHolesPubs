@@ -23,9 +23,9 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li>@Html.ActionLink("Начальная страница", "Index",   "Home")</li>
-          <li>@Html.ActionLink("Авторы",             "Index",   "Authors")</li>
-          <li>@Html.ActionLink("Статьи",             "Index",   "Articles")</li>
+          <li><i class="icon-home icon-white"></i>@Html.ActionLink("Начальная страница", "Index", "Home")</li>
+          <li><i class="icon-user icon-white"></i>@Html.ActionLink("Авторы", "Index", "Authors")</li>
+          <li><i class="icon-file icon-white"></i>@Html.ActionLink("Статьи", "Index", "Articles")</li>
           <li>@Html.ActionLink("Контакты",           "Contact", "Home")</li>
         </ul>
         @Html.Partial("_LoginPartial")

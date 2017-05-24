@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlackHoles.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,23 @@ namespace BlackHoles.Utils
                       .First()
                       .GetCustomAttribute<DisplayAttribute>()
                       .GetName();
+    }
+
+    public static MvcHtmlString EnsureEndWithDot(this HtmlHelper htmlHelper, string text)
+    {
+      if (text.LastOrDefault() != '.')
+        text += '.';
+      return new MvcHtmlString(htmlHelper.Encode(text));
+    }
+
+    public static MvcHtmlString MakeAuthorFioAndScienceDegree(this HtmlHelper htmlHelper, string rusSurname, string rusInitials, string scienceDegree)
+    {
+      const string nbsp = "&nbsp;";
+      var scienceDegreeOpt = string.IsNullOrWhiteSpace(scienceDegree) ? null : (", " + htmlHelper.Encode(scienceDegree));
+      var html = "<b>" + htmlHelper.Encode(rusSurname) + nbsp + htmlHelper.Encode(rusInitials).Replace(" ", nbsp) + "</b>" + scienceDegreeOpt;
+      if (html.LastOrDefault() != '.')
+        html += '.';
+      return new MvcHtmlString(html);
     }
 
     public static MvcHtmlString PublicationMonth(this HtmlHelper htmlHelper, int number)
