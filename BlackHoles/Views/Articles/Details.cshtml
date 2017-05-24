@@ -43,11 +43,11 @@
   @Html.Partial("AuthorDetailsRus", author)
 }
 
-<div class="with-spasing">
+<div class="with-spacing">
   <b>Аннотация:</b>&nbsp;@Html.DisplayFor(model => model.RusAbstract)
 </div>
 
-<div class="with-spasing">
+<div class="with-spacing">
   <b>Ключевые&nbsp;слова:</b>&nbsp;@Html.DisplayFor(model => model.RusKeywords)
 </div>
 
@@ -60,18 +60,18 @@
   @Html.Partial("AuthorDetailsEnu", author)
 }
 
-<div class="with-spasing">
+<div class="with-spacing">
   <b>Annotation:</b>&nbsp;@Html.DisplayFor(model => model.EnuAbstract)
 </div>
 
-<div class="with-spasing">
+<div class="with-spacing">
   <b>Keywords:</b>&nbsp;@Html.DisplayFor(model => model.EnuKeywords)
 </div>
 
 <hr />
 
 <h4 class="bold">Список литературы</h4>
-<div class="no-line-break with-spasing">
+<div class="no-line-break with-spacing">
 @Html.DisplayFor(model => model.References)
 </div>
 

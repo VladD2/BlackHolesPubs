@@ -2,7 +2,7 @@
 @using BlackHoles.Entities
 @model Author
 
-<div>
+<div class="with-spacing">
   @Html.MakeAuthorFioAndScienceDegree(Model.RusSurname, Model.RusInitials, Model.ScienceDegree)
   <br />
   <b>Место&nbsp;работы:</b>&nbsp;@Html.EnsureEndWithDot(Model.RusOrgName)
