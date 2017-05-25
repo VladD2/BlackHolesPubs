@@ -22,8 +22,6 @@ namespace BlackHoles.Controllers
   [Authorize]
   public class ArticlesController : Controller
   {
-    const string ReviewTextPrefix = "review-text-";
-    const string ReviewImgPrefix = "review-img-";
     private IssuesDb db = new IssuesDb();
 
     // GET: Articles
@@ -32,7 +30,7 @@ namespace BlackHoles.Controllers
       var userId = User.GetUserId();
       var authors = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User).ToList();
       foreach (var author in authors)
-        FillFilesInfo(author);
+        author.FillFilesInfo(Server.MapPath);
       return View(authors);
     }
 
@@ -69,7 +67,7 @@ namespace BlackHoles.Controllers
     {
       var settings = Settings.Default;
       var isCreating = article.Id == 0;
-      FillPrperties(article);
+      article.FillPrperties(db);
 
       if (string.IsNullOrWhiteSpace(article.AuthorsIds))
         return ContinueEdit(article);
@@ -107,20 +105,19 @@ namespace BlackHoles.Controllers
         db.SaveChanges();
 
         if (articleFile.ContentLength > 0)
-          SeveFile(article, articleFile, null);
+          article.SeveFile(articleFile, null);
 
         if (additionalTextFile.ContentLength > 0)
-          SeveFile(article, additionalTextFile, ReviewTextPrefix);
+          article.SeveFile(additionalTextFile, Server.MapPath, Constants.ReviewTextPrefix);
 
-        TrySeveFiles(article, additionalImg1, additionalImg2, ReviewImgPrefix);
+        article.TrySeveFiles(Server.MapPath, additionalImg1, additionalImg2, Constants.ReviewImgPrefix);
 
         TrySendMessage(article);
 
         return RedirectToAction("Index");
       }
 
-      article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, article.AuthorsIds.ParseToIntArray());
-      return View(article);
+      return ContinueEdit(article);
     }
 
     private void TryAddMessage(Article article)
@@ -187,114 +184,11 @@ namespace BlackHoles.Controllers
     }
 
 
-    private void TrySeveFiles(Article article, HttpPostedFileBase file1, HttpPostedFileBase file2, string prefix = null)
-    {
-      if (file1.ContentLength > 0 && file2.ContentLength == 0)
-        SeveFile(article, file1, prefix);
-      else
-      {
-        SeveFile(article, file1, prefix);
-        SeveFile(article, file2, prefix + "2-");
-      }
-    }
-
-    private void SeveFile(Article article, HttpPostedFileBase file, string prefix = null)
-    {
-      var fullPath = MakeFileName(article, file, prefix);
-      file.SaveAs(fullPath);
-    }
-
-    private string[] GetFileVersions(Article article, string prefix = null)
-    {
-      if (article.Id <= 0)
-        return new string[0];
-
-      var settings = Settings.Default;
-      var authors = GetArticleAuthorsSurnames(article);
-      var filePattern = $"{prefix}{settings.Year}-{settings.Number}-id{article.Id}-v*";
-      var versions = Directory.GetFiles(GetArticleDir(article), filePattern);
-      return versions;
-    }
-
-    private string GetArticleAuthorsSurnames(Article article)
-    {
-      return string.Join("-", article.Authors.Select(a => ValidFileText(a.RusSurname)));
-    }
-
-    private string GetArticleDir(Article article)
-    {
-      var settings = Settings.Default;
-      var articleDir = Server.MapPath($"~/App_Data/UploadedFiles/{settings.Year}/{settings.Number}/{article.Id}/");
-      if (!Directory.Exists(articleDir))
-        Directory.CreateDirectory(articleDir);
-      return articleDir;
-    }
-
-    private string MakeFileName(Article article, HttpPostedFileBase file, string prefix = null)
-    {
-      var settings = Settings.Default;
-      var versions = GetFileVersions(article, prefix);
-      var rx       = new Regex(@"\d{4}-\d-id\d+-v(?<version>\d+)");
-      var version  = versions.Length + 1;
-
-      foreach (var versionFileName in versions)
-      {
-        var res = rx.Match(Path.GetFileName(versionFileName));
-        if (res.Success)
-        {
-          var ver = int.Parse(res.Groups["version"].Value);
-          if (ver + 1 > version)
-            version = ver + 1;
-        }
-      }
-
-      var authors  = GetArticleAuthorsSurnames(article);
-      var ext      = Path.GetExtension(file.FileName);
-      var fileName = $"{prefix}{settings.Year}-{settings.Number}-id{article.Id}-v{version}-{authors}-{article.ShortArtTitles}{ext}";
-      var fullPath = Path.Combine(GetArticleDir(article), fileName);
-      return fullPath;
-    }
-
-    private void FillFilesInfo(Article article)
-    {
-      article.ArticleVersions = GetFileVersions(article).Length;
-      article.ReviewTextVersions = GetFileVersions(article, ReviewTextPrefix).Length;
-      article.ReviewImgVersions = GetFileVersions(article, ReviewImgPrefix).Length;
-    }
-
-    public static string ValidFileText(string text)
-    {
-      var builder = new StringBuilder(text.Length);
-      foreach (var ch in text)
-      {
-        if (char.IsLetterOrDigit(ch))
-          builder.Append(ch);
-        else if (char.IsWhiteSpace(ch) || ch == '_')
-          builder.Append('-');
-      }
-
-      return builder.ToString();
-    }
-
     private ActionResult ContinueEdit(Article article)
     {
-      article.AuthorsViewModel = MakeArticleAuthorsViewModel(article, article.AuthorsIds.ParseToIntArray());
-      FillFilesInfo(article);
+      article.MakeArticleAuthorsViewModel(User, db);
+      article.FillFilesInfo(Server.MapPath);
       return View(article);
-    }
-
-    private void FillPrperties(Article article)
-    {
-      var authorsIds = article.AuthorsIds.ParseToIntArray();
-      if (article.Authors == null)
-        article.Authors = new List<Author>();
-      else
-        article.Authors.Clear();
-      var authors = db.Authors.Where(a => authorsIds.Contains(a.Id)).ToList();
-      article.Authors.AddRange(authors);
-      article.Modified = DateTime.UtcNow;
-      if (article.References != null)
-        article.References = article.References.Trim(' ', '\t', '\r', '\n');
     }
 
     void LoadNestedMessage(Message msg)
@@ -325,13 +219,8 @@ namespace BlackHoles.Controllers
 
       LoadNestedMessage(article);
 
-      var authorsIds = article.Authors.Select(a => a.Id).ToArray();
-      article.AuthorsIds = string.Join(", ", authorsIds);
-
-      ArticleAuthorsViewModel newArticleAuthors = MakeArticleAuthorsViewModel(article, authorsIds);
-      article.AuthorsViewModel = newArticleAuthors;
-      FillFilesInfo(article);
-      return View(article);
+      article.MakeAuthorsIds();
+      return ContinueEdit(article);
     }
 
     private void LoadNestedMessage(Article article)
@@ -373,7 +262,7 @@ namespace BlackHoles.Controllers
 
     private ActionResult EditImpl(Article article)
     {
-      FillPrperties(article);
+      article.FillPrperties(db);
 
       DbUtils.Revalidate(this, article);
 
@@ -385,15 +274,15 @@ namespace BlackHoles.Controllers
         HttpPostedFileBase additionalImg2 = Request.Files[3];
 
         if (articleFile.ContentLength > 0)
-          SeveFile(article, articleFile, null);
+          article.SeveFile(articleFile, null);
 
         if (additionalTextFile.ContentLength > 0)
-          SeveFile(article, additionalTextFile, ReviewTextPrefix);
+          article.SeveFile(additionalTextFile, Server.MapPath, Constants.ReviewTextPrefix);
 
         if (!CheckFiles(additionalImg1, additionalImg2))
           return ContinueEdit(article);
 
-        TrySeveFiles(article, additionalImg1, additionalImg2, ReviewImgPrefix);
+        article.TrySeveFiles(Server.MapPath, additionalImg1, additionalImg2, Constants.ReviewImgPrefix);
 
         TryAddMessage(article);
 
@@ -420,16 +309,6 @@ namespace BlackHoles.Controllers
         return HttpNotFound();
       }
       return View(article);
-    }
-
-    private ArticleAuthorsViewModel MakeArticleAuthorsViewModel(Article article, int[] authorsIds)
-    {
-      var query = db.Authors.FilterByOwner(User);
-      if (authorsIds != null && authorsIds.Length != 0)
-        query = query.Where(a => !authorsIds.Contains(a.Id));
-      var other = query.ToList();
-      var newArticleAuthors = new ArticleAuthorsViewModel() { ArticleAuthors = article.Authors ?? new List<Author>(), AvailableAuthors = other };
-      return newArticleAuthors;
     }
 
     // POST: Articles/Delete/5
