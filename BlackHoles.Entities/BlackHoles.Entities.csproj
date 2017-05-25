@@ -53,15 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Article.cs" />
-    <Compile Include="ArticleStatus.cs" />
-    <Compile Include="Author.cs" />
-    <Compile Include="ApplicationUser.cs" />
-    <Compile Include="ArticleAuthorsViewModel.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Error.cs" />
-    <Compile Include="Issue.cs" />
-    <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlackHoles.Entities
+namespace BlackHoles.Models
 {
   public class Issue
   {

@@ -195,6 +195,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\Article.cs" />
+    <Compile Include="Models\ArticleAuthorsViewModel.cs" />
+    <Compile Include="Models\ArticleStatus.cs" />
+    <Compile Include="Models\Author.cs" />
+    <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\Issue.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -351,12 +360,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BlackHoles.Entities\BlackHoles.Entities.csproj">
-      <Project>{a6f3b33e-ae63-40c7-8e65-c50fe2690325}</Project>
-      <Name>BlackHoles.Entities</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

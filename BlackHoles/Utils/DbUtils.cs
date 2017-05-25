@@ -1,5 +1,4 @@
 ﻿using BlackHoles.DataContexts;
-using BlackHoles.Entities;
 using BlackHoles.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -14,21 +13,21 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
-    public static IQueryable<Article> FilterByOwner(this IQueryable<Article> query, IPrincipal user)
+    public static IQueryable<Article> FilterByOwner(this IQueryable<Article> query, IPrincipal user, string role = Constants.EditorRole)
     {
       var userId = user.GetUserId();
 
-      if (!user.IsInRole(Constants.AdminRole))
+      if (!user.IsInRole(role))
         query = query.Where(a => a.OwnerId == userId);
 
       return query;
     }
 
-    public static IQueryable<Author> FilterByOwner(this IQueryable<Author> query, IPrincipal user)
+    public static IQueryable<Author> FilterByOwner(this IQueryable<Author> query, IPrincipal user, string role = Constants.EditorRole)
     {
       var userId = user.GetUserId();
 
-      if (!user.IsInRole(Constants.AdminRole))
+      if (!user.IsInRole(role))
         query = query.Where(a => a.OwnerId == userId);
 
       return query;

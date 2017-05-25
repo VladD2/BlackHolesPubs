@@ -1,5 +1,4 @@
-﻿using BlackHoles.Entities;
-using BlackHoles.Models;
+﻿using BlackHoles.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -39,8 +38,7 @@ namespace BlackHoles.DataContexts
       base.OnModelCreating(modelBuilder);
     }
 
-    public System.Data.Entity.DbSet<BlackHoles.Entities.Issue> Issues { get; set; }
-
-    public System.Data.Entity.DbSet<BlackHoles.Entities.Message> Messages { get; set; }
+    public DbSet<Issue> Issues { get; set; }
+    public DbSet<Message> Messages { get; set; }
   }
 }

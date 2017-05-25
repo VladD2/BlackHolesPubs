@@ -7,9 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BlackHoles.DataContexts;
-using BlackHoles.Entities;
 using BlackHoles.Utils;
 using AutoMapper;
+using BlackHoles.Models;
 
 namespace BlackHoles.Controllers
 {
@@ -122,7 +122,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author = db.Authors.FilterByOwner(User).First(a => a.Id == id);
+      Author author = db.Authors.FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
       if (author == null)
       {
         return HttpNotFound();
@@ -135,7 +135,7 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult DeleteConfirmed(int id)
     {
-      Author author = db.Authors.FilterByOwner(User).First(a => a.Id == id);
+      Author author = db.Authors.FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
       db.Authors.Remove(author);
       db.SaveChanges();
       return RedirectToAction("Index");

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BlackHoles.Entities
+namespace BlackHoles.Models
 {
   public enum ArticleStatus
   {

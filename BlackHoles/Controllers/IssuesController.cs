@@ -7,7 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BlackHoles.DataContexts;
-using BlackHoles.Entities;
+using BlackHoles.Models;
 
 namespace BlackHoles.Controllers
 {
