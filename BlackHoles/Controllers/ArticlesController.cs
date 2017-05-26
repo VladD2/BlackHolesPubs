@@ -38,9 +38,8 @@ namespace BlackHoles.Controllers
     public ActionResult Details(int? id)
     {
       if (id == null)
-      {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-      }
+
       Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors.Select(x => x.Owner)).Include(a => a.Authors).Include(a => a.Owner)
         .FilterByOwner(User)
         .SingleOrDefault(a => a.Id == id);
@@ -49,6 +48,40 @@ namespace BlackHoles.Controllers
         return HttpNotFound();
       }
       return View(article);
+    }
+
+    // GET: Articles/Doc/5
+    public ActionResult Doc(int? id)
+    {
+      return GetFile(id);
+    }
+
+    // GET: Articles/Doc/5
+    public ActionResult ReviewTxt(int? id)
+    {
+      return GetFile(id, Constants.ReviewTextPrefix);
+    }
+
+    // GET: Articles/Doc/5
+    public ActionResult ReviewImg(int? id)
+    {
+      return GetFile(id, Constants.ReviewImgPrefix);
+    }
+
+    private ActionResult GetFile(int? id, string prefix = null)
+    {
+      if (id == null)
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+      Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors.Select(x => x.Owner)).Include(a => a.Authors).Include(a => a.Owner)
+        .FilterByOwner(User)
+        .SingleOrDefault(a => a.Id == id);
+
+      var path = article.GetNameForLatestFileVersion(Server.MapPath, prefix);
+      var ext = Path.GetExtension(path);
+      var name = Path.GetFileName(path);
+      var contentType = "application/" + ext.TrimStart('.');
+      return File(path, contentType, name);
     }
 
     // GET: Articles/Create
@@ -274,7 +307,7 @@ namespace BlackHoles.Controllers
         HttpPostedFileBase additionalImg2 = Request.Files[3];
 
         if (articleFile.ContentLength > 0)
-          article.SeveFile(articleFile, null);
+          article.SeveFile(articleFile, Server.MapPath);
 
         if (additionalTextFile.ContentLength > 0)
           article.SeveFile(additionalTextFile, Server.MapPath, Constants.ReviewTextPrefix);

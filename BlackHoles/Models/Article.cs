@@ -12,11 +12,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BlackHoles.Models
 {
   public class Article
   {
+    private const string FilePattern = @"\d{4}-\d-id\d+-v(?<version>\d+)";
+
     [Key]
     public int Id { get; set; }
 
@@ -100,8 +103,8 @@ namespace BlackHoles.Models
 
     [NotMapped]
     [Range(typeof(bool), "true", "true", ErrorMessage = "Без подтверждения согласия вы не можете добавить запрос на публикацию статьи!")]
-    //[RegularExpression("true", ErrorMessage = "Вы обязаны принять условия, чтобы добавить запрос на публикацию статьи!")]
     public bool Agreed { get; set; }
+
 
     public string GetAuthorsBriefFios()
     {
@@ -154,10 +157,15 @@ namespace BlackHoles.Models
       return string.Join("-", this.Authors.Select(a => ValidFileText(a.RusSurname)));
     }
 
-    private string GetArticleDir(Func<string, string> mapPath)
+    public static string GetFilesRootPath(int id)
     {
       var settings = Settings.Default;
-      var articleDir = mapPath($"~/App_Data/UploadedFiles/{settings.Year}/{settings.Number}/{this.Id}/");
+      return $"~/App_Data/UploadedFiles/{settings.Year}/{settings.Number}/{id}/";
+    }
+
+    private string GetArticleDir(Func<string, string> mapPath)
+    {
+      var articleDir = mapPath(GetFilesRootPath(this.Id));
       if (!Directory.Exists(articleDir))
         Directory.CreateDirectory(articleDir);
       return articleDir;
@@ -180,11 +188,36 @@ namespace BlackHoles.Models
       file.SaveAs(fullPath);
     }
 
+    private string GetVirtualPath(Func<string, string> mapPath, string localPath)
+    {
+      string rootpath = mapPath("~/");
+
+      localPath = localPath.Replace(rootpath, "");
+      localPath = localPath.Replace("\\", "/");
+
+      return "../../" + localPath;
+    }
+
+    public string GetUrl(Func<string, string> mapPath, string prefix = null)
+    {
+      var path = GetNameForLatestFileVersion(mapPath, prefix);
+      return GetVirtualPath(mapPath, path);
+    }
+
+    public string GetNameForLatestFileVersion(Func<string, string> mapPath, string prefix = null)
+    {
+      var settings = Settings.Default;
+      var versions = GetFileVersions(mapPath, prefix);
+      var rx = new Regex(FilePattern);
+
+      return versions.Max();
+    }
+
     public string MakeFileName(HttpPostedFileBase file, Func<string, string> mapPath, string prefix = null)
     {
       var settings = Settings.Default;
       var versions = GetFileVersions(mapPath, prefix);
-      var rx = new Regex(@"\d{4}-\d-id\d+-v(?<version>\d+)");
+      var rx = new Regex(FilePattern);
       var version = versions.Length + 1;
 
       foreach (var versionFileName in versions)
