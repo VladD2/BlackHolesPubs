@@ -26,7 +26,7 @@
           <li><i class="icon-home icon-white"></i>@Html.ActionLink("Начальная страница", "Index", "Home")</li>
           <li><i class="icon-user icon-white"></i>@Html.ActionLink("Авторы", "Index", "Authors")</li>
           <li><i class="icon-file icon-white"></i>@Html.ActionLink("Статьи", "Index", "Articles")</li>
-          <li>@Html.ActionLink("Контакты",           "Contact", "Home")</li>
+          <li>@Html.ActionLink("Контакты", "Contact", "Home")</li>
         </ul>
         @Html.Partial("_LoginPartial")
       </div>
@@ -41,23 +41,8 @@
   @Scripts.Render("~/bundles/bootstrap")
   @Scripts.Render("~/Scripts/rx.js")
   @Scripts.Render("~/Scripts/rx.jquery.js")
-  @RenderSection("scripts", required: false)
   @Scripts.Render("~/Scripts/YandexTranslate.js")
-  <script>
-      // extend jquery range validator to work for required checkboxes
-      var defaultRangeValidator = $.validator.methods.range;
-      $.validator.methods.range = function (value, element, param)
-      {
-        if (element.type === 'checkbox')
-        {
-          // if it's a checkbox return true if it is checked
-          return element.checked;
-        } else
-        {
-          // otherwise run the default validation function
-          return defaultRangeValidator.call(this, value, element, param);
-        }
-      }
-  </script>
+  @RenderSection("scripts", required: false)
+  @RenderSection("ExtendJqueryRangeValidator", required: false)
 </body>
 </html>

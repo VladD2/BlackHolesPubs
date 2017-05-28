@@ -87,6 +87,7 @@ namespace BlackHoles.Controllers
     // GET: Articles/Create
     public ActionResult Create()
     {
+      ViewBag.Create = true;
       var newArticle = new Article();
       return ContinueEdit(newArticle);
     }
@@ -98,6 +99,7 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed")] Article article)
     {
+      ViewBag.Create = true;
       var settings = Settings.Default;
       var isCreating = article.Id == 0;
       article.FillPrperties(db);
@@ -137,8 +139,10 @@ namespace BlackHoles.Controllers
         db.Articles.Add(article);
         db.SaveChanges();
 
+        ViewBag.Create = false;
+
         if (articleFile.ContentLength > 0)
-          article.SeveFile(articleFile, null);
+          article.SeveFile(articleFile, Server.MapPath);
 
         if (additionalTextFile.ContentLength > 0)
           article.SeveFile(additionalTextFile, Server.MapPath, Constants.ReviewTextPrefix);
@@ -221,7 +225,7 @@ namespace BlackHoles.Controllers
     {
       article.MakeArticleAuthorsViewModel(User, db);
       article.FillFilesInfo(Server.MapPath);
-      return View(article);
+      return View("ArticleView", article);
     }
 
     void LoadNestedMessage(Message msg)
@@ -241,6 +245,8 @@ namespace BlackHoles.Controllers
     {
       if (id == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+      ViewBag.Create = false;
 
       var article = db.Articles
         .Include(a => a.Authors)
@@ -269,6 +275,8 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed,Status")] Article article)
     {
+      ViewBag.Create = false;
+
       var userId = User.GetUserId();
       var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue)
                    .FilterByOwner(User).SingleOrDefault(a => a.Id == article.Id);
@@ -323,7 +331,7 @@ namespace BlackHoles.Controllers
 
         TrySendMessage(article);
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Details", new { id = article.Id });
       }
 
       return ContinueEdit(article);
@@ -405,6 +413,8 @@ namespace BlackHoles.Controllers
         var article = db.Articles
           .Include(a => a.Messages)
           .Include(a => a.Authors)
+          .Include(a => a.Authors.Select(au => au.Owner))
+          .Include(a => a.Owner)
           .FilterByOwner(User)
           .FirstOrDefault(a => a.Id == comment.ArticleId);
 

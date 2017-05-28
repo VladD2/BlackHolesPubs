@@ -6,7 +6,8 @@
 
 @{
   IssuesDb db = new IssuesDb();
-  var isCreating = ViewBag.Create;
+  var isCreating = (bool)ViewBag.Create;
+  var title = isCreating ? "Создание запроса на публикацию статьи" : "Редактирование запроса на публикацию статьи";
   var isEditor = User.IsInRole(Constants.EditorRole);
 }
 
@@ -252,7 +253,7 @@
 
       <tr>
         <td colspan="3">
-          @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Сохранить" class="btn btn-primary" />
+          @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Сохранить" title="Сохранение и просмотреть результат" class="btn btn-primary" />
         </td>
       </tr>
     </tbody>
@@ -269,4 +270,16 @@
   {
     @: <b>Загрузите файл!</b>
   }
+}
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/Scripts/bootstrap-filestyle.js")
+  @Scripts.Render("~/Scripts/Article.js")
+}
+
+@section ExtendJqueryRangeValidator
+{
+  <script>
+  </script>
 }

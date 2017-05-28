@@ -8,6 +8,18 @@ function attachEvents()
   $('#availableAuthorsComboBox').on("change", onChange);
   $('#authors').on("click", "a", onRemoveAuthor);
   $('#uploadArticle').on('click', onUploadArticle);
+
+  // extend jquery range validator to work for required checkboxes
+  var defaultRangeValidator = $.validator.methods.range;
+  $.validator.methods.range = validatorRange;
+}
+
+function validatorRange(value, element, param)
+{
+  if (element.type === 'checkbox')
+    return element.checked; // if it's a checkbox return true if it is checked
+  else
+    return defaultRangeValidator.call(this, value, element, param); // otherwise run the default validation function
 }
 
 function updateAuthors(authorIds)

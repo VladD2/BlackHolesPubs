@@ -1,4 +1,5 @@
-﻿@using System.Web.Mvc.Html;
+﻿@using BlackHoles;
+@using System.Web.Mvc.Html;
 @using System.Web.Mvc;
 
 @helper TableRowButtons(object routeValues)
@@ -6,13 +7,16 @@
   <td nowrap>
     <a href='@Url.Action("Edit",    routeValues)' class="btn btn-primary btn-xs" title = "Изменить" ><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
     <a href='@Url.Action("Details", routeValues)' class="btn btn-primary btn-xs" title = "Просмотор"><img width="20" height="20" src='@Url.Content("~/Images/View-white.svg")' /></a>
-    <a href='@Url.Action("Delete",  routeValues)' class="btn btn-primary btn-xs" title = "Удалить"  ><img width="20" height="20" src='@Url.Content("~/Images/Delete-white.svg")' /></a>
+    @if (!User.IsInRole(Constants.EditorRole) || User.IsInRole(Constants.AdminRole))
+    {
+      <a href='@Url.Action("Delete", routeValues)' class="btn btn-primary btn-xs" title = "Удалить"  ><img width="20" height="20" src='@Url.Content("~/Images/Delete-white.svg")' /></a>
+    }
   </td>
 }
 
 @helper BackButton()
 {
-  <a href='@Url.Action("Index")' class="btn btn-primary" title="Назад"><img width="20" height="20" src='@Url.Content("~/Images/Back-white.svg")'/></a>
+  <a href='@Url.Action("Index")' class="btn btn-primary" title="Назад (без сохранения)"><img width="20" height="20" src='@Url.Content("~/Images/Back-white.svg")'/></a>
 }
 
 @helper AutoTranslate(string fieldName)

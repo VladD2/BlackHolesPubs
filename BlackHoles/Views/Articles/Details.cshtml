@@ -13,6 +13,10 @@
   ViewBag.Title = "Сводная информация о статье";
 }
 
+<a href='@Url.Action("Edit", new { id = Model.Id })' class="btn btn-primary" title="Изменить"><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
+@Shared.BackButton()
+<a href='@Url.Action("Index", "Home")' class="btn btn-primary" title="Перейти к главной странице"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+
 <div>
   <dl class="dl-horizontal">
     <dt>Идентификатор:</dt>
@@ -34,9 +38,18 @@
     <dd>@Html.DisplayFor(model => model.Specialty)</dd>
 
     <dt>Последние версии файлов:</dt>
-    <dd>@Html.ActionLink("статья", "Doc",                 new { id = Model.Id }) |
-        @Html.ActionLink("рецензия (текст)", "ReviewTxt", new { id = Model.Id }) |
-        @Html.ActionLink("рецензия (фото)",  "ReviewImg", new { id = Model.Id })
+    @{
+      var docUrl = Url.Action("Doc", new { id = Model.Id });
+    }
+    <dd><a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a>
+      @if (Model.ReviewTextVersions > 0)
+      {
+        @: | <a href="@Url.Action("ReviewTxt", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (текст)</a>
+      }
+      @if (Model.ReviewImgVersions > 0)
+      {
+        @: | <a href="@Url.Action("ReviewImg", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (фото)</a>
+      } 
     </dd>
 </dl>
 </div>
