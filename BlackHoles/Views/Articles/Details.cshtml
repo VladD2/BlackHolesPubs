@@ -37,19 +37,29 @@
     <dt>@Html.DisplayNameFor(model => model.Specialty):</dt>
     <dd>@Html.DisplayFor(model => model.Specialty)</dd>
 
-    <dt>Последние версии файлов:</dt>
+    <dt>Файлов:</dt>
     @{
       var docUrl = Url.Action("Doc", new { id = Model.Id });
     }
     <dd><a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a>
+      |
       @if (Model.ReviewTextVersions > 0)
       {
-        @: | <a href="@Url.Action("ReviewTxt", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (текст)</a>
+        <a href="@Url.Action("ReviewTxt", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (текст)</a>
       }
+      else
+      {
+        <span class="label label-danger">рецензия (текст) не загружена!</span>
+      }
+      |
       @if (Model.ReviewImgVersions > 0)
       {
-        @: | <a href="@Url.Action("ReviewImg", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (фото)</a>
-      } 
+        <a href="@Url.Action("ReviewImg", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (фото)</a>
+      }
+      else
+      {
+        <span class="label label-danger">рецензия (фото) не загружена!</span>
+      }
     </dd>
 </dl>
 </div>

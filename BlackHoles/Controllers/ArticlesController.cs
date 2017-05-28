@@ -28,10 +28,10 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      var authors = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User).ToList();
-      foreach (var author in authors)
-        author.FillFilesInfo(Server.MapPath);
-      return View(authors);
+      var articles = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User).ToList();
+      foreach (var article in articles)
+        article.FillFilesInfo(Server.MapPath);
+      return View(articles);
     }
 
     // GET: Articles/Details/5
@@ -43,10 +43,12 @@ namespace BlackHoles.Controllers
       Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors.Select(x => x.Owner)).Include(a => a.Authors).Include(a => a.Owner)
         .FilterByOwner(User)
         .SingleOrDefault(a => a.Id == id);
+
       if (article == null)
-      {
         return HttpNotFound();
-      }
+
+      article.FillFilesInfo(Server.MapPath);
+
       return View(article);
     }
 
