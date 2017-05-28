@@ -44,23 +44,39 @@ namespace BlackHoles
     {
       var context = new IssuesDb();
 
-      var user = context.Users.Where(u => u.UserName == "vc@rsdn.ru").FirstOrDefault();
-      if (user == null)
-        return;
 
       var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
       var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-      CreateRole(user, roleManager, UserManager, Constants.AdminRole);
-      CreateRole(user, roleManager, UserManager, Constants.EditorRole);
+      var editor1 = GetUser(context, "alxletur@gmail.com");
+      if (editor1 != null)
+        AddRole(editor1, roleManager, UserManager, Constants.EditorRole);
+
+      var editor2 = GetUser(context, "bp2702@yandex.ru");
+      if (editor2 != null)
+        AddRole(editor2, roleManager, UserManager, Constants.EditorRole);
+
+      var editor3 = GetUser(context, "vc@rsdn.ru");
+      if (editor3 != null)
+      {
+        RemoveRole(editor3, roleManager, UserManager, Constants.AdminRole);
+        AddRole(editor3, roleManager, UserManager, Constants.EditorRole);
+      }
+
+      var admin = GetUser(context, "vladdq@ya.ru");
+      if (admin != null)
+      {
+        AddRole(admin, roleManager, UserManager, Constants.AdminRole);
+        AddRole(admin, roleManager, UserManager, Constants.EditorRole);
+      }
     }
 
-    private void CreateRole(ApplicationUser user, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, object editor)
+    private static ApplicationUser GetUser(IssuesDb context, string email)
     {
-      throw new NotImplementedException();
+      return context.Users.Where(u => u.Email == email).SingleOrDefault();
     }
 
-    private static void CreateRole(ApplicationUser user, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> UserManager, string roleName)
+    private static void AddRole(ApplicationUser user, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> UserManager, string roleName)
     {
       if (!roleManager.RoleExists(roleName))
       {
@@ -70,6 +86,19 @@ namespace BlackHoles
       if (!UserManager.IsInRole(user.Id, roleName))
       {
         var result = UserManager.AddToRole(user.Id, roleName);
+      }
+    }
+
+    private static void RemoveRole(ApplicationUser user, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> UserManager, string roleName)
+    {
+      if (!roleManager.RoleExists(roleName))
+      {
+        var role = new IdentityRole() { Name = roleName };
+        roleManager.Create(role);
+      }
+      if (UserManager.IsInRole(user.Id, roleName))
+      {
+        var result = UserManager.RemoveFromRole(user.Id, roleName);
       }
     }
   }
