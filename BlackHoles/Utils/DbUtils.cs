@@ -13,6 +13,13 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
+    public static int AuthorComparison(Author a, Author b)
+    {
+      var res = a.RusSurname.CompareTo(b.RusSurname);
+
+      return res == 0 ? a.RusInitials.CompareTo(b.RusInitials) : res;
+    }
+
     public static IQueryable<Article> FilterByOwner(this IQueryable<Article> query, IPrincipal user, string role = Constants.EditorRole)
     {
       var userId = user.GetUserId();

@@ -21,7 +21,7 @@ namespace BlackHoles.Controllers
     // GET: Authors
     public ActionResult Index()
     {
-      return View(db.Authors.Include(a => a.Owner).FilterByOwner(User).ToList());
+      return View(db.Authors.Include(a => a.Owner).FilterByOwner(User).OrderBy(a => a.RusSurname).ToList());
     }
 
     // GET: Authors/Details/5

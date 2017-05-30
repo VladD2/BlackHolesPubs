@@ -6,6 +6,17 @@
 <div style="max-width: 1200px; margin: auto;">
   <h2>Авторы</h2>
 
+  @if (User.IsInRole(Constants.EditorRole))
+  {
+    var count = Model.Count();
+    <div>
+      <dl class="dl-horizontal">
+        <dt>Количество авторов:</dt>
+        <dd>@count</dd>
+      </dl>
+    </div>
+  }
+
   <p>Доавьте сюда авторов которые будут использоваться в публикуемых вами статьях.</p>
 
   @Html.ActionLink("Добавить автора", "Create", null, new { @class = "btn btn-primary", style = "margin-bottom: 10px;" })

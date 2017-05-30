@@ -341,6 +341,7 @@
     <Content Include="Views\Shared\AuthorDetailsRus.cshtml" />
     <Content Include="Views\Shared\AuthorDetailsEnu.cshtml" />
     <Content Include="Views\Home\Oferta.cshtml" />
+    <Content Include="Views\Home\Requirements.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

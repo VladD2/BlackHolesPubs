@@ -28,9 +28,13 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      var articles = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User).ToList();
+      var articles = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User)
+        .OrderByDescending(a => a.Status).ThenBy(a => a.Authors.Min(au => au.RusSurname)).ToList();
       foreach (var article in articles)
+      {
         article.FillFilesInfo(Server.MapPath);
+        article.Authors.Sort(DbUtils.AuthorComparison);
+      }
       return View(articles);
     }
 
@@ -48,6 +52,7 @@ namespace BlackHoles.Controllers
         return HttpNotFound();
 
       article.FillFilesInfo(Server.MapPath);
+      article.Authors.Sort(DbUtils.AuthorComparison);
 
       return View(article);
     }
@@ -260,6 +265,7 @@ namespace BlackHoles.Controllers
 
       LoadNestedMessage(article);
 
+      article.Authors.Sort(DbUtils.AuthorComparison);
       article.MakeAuthorsIds();
       return ContinueEdit(article);
     }

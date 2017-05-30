@@ -10,6 +10,26 @@
 <div style="max-width: 1200px; margin: auto;">
   <h2>@title</h2>
 
+  @if (User.IsInRole(Constants.EditorRole))
+  {
+    var articles = Model.ToList();
+    <div>
+      <dl class="dl-horizontal">
+        <dt>Всего статей:</dt>
+        <dd>@articles.Count</dd>
+
+        <dt>Принятых статей:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.Accepted)</dd>
+
+        <dt>Требует проверки:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification)</dd>
+
+        <dt>С ошибками:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.HasArrors)</dd>
+      </dl>
+    </div>
+  }
+
   <p>
     @Html.ActionLink("Доабавить статью", "Create", null, new { @class = "btn btn-primary" })
   </p>
