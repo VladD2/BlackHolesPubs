@@ -340,6 +340,7 @@
     <Content Include="Views\Articles\Details.cshtml" />
     <Content Include="Views\Shared\AuthorDetailsRus.cshtml" />
     <Content Include="Views\Shared\AuthorDetailsEnu.cshtml" />
+    <Content Include="Views\Home\Oferta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

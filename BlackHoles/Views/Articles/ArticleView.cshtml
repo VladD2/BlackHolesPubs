@@ -94,7 +94,7 @@
           @Html.EditorFor(model => model.ShortArtTitles, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.ShortArtTitles, "", new { @class = "text-danger" })
         </td>
-        <td>Краткое (сокращенное) название статьи. Оно будет использоваться для отображения в списка, для именования файла статьи и колонтитуле. 
+        <td>Краткое (сокращенное) название статьи. Оно будет использоваться для отображения в списках, для именования файла статьи и в колонтитуле. 
             Недопускается использовать символы: <code>\</code>, <code>/</code>, <code>:</code>, <code>|</code>,
           <code>&lt;</code>, <code>&gt;</code>, <code>?</code>, <code>"</code> и <code>*</code>.</td>
       </tr>
@@ -118,7 +118,8 @@
           @Html.EditorFor(model => model.RusKeywords, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.RusKeywords, "", new { @class = "text-danger" })
         </td>
-        <td>2-6 слов/словосочетаний) разделенные точкой с запятой или запятой (не смешивать!). Ключевые слова не должны быть предложениями содержащими множество слов. Оптимально 1-3 слова. <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati" target="_blank">Подробнее</a>.
+        <td>2-6 слов/словосочетаний разделенных точкой с запятой или запятой (не смешивать!). Ключевые слова <b>не должны быть предложениями</b> содержащими множество слов. 
+        Оптимально 1-4 слова. <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati" target="_blank">Подробнее</a>.
         </td>
       </tr>
 
@@ -130,7 +131,7 @@
         </td>
         <td>
           Каждое вхождение в списке должно отделяться новой строкой. Список должен быть пронумерован с еденицы. 
-          <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Рекомендации</a> по цитированию и сноскам.
+          <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Требования</a> по цитированию и сноскам.
         </td> 
       </tr>
 
@@ -187,14 +188,15 @@
         </td>
         <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литераруры, информации об авторах и т.п.). 
         Допустимые форматы: <code>.doc</code> - MS Word 97-2003 (предпочтительный формат), <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. 
-        <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Рекомендации</a> по сноскам/цитатам.</td>
+        <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Требования</a> по сноскам/цитатам.</td>
       </tr>
       <tr>
         <td>@Html.Label("Текст рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
         <input type="file" name="additionalTextFile" id="additionalText" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (текст)..." />
         </td>
-        <td>Рецензия в текстовом виде: <code>.doc</code>, <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. Это не должно быть изображение помещенное в .doc.</td>
+        <td>Рецензия в текстовом виде: <code>.doc</code>, <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. Это не должно быть изображение помещенное в .doc.
+          Это поле может быть заполнено впоследствии (если рецензии пока нет).</td>
       </tr>
       <tr>
         <td>@Html.Label("Фото/скан рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
@@ -205,7 +207,7 @@
         </td>
         <td>Рецензия в виде изобраения: <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. 
         Желательно, чтобы это был один файл. Если у вас два файла, добавьте второй файл в поле ниже.
-        Если файл один, не заполняйте нижнее поле.</td>
+        <b>Если файл один</b>, не заполняйте нижнее поле.  Это поле может быть заполнено впоследствии (если рецензии пока нет).</td>
       </tr>
 
       <tr>
@@ -215,10 +217,10 @@
               @Html.CheckBoxFor(m => m.Agreed) Авторы статьи <span class="labelx label2-important">ознакомились</span> 
               с <a href="http://www.k-press.ru/bh/requirements.htm" target="_blank">требованиями к статьям</a>,
               <a href="http://www.k-press.ru/bh/conditions.htm" target="_blank">порядком и условиями публикации статей, правами и обязанностями авторов</a>,
-              <a href="http://www.k-press.ru/bh/oferta.html" target="_blank">публичнаой офертой</a>, 
+              <a href='@Url.Action("Oferta", "Home")' target="_blank">публичнаой офертой</a>, 
               <span class="labelx label2-agree">согласны</span> с описанными по приведенным ссылкам уловиями. 
               Устанавливая этот флажок, <span class="labelx label2-important">авторы производят акцепт</span> публичной 
-              <a href="http://www.k-press.ru/bh/oferta.html" target="_blank">оферты</a>, и <span class="labelx label2-agree">соглашаются</span> 
+              <a href="@Url.Action("Oferta", "Home")" target="_blank">оферты</a>, и <span class="labelx label2-agree">соглашаются</span> 
               на обработку своих персональных данных.
             </label>
           </div>

@@ -7,10 +7,11 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.WebPages;
 
 namespace BlackHoles.Utils
 {
-  public static class DisplayExtensions
+  public static class BlackHolesExtensions
   {
     public static string GetDisplayName(this Enum enumValue)
     {
@@ -72,15 +73,26 @@ namespace BlackHoles.Utils
       return attr;
     }
 
+    public static string Action(this WebViewPage page, string actionName, string controllerName, object routeValue = null)
+    {
+      return Action(page.Request, page.Url, actionName, controllerName, routeValue);
+    }
+
     public static string Action(this Controller controller, string actionName, string controllerName, object routeValue = null)
     {
+      return Action(controller.Request, controller.Url, actionName, controllerName, routeValue);
+    }
+
+    public static string Action(HttpRequestBase request, UrlHelper url, string actionName, string controllerName, object routeValue)
+    {
       var dict = routeValue == null ? new RouteValueDictionary() : new RouteValueDictionary(routeValue);
-      var referrer = controller.Request.UrlReferrer;
+      var uri = request.Url;
+      var referrer = request.UrlReferrer ?? uri;
       var host = referrer.Host;
       var port = referrer.Port == 80 ? "" : (":" + referrer.Port);
       var protocol = referrer.Scheme;
-      var localUrl = controller.Url.Action(actionName, controllerName, dict);
-      var result = $"{protocol}://{host}{localUrl}";
+      var localUrl = url.Action(actionName, controllerName, dict);
+      var result = $"{protocol}://{host}{port}{localUrl}";
       return result;
     }
   } // class
