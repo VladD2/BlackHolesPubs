@@ -30,7 +30,7 @@
 
   @if (Model.AvailableAuthors.Count > 0)
   {
-    <div class="text-primary small">Выберите автора, чтобы добавить его в статью: @Html.DropDownList("availableAuthorsComboBox", GetAuthors(Model.AvailableAuthors))</div>
+    <div class="text-primary small">Выберите автора, чтобы добавить его в статью: @Html.DropDownList("availableAuthorsComboBox", GetAuthors(Model.AvailableAuthors), new { @class = "form-control" })</div>
   }
   else if (Model.ArticleAuthors.Count == 0)
   {

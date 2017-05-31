@@ -1,0 +1,36 @@
+﻿
+@{ ViewBag.Title = "PaymentDetails"; }
+
+<h3 class="text-center bold">Реквизиты для оплаты за публикацию в журнале @Constants.Jur</h3>
+
+@Shared.FreePublication()
+
+<table>
+  <tr>
+    <td align="right" valign="top">
+      <b>Сумма:</b>
+    </td>
+    <td><A href="http://www.k-press.ru/bh/Prices.asp">Стоимость публикации доступна по этой ссылке (нажмите сюда, чтобы перейти)</A></td>
+  </tr>
+  <tr>  <td align="right"><b>Получатель:</b></td>         <td>ООО «К-Пресс»</td> </tr>
+  <tr>  <td align="right"><b>ИНН:</b></td>                <td>7704563531</td> </tr>
+  <tr>  <td align="right"><b>КПП:</b></td>                <td>770401001</td> </tr>
+  <tr>  <td align="right"><b>Расчетный&nbsp;счет:</b></td>     <td>40702810738090117201</td> </tr>
+  <tr>  <td align="right"><b>в&nbsp;банке:</b></td>            <td>Сбербанк России. г. Москва, Мещанское отделение № 7811/068. г. Москва</td> </tr>
+  <tr>  <td align="right"><b>БИК:</b></td>                <td>044525225</td> </tr>
+  <tr>  <td align="right"><b>кор.счет:</b></td>          <td>30101810400000000225</td> </tr>
+  <tr>
+    <td align="right"><b>Основание&nbsp;платежа:</b></td>
+    <td>
+      за публикацию в ЧД №
+      <font color="red">[номер журнала]</font>
+      <font color="red">[год жунала]</font>,
+      <font color="red">[Фамилия Имя Отчество автора(ов)].</font>
+      <i>Если нужен экземпляр журнала (бумажная версия):</i>
+      <font color="red">[Индекс],</font>
+      <font color="red">[Адрес].</font>
+    </td>
+  </tr>
+  <tr>  <td align="right"><b>Тип операции:</b></td>      <td>Платежи в пользу юридического лица</td> </tr>
+</table>
+

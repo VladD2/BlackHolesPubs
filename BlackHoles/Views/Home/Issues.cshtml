@@ -1,0 +1,42 @@
+﻿@using BlackHoles
+@using BlackHoles.Properties
+@using BlackHoles.Utils
+@using System.IO
+
+@{
+  var path = Path.GetFullPath(Path.Combine(Server.MapPath("~/"), ".."));
+  var dirs = Directory.EnumerateDirectories(path)
+    .Where(d => DbUtils.IsYear(Path.GetFileName(d)))
+    .OrderByDescending(d => int.Parse(Path.GetFileName(d)))
+    .ToArray();
+  const int issuesCount = 6;
+}
+
+<div class="table-responsive">
+  <table cellSpacing=2 cellPadding=2 width="100%" border=0 align="center" style="border-collapse: separate; border-spacing: 2px; border-top: 0px;">
+    <tr>
+      <th class="header">Год</th>
+      <th class="header" colSpan=6>Номера журналов</th>
+    </tr>
+    @foreach (var dir in dirs)
+    {
+      var year = Path.GetFileName(dir);
+      <tr>
+        <td class='header'>&nbsp;@year&nbsp;</td>
+      @for (int i = 1; i <= issuesCount; i++)
+      {
+        var fullPath = Path.Combine(dir, i.ToString());
+        if (Directory.Exists(fullPath))
+        {
+          <td class='tablelink' nowrap><a href="http://www.k-press.ru/bh/@year/@i/toc.asp">@year № @i</a></td>
+        }
+        else
+        {
+          <td class='tablelink'>&nbsp;</td>
+        }
+      }
+    </tr>
+    }
+  </table>
+</div>
+

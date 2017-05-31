@@ -10,8 +10,6 @@ namespace BlackHoles
 {
   public class MvcApplication : System.Web.HttpApplication
   {
-    public const string Jur = "\"«Черные дыры» в Российском законодательстве\"";
-
     protected void Application_Start()
     {
       AreaRegistration.RegisterAllAreas();

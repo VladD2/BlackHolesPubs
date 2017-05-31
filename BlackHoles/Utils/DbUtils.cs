@@ -13,6 +13,12 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
+    public static bool IsYear(string str)
+    {
+      var year = 0;
+      return int.TryParse(str, out year) ? year > 1990 : false;
+    }
+
     public static int AuthorComparison(Author a, Author b)
     {
       var res = a.RusSurname.CompareTo(b.RusSurname);

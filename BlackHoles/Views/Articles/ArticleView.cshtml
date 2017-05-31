@@ -41,33 +41,33 @@
         <td width="50%" colspan="2">
           @{
             var lst = new List<SelectListItem>()
-          {
-            new SelectListItem() { Text="Выберите номер специальности...", Disabled=true, Selected=true },
-            new SelectListItem() { Value="12.00.01", Text="12.00.01 – Теория и история права и государства; история учений о праве и государстве" },
-            new SelectListItem() { Value="12.00.02", Text="12.00.02 – Конституционное право; конституционный судебный процесс; муниципальное право" },
-            new SelectListItem() { Value="12.00.03", Text="12.00.03 – Гражданское право; предпринимательское право; семейное право; международное частное право" },
-            new SelectListItem() { Value="12.00.04", Text="12.00.04 – Финансовое право; налоговое право; бюджетное право" },
-            new SelectListItem() { Value="12.00.05", Text="12.00.05 – Трудовое право; право социального обеспечения" },
-            new SelectListItem() { Value="12.00.06", Text="12.00.06 – Земельное право; природоресурсное право; экологическое право; аграрное право" },
-            new SelectListItem() { Value="12.00.07", Text="12.00.07 – Корпоративное право; энергетическое право" },
-            new SelectListItem() { Value="12.00.08", Text="12.00.08 – Уголовное право и криминология; уголовно - исполнительное право" },
-            new SelectListItem() { Value="12.00.09", Text="12.00.09 – Уголовный процесс" },
-            new SelectListItem() { Value="12.00.10", Text="12.00.10 – Международное право; Европейское право" },
-            new SelectListItem() { Value="12.00.11", Text="12.00.11 – Судебная деятельность, прокурорская деятельность, правозащитная и правоохранительная деятельность" },
-            new SelectListItem() { Value="12.00.12", Text="12.00.12 – Криминалистика; судебно - экспертная деятельность; оперативно - розыскная деятельность" },
-            new SelectListItem() { Value="12.00.13", Text="12.00.13 – Информационное право" },
-            new SelectListItem() { Value="12.00.14", Text="12.00.14 – Административное право; административный процесс" },
-            new SelectListItem() { Value="12.00.15", Text="12.00.15 – Гражданский процесс; арбитражный процесс" },
-          };
+            {
+              new SelectListItem() { Text="Выберите номер специальности...", Disabled=true, Selected=true },
+              new SelectListItem() { Value="12.00.01", Text="12.00.01 – Теория и история права и государства; история учений о праве и государстве" },
+              new SelectListItem() { Value="12.00.02", Text="12.00.02 – Конституционное право; конституционный судебный процесс; муниципальное право" },
+              new SelectListItem() { Value="12.00.03", Text="12.00.03 – Гражданское право; предпринимательское право; семейное право; международное частное право" },
+              new SelectListItem() { Value="12.00.04", Text="12.00.04 – Финансовое право; налоговое право; бюджетное право" },
+              new SelectListItem() { Value="12.00.05", Text="12.00.05 – Трудовое право; право социального обеспечения" },
+              new SelectListItem() { Value="12.00.06", Text="12.00.06 – Земельное право; природоресурсное право; экологическое право; аграрное право" },
+              new SelectListItem() { Value="12.00.07", Text="12.00.07 – Корпоративное право; энергетическое право" },
+              new SelectListItem() { Value="12.00.08", Text="12.00.08 – Уголовное право и криминология; уголовно - исполнительное право" },
+              new SelectListItem() { Value="12.00.09", Text="12.00.09 – Уголовный процесс" },
+              new SelectListItem() { Value="12.00.10", Text="12.00.10 – Международное право; Европейское право" },
+              new SelectListItem() { Value="12.00.11", Text="12.00.11 – Судебная деятельность, прокурорская деятельность, правозащитная и правоохранительная деятельность" },
+              new SelectListItem() { Value="12.00.12", Text="12.00.12 – Криминалистика; судебно - экспертная деятельность; оперативно - розыскная деятельность" },
+              new SelectListItem() { Value="12.00.13", Text="12.00.13 – Информационное право" },
+              new SelectListItem() { Value="12.00.14", Text="12.00.14 – Административное право; административный процесс" },
+              new SelectListItem() { Value="12.00.15", Text="12.00.15 – Гражданский процесс; арбитражный процесс" },
+            };
           }
-          @Html.DropDownListFor(model => model.Specialty, lst, new { htmlAttributes = new { @class = "form-control" } })
+          @Html.DropDownListFor(model => model.Specialty, lst, new { @class = "form-control" })
           @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
         </td>
         @*<td width="40%"></td>*@
       </tr>
 
       <tr>
-        <td colspan="3" class="alert alert-info"><h4>Следующие поля заплняются на <b>русском</b> языке:</h4></td>
+        <td colspan="3" class="alert alert-info"><h4>Следующие поля заполняются на <b>русском</b> языке:</h4></td>
       </tr>
 
       <tr>
@@ -95,7 +95,7 @@
           @Html.ValidationMessageFor(model => model.ShortArtTitles, "", new { @class = "text-danger" })
         </td>
         <td>Краткое (сокращенное) название статьи. Оно будет использоваться для отображения в списках, для именования файла статьи и в колонтитуле. 
-            Недопускается использовать символы: <code>\</code>, <code>/</code>, <code>:</code>, <code>|</code>,
+            Не допускается использовать символы: <code>\</code>, <code>/</code>, <code>:</code>, <code>|</code>,
           <code>&lt;</code>, <code>&gt;</code>, <code>?</code>, <code>"</code> и <code>*</code>.</td>
       </tr>
 
@@ -118,8 +118,8 @@
           @Html.EditorFor(model => model.RusKeywords, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.RusKeywords, "", new { @class = "text-danger" })
         </td>
-        <td>2-6 слов/словосочетаний разделенных точкой с запятой или запятой (не смешивать!). Ключевые слова <b>не должны быть предложениями</b> содержащими множество слов. 
-        Оптимально 1-4 слова. <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati" target="_blank">Подробнее</a>.
+        <td>1-6 слов/словосочетаний разделенных точкой с запятой или запятой (не смешивать!). Ключевые слова <b>не должны быть предложениями</b>, содержащими множество слов. 
+        <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati" target="_blank">Подробнее</a>.
         </td>
       </tr>
 
@@ -130,13 +130,13 @@
           @Html.ValidationMessageFor(model => model.References, "", new { @class = "text-danger" })
         </td>
         <td>
-          Каждое вхождение в списке должно отделяться новой строкой. Список должен быть пронумерован с еденицы. 
+          Каждое вхождение в списке должно отделяться новой строкой. Список должен быть пронумерован с единицы.  
           <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Требования</a> по цитированию и сноскам.
         </td> 
       </tr>
 
       <tr>
-        <td colspan="3" class="alert alert-info"><h4>Следующие поля заплняются на <b>английском</b> языке:</h4></td>
+        <td colspan="3" class="alert alert-info"><h4>Следующие поля заполняются на <b>английском</b> языке:</h4></td>
       </tr>
 
       <tr>
@@ -186,17 +186,19 @@
           <input type="file" name="articleFile" id="articleFile" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." />
           @Html.ValidationMessage("articleFile", "", new { @class = "text-danger" })
         </td>
-        <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литераруры, информации об авторах и т.п.). 
+        <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литературы, информации об авторах и т.п.). 
         Допустимые форматы: <code>.doc</code> - MS Word 97-2003 (предпочтительный формат), <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. 
-        <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Требования</a> по сноскам/цитатам.</td>
+        @Html.ActionLink("Требования", "Requirements", "Home", null, null, "citation", null, null) по сноскам/цитатам.</td>
       </tr>
       <tr>
         <td>@Html.Label("Текст рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
         <input type="file" name="additionalTextFile" id="additionalText" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (текст)..." />
         </td>
-        <td>Рецензия в текстовом виде: <code>.doc</code>, <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. Это не должно быть изображение помещенное в .doc.
-          Это поле может быть заполнено впоследствии (если рецензии пока нет).</td>
+        <td>
+          @Shared.Review(isFieldDesc: true)
+          <p>Это поле может быть заполнено впоследствии (если рецензии/отзыва пока нет).</p>
+        </td>
       </tr>
       <tr>
         <td>@Html.Label("Фото/скан рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
@@ -205,20 +207,25 @@
           <input type="file" name="additionalImg1" id="additionalImg1" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (фото/скан)..." />
           <input type="file" name="additionalImg2" id="additionalImg2" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите второй файл рецензии (фото/скан)..." />
         </td>
-        <td>Рецензия в виде изобраения: <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. 
-        Желательно, чтобы это был один файл. Если у вас два файла, добавьте второй файл в поле ниже.
-        <b>Если файл один</b>, не заполняйте нижнее поле.  Это поле может быть заполнено впоследствии (если рецензии пока нет).</td>
+        <td>
+          <p>Изображение (фото или скан) рецензии/отзыва (передаваемого в предыдущем поле) в форматах: 
+            <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. 
+            На изображении должны быть подписи рецензентов и печати учреждения.</p>
+          <p>Желательно, чтобы это был один файл. Если у вас два файла (содержащий вторую страницу), добавьте второй файл в поле ниже.
+          <b>Если файл один</b>, не заполняйте нижнее поле. Текст на переданном изображении должен совпадать с текстом, переданным в поле выше.</p>
+          <p>Это поле может быть заполнено впоследствии (если рецензии пока нет).</p>
+        </td>
       </tr>
 
       <tr>
         <td colspan="3">
           <div class="checkbox lead">
             <label>
-              @Html.CheckBoxFor(m => m.Agreed) Авторы статьи <span class="labelx label2-important">ознакомились</span> 
-              с <a href="http://www.k-press.ru/bh/requirements.htm" target="_blank">требованиями к статьям</a>,
-              <a href="http://www.k-press.ru/bh/conditions.htm" target="_blank">порядком и условиями публикации статей, правами и обязанностями авторов</a>,
-              <a href='@Url.Action("Oferta", "Home")' target="_blank">публичнаой офертой</a>, 
-              <span class="labelx label2-agree">согласны</span> с описанными по приведенным ссылкам уловиями. 
+              @Html.CheckBoxFor(m => m.Agreed) Авторы статьи <span class="labelx label2-important">ознакомились</span> с 
+              <a href="@Url.Action("Requirements", "Home")" target="_blank">требованиями к статьям</a>,
+              <a href="@Url.Action("Conditions", "Home")" target="_blank">порядком и условиями публикации статей, правами и обязанностями авторов</a>,
+              <a href='@Url.Action("Oferta", "Home")' target="_blank">публичной офертой</a>, 
+              <span class="labelx label2-agree">согласны</span> с описанными по приведенным ссылкам условиями. 
               Устанавливая этот флажок, <span class="labelx label2-important">авторы производят акцепт</span> публичной 
               <a href="@Url.Action("Oferta", "Home")" target="_blank">оферты</a>, и <span class="labelx label2-agree">соглашаются</span> 
               на обработку своих персональных данных.

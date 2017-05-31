@@ -244,9 +244,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\antiplagiat.gif" />
     <Content Include="Images\Back-white.svg" />
     <Content Include="Images\Delete-white.svg" />
     <Content Include="Images\Edit-white.svg" />
+    <Content Include="Images\k-press-logo.gif" />
     <Content Include="Images\View-white.svg" />
     <Content Include="Scripts\Article.js" />
     <Content Include="Scripts\bootstrap-filestyle.js" />
@@ -341,7 +343,14 @@
     <Content Include="Views\Shared\AuthorDetailsRus.cshtml" />
     <Content Include="Views\Shared\AuthorDetailsEnu.cshtml" />
     <Content Include="Views\Home\Oferta.cshtml" />
+    <Content Include="Views\Home\FormattingRequirements.cshtml" />
     <Content Include="Views\Home\Requirements.cshtml" />
+    <Content Include="Views\Home\Conditions.cshtml" />
+    <Content Include="Views\Home\Prices.cshtml" />
+    <Content Include="Views\Home\PaymentDetails.cshtml" />
+    <Content Include="Views\Home\Antiplagiat.cshtml" />
+    <Content Include="Views\Home\Issues.cshtml" />
+    <Content Include="Views\Home\ReviewRules.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

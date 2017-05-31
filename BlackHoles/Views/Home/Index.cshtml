@@ -2,37 +2,71 @@
 @using BlackHoles.Properties;
 @using BlackHoles.Utils;
 @{
-  ViewBag.Title = "Публикация в журнале " + MvcApplication.Jur;
+  ViewBag.Title = "Публикация в журнале " + Constants.Jur;
   var settings = @Settings.Default;
 }
 
-<div class="jumbotron" style="max-width: 720px; margin: auto;">
-  <h2>Публикация в журнале <b>@MvcApplication.Jur</b></h2>
-  <p class="lead">
-    Сейчас идет формирование № @settings.Number за @settings.Year год, который выйдет в @Html.PublicationMonth(settings.Number). 
-    На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и статьях.
+<div style="max-width: 900px; margin: auto;">
+  <p><a href="http://www.k-press.ru/bh/default-eng.asp">English version</a></p>
+  <b><font color="#003399">Ж</font></b>урнал <b>@Constants.Jur</b> публикует аналитические статьи, результаты фундаментальных теоретических и
+  практических исследований в области российского законодательства и правоприменительной практики.</p>
 
+  <p>Журнал включен в перечень рецензируемых научных изданий  <b>ВАК</b> от <A href="http://vak.ed.gov.ru/87">01.12.2015 (по состоянию на 23.05.2017)</A> 
+  под номером 1378 (<A href="http://www.k-press.ru/bh/scientific-specialties-classifier.html"><b>12.00.00 – юридические науки</b></A>).</p>
+  
+  <p><A href="http://www.k-press.ru/bh/editorial-board.htm">Редколлегия журнала</A> <A href="http://www.k-press.ru/bh/editorial-board-eng.asp">(Editorial board - English)</A></p>
+  
+  <p>
+    <b>Главный редактор</b>: Чистякова Людмила Александровна, <b><span class="glyphicon glyphicon-earphone" aria-hidden="true"></b> +7 (916) 320-71-78, <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="mailto:bp2702@yandex.ru">bp2702@yandex.ru</a>
   </p>
-  <p class="lead">
-    Сначала добавьте авторов публикаций, а потом публикации (где можно будет указать заранее введенных авторов).
-  </p>
 
-  <hr />
+  <ul>
+    <li><A href='@Url.Action("Requirements", "Home")'>Требования к статьям (рукописям), предоставляемым для публикации в журнал</A></li>
+    <li><a href='@Url.Action("Conditions", "Home")'>Порядок и условия публикации статей, права и обязанности авторов</a></li>
+    <li><a href='@Url.Action("ReviewRules", "Home")'>Правила рецензирования статей</a></li>
+    <li>Индекс по <a href="http://www.rosp.ru/service/subscribe/">каталогу “Роспечать”</a> - <B>80270</B></li>
+    <li>ISSN <b>0236-4964</b></li>
+    <li><a href="http://www.k-press.ru/bh/Subscription.asp">Подписка</a></li>
+    <li>Полные тексты статей<b> <a href="http://elibrary.ru/title_about.asp?id=7639">доступны на сайте РИНЦ</a></b> (Российского Индекса Цитирования).</li>
+  </ul>
 
-  @if (Request.IsAuthenticated)
-  {
-    if (User.IsInRole(Constants.AdminRole))
-    {
-      <p>@Html.ActionLink("Номера", "Index", "Issues", null, new { @class = "btn btn-primary btn-lg" })</p>
-    }
-    <p>@Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary btn-lg" })</p>
-    <p>@Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary btn-lg" })</p>
-  }
-  else
-  {
-    <p class="text-danger">Вы не произвели вход в систему (не автораизовались)!</p>
-    <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("войти в свою учетную запись (авторизоваться)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
-    <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтес в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
-  }
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#issuesPanel">Выпуски журналов</a></li>
+    <li               ><a data-toggle="tab" href="#pubsPanel"  ><b>Опубликовать статью</b></a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="issuesPanel" class="tab-pane fade in active">
+      <p></p>
+      @Html.Partial("Issues")
+    </div>
+    <div id="pubsPanel" class="tab-pane fade">
+      <p></p>
+      <p class="alert alert-info">
+        Сейчас идет формирование № <b>@settings.Number</b> за <b>@settings.Year</b> год, который выйдет в <b>@Html.PublicationMonth(settings.Number)</b>.
+        На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и статьях.
+      </p>
+      <p>
+        Сначала добавьте авторов публикаций, а потом публикации (где можно будет указать заранее введенных авторов).
+      </p>
+      @if (Request.IsAuthenticated)
+      {
+        <p>
+          @if (User.IsInRole(Constants.AdminRole))
+          {
+            @Html.ActionLink("Номера", "Index", "Issues", null, new { @class = "btn btn-primary" })
+          }
+          @Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary" })
+          @Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary" })
+        </p>
+      }
+      else
+      {
+        <p class="text-danger">Вы не произвели вход в систему (не автораизовались)!</p>
+        <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("войти в свою учетную запись (авторизоваться)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
+        <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтес в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
+      }
+    </div>
+  </div>
 </div>
 

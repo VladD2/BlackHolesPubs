@@ -153,3 +153,28 @@ a.reply {
   margin-bottom: 7px;
 }
 
+.header {
+  font-weight: bold;
+  color: white;
+  /*font-family: Tahoma, Arial, PragmaticaC, 'sans serif';*/
+  background-color: #6699ff;
+  text-align: center
+}
+
+.tablelink {
+  font-weight: bold;
+  color: #0066cc;
+  /*font-family: Arial, Tahoma, PragmaticaC, 'sans serif';*/
+  text-align: center;
+  background-color: #99ccff;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+#content, #sidebar {
+  margin-bottom: 5em;
+}

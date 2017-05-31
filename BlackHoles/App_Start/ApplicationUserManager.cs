@@ -53,7 +53,7 @@ namespace BlackHoles
         new EmailTokenProvider<ApplicationUser>
         {
           Subject = "Секретный код",
-          BodyFormat = "Ваш секретный код для сайта жунала 'Черные дыры в Российском законодательстве': {0}"
+          BodyFormat = "Ваш секретный код для сайта жунала " + Constants.Jur + ": {0}"
         });
       manager.EmailService = new MailMessageService();
       manager.SmsService = new SmsService();
