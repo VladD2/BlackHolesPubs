@@ -181,7 +181,7 @@ namespace BlackHoles.Controllers
       if (article.CurrentMessageText == null)
         return;
 
-      MailMessageService.SendMail(MailMessageService.MainEmail, $"Коментраий к статье '{article.ShortArtTitles}'",
+      MailMessageService.SendMail(Constants.MainEmail, $"Коментраий к статье '{article.ShortArtTitles}'",
         $@"<html>
 <body>
 </body>

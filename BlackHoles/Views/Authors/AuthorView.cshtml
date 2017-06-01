@@ -69,7 +69,7 @@
             @Html.ValidationMessageFor(model => model.RusSubdivision, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>Необязательное поле. Будет вписано в реквизиты автора, в статье. Например: Кафедра права.</td>
+        <td>@InfoOptional() Будет вписано в реквизиты автора, в статье. Например: Кафедра права.</td>
       </tr>
 
       <tr>
@@ -80,7 +80,7 @@
             @Html.ValidationMessageFor(model => model.RusPosition, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>Необязательное поле. Будет вписано в реквизиты автора, в статье. Например: Старший преподаватель.</td>
+        <td>@InfoOptional() Будет вписано в реквизиты автора, в статье. Например: Старший преподаватель.</td>
       </tr>
 
       <tr>
@@ -91,7 +91,7 @@
             @Html.ValidationMessageFor(model => model.ScienceDegree, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>Необязательное поле. Будет вписано в реквизиты автора, в статье. Учёное звание, учёная степень. Например: д-р юрид. наук, доцент.</td>
+        <td>@InfoOptional() Будет вписано в реквизиты автора, в статье. Учёное звание, учёная степень. Например: д-р юрид. наук, доцент.</td>
       </tr>
 
       <tr>
@@ -102,7 +102,7 @@
             @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>Необязательное поле. Используется для связи с автором. Публично недоступно.</td>
+        <td>@InfoOptional() Используется для связи с автором. Публично недоступно.</td>
       </tr>
 
       <tr><td colspan="3" class="alert alert-info">Следующие поля заполняются на <b>английсокм</b> языке:</td></tr>
@@ -151,3 +151,8 @@
 <div>@Html.ActionLink("К списку авторов", "Index")</div>
 
 @section Scripts { @Scripts.Render("~/bundles/jqueryval") }
+
+@helper InfoOptional()
+{
+  @:Необязательное поле. <span class="text-warning">Оставьте его пустым</span>, если для него нет информации.
+}

@@ -13,6 +13,9 @@ namespace BlackHoles
     public const string ReviewTextPrefix = "review-text-";
     public const string ReviewImgPrefix = "review-img-";
     public const string Jur = "\"«Черные дыры» в Российском законодательстве\"";
+    public const string ErrorCaption = "Ошибка на сайте k-press.ru!";
+    public const string MainEmail = "vladdq@yandex.ru";
+
     public const int OriginalityPercentage = 70;
   }
 }

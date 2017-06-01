@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
@@ -148,7 +149,7 @@ namespace BlackHoles.Models
       var settings = Settings.Default;
       var authors = this.GetArticleAuthorsSurnames();
       var filePattern = $"{prefix}{settings.Year}-{settings.Number}-id{this.Id}-v*";
-      var versions = Directory.GetFiles(this.GetArticleDir(mapPath), filePattern);
+      var versions = Directory.EnumerateFiles(this.GetArticleDir(mapPath), filePattern).Where(f => !string.IsNullOrWhiteSpace(Path.GetExtension(f))).ToArray();
       return versions;
     }
 
@@ -173,6 +174,9 @@ namespace BlackHoles.Models
 
     public void TrySeveFiles(Func<string, string> mapPath, HttpPostedFileBase file1, HttpPostedFileBase file2, string prefix = null)
     {
+      if (file1.ContentLength == 0)
+        return;
+
       if (file1.ContentLength > 0 && file2.ContentLength == 0)
         SeveFile(file1, mapPath, prefix);
       else
@@ -185,6 +189,27 @@ namespace BlackHoles.Models
     public void SeveFile(HttpPostedFileBase file, Func<string, string> mapPath, string prefix = null)
     {
       var fullPath = MakeFileName(file, mapPath, prefix);
+
+      var ext = Path.GetExtension(fullPath);
+      if (string.IsNullOrWhiteSpace(ext))
+      {
+        var stackTrace = new StackTrace(true);
+        var builder = new StringBuilder();
+        foreach (var r in stackTrace.GetFrames())
+          builder.AppendLine($"Filename: {r.GetFileName()} Method: {r.GetMethod()} Line: {r.GetFileLineNumber()} Column: {r.GetFileColumnNumber()}  ");
+
+        MailMessageService.SendMail(Constants.MainEmail, Constants.ErrorCaption,
+          $@"Файл без расширения!
+fullPath: '{fullPath}'
+file.ContentLength: {file.ContentLength}
+file.ContentType: '{file.ContentType}'
+file.FileName: '{file.FileName}'
+file: '{file}'
+StackTrace: {builder}
+");
+        throw new ApplicationException("Надопустимо загружать файлы без расширений!");
+      }
+
       file.SaveAs(fullPath);
     }
 

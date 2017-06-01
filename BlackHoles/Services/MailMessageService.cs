@@ -15,8 +15,6 @@ namespace BlackHoles
 {
   public class MailMessageService : IIdentityMessageService
   {
-    public const string MainEmail = "vladdq@yandex.ru";
-
     public async Task SendAsync(IdentityMessage message)
     {
       using (var mail = new MailMessage())
@@ -52,7 +50,7 @@ namespace BlackHoles
     {
       using (var mail = new MailMessage())
       {
-        mail.From = new MailAddress(MainEmail);
+        mail.From = new MailAddress(Constants.MainEmail);
         var mailto2 = mailto.Replace("    ", "").Replace("   ", "").Replace("  ", "").Replace(" ", "").Replace(" ", "").Replace("–", "-").Trim(';', ',');
 
         mail.To.Add(mailto2);

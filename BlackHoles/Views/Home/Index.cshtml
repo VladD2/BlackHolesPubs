@@ -32,7 +32,7 @@
 
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#issuesPanel">Выпуски журналов</a></li>
-    <li               ><a data-toggle="tab" href="#pubsPanel"  ><b>Опубликовать статью</b></a></li>
+    <li               ><a data-toggle="tab" href="#pubsPanel" style="color: red;"  ><b>Опубликовать статью</b></a></li>
   </ul>
 
   <div class="tab-content">
@@ -62,9 +62,9 @@
       }
       else
       {
-        <p class="text-danger">Вы не произвели вход в систему (не автораизовались)!</p>
+        <p class="text-danger">Вы не произвели вход в систему (не авторизовались)!</p>
         <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("войти в свою учетную запись (авторизоваться)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
-        <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтес в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
+        <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтесь в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
       }
     </div>
   </div>
