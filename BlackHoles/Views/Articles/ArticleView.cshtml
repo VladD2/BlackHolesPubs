@@ -184,7 +184,14 @@
       <tr>
         <td>@Html.Label("Файл статьи", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
-          <input type="file" name="articleFile" id="articleFile" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." />
+
+          @{ 
+            var canUpload = Model.Status != ArticleStatus.Accepted || User.IsInRole(Constants.EditorRole);
+            var articleFileState = canUpload ? "" : "data-disabled=true";
+            var articleFilePlaceholder = canUpload ? "файл не выбран!" : "Замена файла принятого к публикации невозможна!";
+          }
+          
+          <input type="file" name="articleFile" id="articleFile" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="@articleFilePlaceholder" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." @articleFileState />
           @Html.ValidationMessage("articleFile", "", new { @class = "text-danger" })
         </td>
         <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литературы, информации об авторах и т.п.). 

@@ -5,6 +5,11 @@
     ViewBag.Title = "Описание автора";
 }
 
+<a href='@Url.Action("Edit", new { id = Model.Id })' class="btn btn-primary" title="Изменить"><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
+@Shared.BackButton()
+<a href='@Url.Action("Index", "Home")' class="btn btn-primary" title="Перейти к главной странице"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+<a href='@Url.Action("Index", "Articles")' class="btn btn-primary" title="Перейти к списку статей"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+
 <h2>@ViewBag.Title</h2>
 
 @Html.Partial("AuthorDetailsRus", Model)

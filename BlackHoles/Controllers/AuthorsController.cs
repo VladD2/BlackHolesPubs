@@ -62,7 +62,7 @@ namespace BlackHoles.Controllers
       {
         db.Authors.Add(author);
         db.SaveChanges();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Details", new { id = author.Id });
       }
 
       return View(author);
@@ -110,7 +110,7 @@ namespace BlackHoles.Controllers
       if (ModelState.IsValid)
       {
         db.SaveChanges();
-        return RedirectToAction("Index");
+        return RedirectToAction("Details", new { id = author.Id });
       }
       return View(author);
     }

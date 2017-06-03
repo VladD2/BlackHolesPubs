@@ -158,7 +158,7 @@ namespace BlackHoles.Controllers
 
         TrySendMessage(article);
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Details", new { id = article.Id });
       }
 
       return ContinueEdit(article);
