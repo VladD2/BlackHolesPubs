@@ -5,7 +5,23 @@
 <div class="with-spacing">
   @Html.MakeAuthorFioAndScienceDegree(Model.EnuSurname, Model.EnuInitials, null)
   <br />
-  <b>Place&nbsp;of&nbsp;employment:</b>&nbsp;@Html.EnsureEndWithDot(Model.EnuOrgName)
+  @LabelFor(Model.OrganizationKind)@Html.EnsureEndWithDot(Model.EnuOrgName)
   <br />
   <b>E-mail:</b>&nbsp;@Html.EnsureEndWithDot(Model.Owner.Email)
 </div>
+
+@helper LabelFor(OrganizationKind kind)
+{
+  switch (kind)
+  {
+    case OrganizationKind.Work:
+      @:<b>Place&nbsp;of&nbsp;employment:</b>
+      break;
+    case OrganizationKind.Study:
+      @:<b>Place&nbsp;of&nbsp;study:</b>
+      break;
+    default:
+      @:<b><span class="text-danger">Не задан тип организации!</span></b>
+      break;
+  }
+}

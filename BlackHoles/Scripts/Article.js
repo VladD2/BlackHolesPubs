@@ -7,7 +7,6 @@ function attachEvents()
 
   $('#availableAuthorsComboBox').on("change", onChange);
   $('#authors').on("click", "a", onRemoveAuthor);
-  $('#uploadArticle').on('click', onUploadArticle);
 
   // extend jquery range validator to work for required checkboxes
   var defaultRangeValidator = $.validator.methods.range;
@@ -67,6 +66,25 @@ function onRemoveAuthor()
 
   console.log("<<< onRemoveAuthor");
   return false;
+}
+
+function onSubmit()
+{
+  if (!window.File)
+    return true;
+
+  var files = document.getElementById("articleFile").files;
+
+  if (files.length == 0)
+    return true;
+
+  var file = files[0];
+
+  if (file.lastModifiedDate === 'undefined')
+    return true;
+  $('#ArticleDate').val(file.lastModifiedDate.toJSON());
+
+  return true;
 }
 
 function onUploadArticle(e)

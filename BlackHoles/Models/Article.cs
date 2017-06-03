@@ -97,6 +97,10 @@ namespace BlackHoles.Models
     public int ArticleVersions { get; set; }
 
     [NotMapped]
+    [Display(Name = "Дата файла")]
+    public DateTime ArticleDate { get; set; }
+
+    [NotMapped]
     public int ReviewTextVersions { get; set; }
 
     [NotMapped]
@@ -136,7 +140,13 @@ namespace BlackHoles.Models
 
     public void FillFilesInfo(Func<string, string> mapPath)
     {
-      this.ArticleVersions = this.GetFileVersions(mapPath).Length;
+      var articleVersions = this.GetFileVersions(mapPath);
+      if (articleVersions.Length > 0)
+      {
+        var articlePath = articleVersions[0];
+        this.ArticleDate = File.GetLastWriteTimeUtc(articlePath);
+      }
+      this.ArticleVersions = articleVersions.Length;
       this.ReviewTextVersions = this.GetFileVersions(mapPath, Constants.ReviewTextPrefix).Length;
       this.ReviewImgVersions = this.GetFileVersions(mapPath, Constants.ReviewImgPrefix).Length;
     }
@@ -149,7 +159,10 @@ namespace BlackHoles.Models
       var settings = Settings.Default;
       var authors = this.GetArticleAuthorsSurnames();
       var filePattern = $"{prefix}{settings.Year}-{settings.Number}-id{this.Id}-v*";
-      var versions = Directory.EnumerateFiles(this.GetArticleDir(mapPath), filePattern).Where(f => !string.IsNullOrWhiteSpace(Path.GetExtension(f))).ToArray();
+      var versions = Directory.EnumerateFiles(this.GetArticleDir(mapPath), filePattern)
+        .Where(f => !string.IsNullOrWhiteSpace(Path.GetExtension(f)))
+        .OrderByDescending(f => f)
+        .ToArray();
       return versions;
     }
 
@@ -211,6 +224,9 @@ StackTrace: {builder}
       }
 
       file.SaveAs(fullPath);
+
+      if (string.IsNullOrEmpty(prefix))
+        File.SetLastWriteTimeUtc(fullPath, this.ArticleDate.ToUniversalTime());
     }
 
     private string GetVirtualPath(Func<string, string> mapPath, string localPath)
@@ -233,7 +249,6 @@ StackTrace: {builder}
     {
       var settings = Settings.Default;
       var versions = GetFileVersions(mapPath, prefix);
-      var rx = new Regex(FilePattern);
 
       return versions.Max();
     }

@@ -5,7 +5,7 @@
 <div class="with-spacing">
   @Html.MakeAuthorFioAndScienceDegree(Model.RusSurname, Model.RusInitials, Model.ScienceDegree)
   <br />
-  <b>Место&nbsp;работы:</b>&nbsp;@Html.EnsureEndWithDot(Model.RusOrgName)
+  @LabelFor(Model.OrganizationKind)@Html.EnsureEndWithDot(Model.RusOrgName)
   @if (!string.IsNullOrWhiteSpace(Model.RusSubdivision))
   {
     @:<b>Подразделение:</b>&nbsp;@Html.EnsureEndWithDot(Model.RusSubdivision)
@@ -17,3 +17,19 @@
   <br />
   <b>E-mail:</b>&nbsp;@Html.EnsureEndWithDot(Model.Owner.Email)
 </div>
+
+@helper LabelFor(OrganizationKind kind)
+{
+  switch (kind)
+  {
+    case OrganizationKind.Work:
+      @:<b>Место&nbsp;работы:</b>
+        break;
+    case OrganizationKind.Study:
+      @:<b>Место&nbsp;учебы:</b>
+        break;
+    default:
+      @:<b><span class="text-danger">Не задан тип организации!</span></b>
+        break;
+  }
+}

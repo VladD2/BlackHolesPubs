@@ -28,7 +28,11 @@ namespace BlackHoles.Models
     [Required(ErrorMessage = Error.NotSet), StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Имя Отчество")]
     public string RusInitials { get; set; }
 
-    [Required(ErrorMessage = Error.NotSet), StringLength(1000, ErrorMessage = Error.ToLong), Display(Name = "Место работы/учебы")]
+    [Required(ErrorMessage = Error.NotSet)]
+    [Range((int)OrganizationKind.Work, (int)OrganizationKind.Study, ErrorMessage = "Тип организации должен быть задан!")]
+    public OrganizationKind OrganizationKind { get; set; }
+
+    [Required(ErrorMessage = Error.NotSet), StringLength(1000, ErrorMessage = Error.ToLong), Display(Name = "Организация")]
     public string RusOrgName { get; set; }
 
     [StringLength(100, ErrorMessage = Error.ToLong), Display(Name = "Подразделение")]

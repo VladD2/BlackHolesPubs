@@ -204,6 +204,7 @@
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Issue.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\OrganizationKind.cs" />
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -287,6 +288,7 @@
     <Content Include="Scripts\rx.lite.min.js" />
     <Content Include="Scripts\x.compat.min.js" />
     <Content Include="Scripts\x.min.js" />
+    <Content Include="Scripts\Shared.js" />
     <Content Include="Scripts\YandexTranslate.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -351,6 +353,7 @@
     <Content Include="Views\Home\Antiplagiat.cshtml" />
     <Content Include="Views\Home\Issues.cshtml" />
     <Content Include="Views\Home\ReviewRules.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

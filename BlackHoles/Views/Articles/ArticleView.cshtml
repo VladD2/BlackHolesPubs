@@ -18,6 +18,7 @@
   @Html.AntiForgeryToken()
   @Html.ValidationSummary(true, "", new { @class = "text-danger" })
   @Html.HiddenFor(model => model.Id)
+  @Html.HiddenFor(model => model.ArticleDate)
   <table class="table">
     <tbody>
       <tr>
@@ -262,7 +263,7 @@
 
       <tr>
         <td colspan="3">
-          @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Сохранить" title="Сохранение и просмотреть результат" class="btn btn-primary" />
+          @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Сохранить" title="Сохранение и просмотреть результат" class="btn btn-primary" onclick="return onSubmit();" />
         </td>
       </tr>
     </tbody>

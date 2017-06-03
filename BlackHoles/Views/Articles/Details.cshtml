@@ -41,7 +41,7 @@
     @{
       var docUrl = Url.Action("Doc", new { id = Model.Id });
     }
-    <dd><a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a>
+    <dd><a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a> (@Html.DisplayFor(m => m.ArticleDate))
       |
       @if (Model.ReviewTextVersions > 0)
       {

@@ -45,7 +45,10 @@
       </tr>
 
       <tr>
-        <td>@Html.LabelFor(model => model.RusOrgName, htmlAttributes: new { @class = "control-label col-md-2" })</td>
+        <td>@Html.LabelFor(model => model.RusOrgName, "Место", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.EnumDropDownListFor(x => x.OrganizationKind, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.OrganizationKind, "", new { @class = "text-danger" })
+        </td>
         <td>
           <div>
             @Html.EditorFor(model => model.RusOrgName, new { htmlAttributes = new { style = "max-width:none", @class = "form-control" } })

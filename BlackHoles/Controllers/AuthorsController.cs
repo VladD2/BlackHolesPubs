@@ -50,7 +50,7 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "Id,Email,RusSurname,RusInitials,RusOrgName,RusSubdivision,RusPosition,EnuSurname,EnuInitials,EnuOrgName,ScienceDegree,Phone", Exclude="Owner")] Author author)
+    public ActionResult Create([Bind(Include = "Id,Email,RusSurname,RusInitials,RusOrgName,RusSubdivision,RusPosition,EnuSurname,EnuInitials,EnuOrgName,ScienceDegree,Phone,OrganizationKind", Exclude="Owner")] Author author)
     {
       var userId = User.GetUserId();
       var user = db.Users.Find(userId);
@@ -88,7 +88,7 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Email,RusSurname,RusInitials,RusOrgName,RusSubdivision,RusPosition,EnuSurname,EnuInitials,EnuOrgName,ScienceDegree,Phone")] Author author)
+    public ActionResult Edit([Bind(Include = "Id,Email,RusSurname,RusInitials,RusOrgName,RusSubdivision,RusPosition,EnuSurname,EnuInitials,EnuOrgName,ScienceDegree,Phone,OrganizationKind")] Author author)
     {
       var userId = User.GetUserId();
       var orig = db.Authors.Include(a => a.Owner).FilterByOwner(User).FirstOrDefault(a => a.Id == author.Id);
