@@ -91,10 +91,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BlackHoles.Entities\BlackHoles.Entities.csproj">
-      <Project>{a6f3b33e-ae63-40c7-8e65-c50fe2690325}</Project>
-      <Name>BlackHoles.Entities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BlackHoles\BlackHoles.csproj">
       <Project>{06054FBA-1348-42EC-B742-01F254FB3097}</Project>
       <Name>BlackHoles</Name>
