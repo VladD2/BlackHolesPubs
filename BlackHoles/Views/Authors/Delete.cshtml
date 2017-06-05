@@ -2,112 +2,69 @@
 @model Author
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Удаление описание автора";
 }
 
-<h2>Удаление автора</h2>
+<h2>@ViewBag.Title</h2>
 
-<h3>Вы уверены, что хотите удалить автора? </h3>
+<h3>Вы уверены, что хотите удалить описание автора? </h3>
 <div>
     <h4>Author</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+        <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+        <dd>@Html.DisplayFor(model => model.Email)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
+        <dt>@Html.DisplayNameFor(model => model.RusSurname)</dt>
+        <dd>@Html.DisplayFor(model => model.RusSurname)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusSurname)
-        </dt>
+        <dt>@Html.DisplayNameFor(model => model.RusInitials)</dt>
+        <dd>@Html.DisplayFor(model => model.RusInitials)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusSurname)
-        </dd>
+        <dt>@Html.DisplayNameFor(model => model.RusOrgName)</dt>
+        <dd>@Html.DisplayFor(model => model.RusOrgName)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusInitials)
-        </dt>
+        <dt>@Html.DisplayNameFor(model => model.RusSubdivision)</dt>
+        <dd>@Html.DisplayFor(model => model.RusSubdivision)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusInitials)
-        </dd>
+        <dt>@Html.DisplayNameFor(model => model.RusPosition)</dt>
+        <dd>@Html.DisplayFor(model => model.RusPosition)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusOrgName)
-        </dt>
+        <dt>@Html.DisplayNameFor(model => model.EnuSurname)</dt>
+        <dd>@Html.DisplayFor(model => model.EnuSurname)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusOrgName)
-        </dd>
+        <dt>@Html.DisplayNameFor(model => model.EnuInitials)</dt>
+        <dd>@Html.DisplayFor(model => model.EnuInitials)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusSubdivision)
-        </dt>
+        <dt>@Html.DisplayNameFor(model => model.EnuOrgName)</dt>
+        <dd>@Html.DisplayFor(model => model.EnuOrgName)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusSubdivision)
-        </dd>
+        <dt>@Html.DisplayNameFor(model => model.ScienceDegree)</dt>
+        <dd>@Html.DisplayFor(model => model.ScienceDegree)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusPosition)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RusPosition)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuSurname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuSurname)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuInitials)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuInitials)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuOrgName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuOrgName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ScienceDegree)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ScienceDegree)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
+        <dt>@Html.DisplayNameFor(model => model.Phone)</dt>
+        <dd>@Html.DisplayFor(model => model.Phone)</dd>
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @if (Model.Articles.Any())
+    {
+      <p class="alert alert-danger">
+        Нельзя удалять описание автора, которое использовано в описании заявок на публикацию статей.
+        Удалите все заявки, в которых есть ссылки на данное описание, а затем повторите попытку.
+      </p>
+      @Shared.BackButton()
+    }
+    else
+    {
+      using (Html.BeginForm())
+      {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
             <input type="submit" value="Удалить" class="btn btn-default" /> |
-            @Html.ActionLink("К списку номеров", "Index")
+            @Shared.BackButton()
         </div>
+      }
     }
 </div>

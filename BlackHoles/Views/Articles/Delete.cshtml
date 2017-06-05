@@ -2,87 +2,59 @@
 @model Article
 
 @{
-    ViewBag.Title = "Delete";
+  ViewBag.Title = "Delete";
 }
 
 <h2>Удаление заявки на публикацию статьи</h2>
 
 <h3>Вы действительно хотите удалить заявку?</h3>
 <div>
-    <h4>Article</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Specialty)
-        </dt>
+  <h4>Article</h4>
+  <hr />
+  <dl class="dl-horizontal">
+    <dt>@Html.DisplayNameFor(model => model.Specialty)</dt>
+    <dd>@Html.DisplayFor(model => model.Specialty)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Specialty)
-        </dd>
+    <dt>@Html.DisplayNameFor(model => model.RusArtTitles)</dt>
+    <dd>@Html.DisplayFor(model => model.RusArtTitles)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusArtTitles)
-        </dt>
+    <dt>@Html.DisplayNameFor(model => model.ShortArtTitles)</dt>
+    <dd>@Html.DisplayFor(model => model.ShortArtTitles)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusArtTitles)
-        </dd>
+    <dt>@Html.DisplayNameFor(model => model.RusAbstract)</dt>
+    <dd>@Html.DisplayFor(model => model.RusAbstract)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ShortArtTitles)
-        </dt>
+    <dt>@Html.DisplayNameFor(model => model.RusKeywords)</dt>
+    <dd>@Html.DisplayFor(model => model.RusKeywords)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ShortArtTitles)
-        </dd>
+    <dt>@Html.DisplayNameFor(model => model.EnuArtTitles)</dt>
+    <dd>@Html.DisplayFor(model => model.EnuArtTitles)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusAbstract)
-        </dt>
+    <dt>@Html.DisplayNameFor(model => model.EnuAbstract)</dt>
+    <dd>@Html.DisplayFor(model => model.EnuAbstract)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusAbstract)
-        </dd>
+    <dt>@Html.DisplayNameFor(model => model.EnuKeywords)</dt>
+    <dd>@Html.DisplayFor(model => model.EnuKeywords)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RusKeywords)
-        </dt>
+  </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.RusKeywords)
-        </dd>
+  @if (Model.Status != ArticleStatus.Accepted || User.IsInRole(Constants.AdminRole))
+  {
+    using (Html.BeginForm())
+    {
+      @Html.AntiForgeryToken()
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuArtTitles)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuArtTitles)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuAbstract)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuAbstract)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EnuKeywords)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EnuKeywords)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Удалить" class="btn btn-default" />
-        </div>
+      <div class="form-actions no-color">
+        @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Удалить" class="btn btn-default" />
+      </div>
     }
+  }
+  else
+  {
+    <p class="alert alert-danger">Нельзя удалять статью, принятую к публикации.
+      Если вы решили отказаться от публикации свяжитесь с @Html.ActionLink("представителем редакции", "Contact", "Home").
+      Сообщите ему идентификатор статьи - @Html.DisplayFor(model => model.Id) и причину отказа.
+    </p>
+    @Shared.BackButton()
+  }
 </div>

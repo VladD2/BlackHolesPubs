@@ -218,7 +218,7 @@ namespace BlackHoles.Controllers
 
     private bool CheckFiles(HttpPostedFileBase file1, HttpPostedFileBase file2)
     {
-      if (file1.ContentLength == 0 && file2.ContentLength > 0)
+      if (file1?.ContentLength == 0 && file2?.ContentLength > 0)
       {
         ModelState.AddModelError("additionalImg", "Если задан дополнительный файл первый файл так же должен быть задан!");
         return false;
@@ -317,15 +317,15 @@ namespace BlackHoles.Controllers
 
       if (ModelState.IsValid)
       {
-        HttpPostedFileBase articleFile = Request.Files[0];
-        HttpPostedFileBase additionalTextFile = Request.Files[1];
-        HttpPostedFileBase additionalImg1 = Request.Files[2];
-        HttpPostedFileBase additionalImg2 = Request.Files[3];
+        HttpPostedFileBase articleFile = Request.Files["articleFile"];
+        HttpPostedFileBase additionalTextFile = Request.Files["additionalTextFile"];
+        HttpPostedFileBase additionalImg1 = Request.Files["additionalImg1"];
+        HttpPostedFileBase additionalImg2 = Request.Files["additionalImg2"];
 
-        if (articleFile.ContentLength > 0)
+        if (articleFile?.ContentLength > 0)
           article.SeveFile(articleFile, Server.MapPath);
 
-        if (additionalTextFile.ContentLength > 0)
+        if (additionalTextFile?.ContentLength > 0)
           article.SeveFile(additionalTextFile, Server.MapPath, Constants.ReviewTextPrefix);
 
         if (!CheckFiles(additionalImg1, additionalImg2))
@@ -368,6 +368,9 @@ namespace BlackHoles.Controllers
       Article article = db.Articles.Include(a => a.Messages).FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
       if (article == null)
         return HttpNotFound();
+
+      if (article.Status == ArticleStatus.Accepted && !User.IsInRole(Constants.AdminRole))
+        return HttpNotFound("Нельзя удалять принятую к публикации статью!");
 
       LoadNestedMessage(article);
 

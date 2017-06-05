@@ -187,7 +187,7 @@ namespace BlackHoles.Models
 
     public void TrySeveFiles(Func<string, string> mapPath, HttpPostedFileBase file1, HttpPostedFileBase file2, string prefix = null)
     {
-      if (file1.ContentLength == 0)
+      if (file1 == null || file2 == null || file1.ContentLength == 0)
         return;
 
       if (file1.ContentLength > 0 && file2.ContentLength == 0)

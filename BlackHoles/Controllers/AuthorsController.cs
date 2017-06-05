@@ -31,7 +31,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author = db.Authors.Include(x => x.Owner).FilterByOwner(User).FirstOrDefault(a => a.Id == id);
+      Author author = db.Authors.Include(x => x.Owner).Include(x => x.Articles).FilterByOwner(User).FirstOrDefault(a => a.Id == id);
       if (author == null)
       {
         return HttpNotFound();
@@ -122,7 +122,7 @@ namespace BlackHoles.Controllers
       {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      Author author = db.Authors.FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
+      Author author = db.Authors.Include(x => x.Articles).Include(x => x.Owner).FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
       if (author == null)
       {
         return HttpNotFound();
@@ -135,7 +135,11 @@ namespace BlackHoles.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult DeleteConfirmed(int id)
     {
-      Author author = db.Authors.FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
+      Author author = db.Authors.Include(x => x.Articles).FilterByOwner(User, Constants.AdminRole).SingleOrDefault(a => a.Id == id);
+
+      if (author.Articles.Any())
+        return HttpNotFound("Нельзя удалять описание авторов для которого есть заявки на публикацию.");
+
       db.Authors.Remove(author);
       db.SaveChanges();
       return RedirectToAction("Index");
