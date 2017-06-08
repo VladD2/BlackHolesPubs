@@ -4,7 +4,7 @@
 @using System.IO
 
 @{
-  var path = Path.GetFullPath(Path.Combine(Server.MapPath("~/"), ".."));
+  var path = Path.GetFullPath(Server.MapPath("~/"));
   var dirs = Directory.EnumerateDirectories(path)
     .Where(d => DbUtils.IsYear(Path.GetFileName(d)))
     .OrderByDescending(d => int.Parse(Path.GetFileName(d)))

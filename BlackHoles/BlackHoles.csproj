@@ -247,6 +247,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\antiplagiat.gif" />
     <Content Include="Images\Back-white.svg" />
+    <Content Include="Images\bh-add-article-2.gif" />
     <Content Include="Images\Delete-white.svg" />
     <Content Include="Images\Edit-white.svg" />
     <Content Include="Images\k-press-logo.gif" />
