@@ -28,12 +28,12 @@
     <li>ISSN <b>0236-4964</b></li>
     <li><a href="http://www.k-press.ru/bh/Subscription.asp">Подписка</a></li>
     <li>Полные тексты статей<b> <a href="http://elibrary.ru/title_about.asp?id=7639">доступны на сайте РИНЦ</a></b> (Российского Индекса Цитирования).</li>
-    <li><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> <a href="~/Images/bh-add-article-2.gif" target="_blank"></a>Инструкция по добавлюению заявки на публикацию</li>
   </ul>
 
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#issuesPanel">Выпуски журналов</a></li>
     <li               ><a data-toggle="tab" href="#pubsPanel" style="color: red;"  ><b>Опубликовать статью</b></a></li>
+    <li               ><a data-toggle="tab" href="#learningPanel"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Инструкция</a></li>
   </ul>
 
   <div class="tab-content">
@@ -67,6 +67,9 @@
         <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("войти в свою учетную запись (авторизоваться)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
         <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтесь в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
       }
+    </div>
+    <div id="learningPanel" class="tab-pane fade">
+      <img src="~/Images/bh-add-article-2.gif" />
     </div>
   </div>
 </div>
