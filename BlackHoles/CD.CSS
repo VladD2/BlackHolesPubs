@@ -1,0 +1,121 @@
+BODY
+{
+    background-color: rgb(255,255,255);
+    FONT-FAMILY: Arial, PragmaticaC;
+}
+H1
+{
+    COLOR: #004080;
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC
+}
+P
+{
+    TEXT-ALIGN: justify;
+    FONT-FAMILY: Arial, PragmaticaC;
+    
+}
+PRE
+{
+    TEXT-ALIGN: justify;
+    FONT-FAMILY: Courier New, Courier;
+    background-color: #ffffcc;	
+    
+}
+H2
+{
+    COLOR: #006699;
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif
+}
+H3
+{
+    COLOR: #004080;
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif; 
+    FONT-WEIGHT: bold;
+    TEXT-ALIGN: LEFT;
+}
+H4
+{
+   COLOR: #000000;
+   TEXT-ALIGN: center;
+   TEXT-STYLE: italic;
+   FONT-WEIGHT: bold;
+}
+H6
+{
+   COLOR: #000000;
+   TEXT-ALIGN: center;
+   TEXT-STYLE: italic;
+   FONT-WEIGHT: bold;
+}
+HR
+{
+    COLOR: #004080
+}
+A:link
+{
+    COLOR: #003399;
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif
+}
+A:active
+{
+    COLOR: #006666;
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif
+}
+A:visited
+{
+    COLOR: #253264;   
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif
+}
+UL
+{
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif;
+    TEXT-ALIGN: left
+}
+ADDRESS
+{
+    COLOR: #000000;   
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif;
+    text-align: right 
+}
+REQ
+{
+    COLOR: #000000;   
+    FONT-FAMILY: Arial, Arial Cyr, PragmaticaC, sans serif;
+    TEXT-INDENT: right
+}
+.company
+{
+    FONT-WEIGHT: bold;
+    TEXT-ALIGN: right;
+    FONT-FAMILY: Arial, PragmaticaC;
+}
+
+.pic
+{
+    TEXT-ALIGN: center;
+}
+.caption
+{
+    TEXT-ALIGN: center;
+    FONT-WEIGHT: bold;
+    FONT-FAMILY: Arial, PragmaticaC;
+}
+.TableNo
+{
+    TEXT-ALIGN: right;
+    FONT-WEIGHT: bold;
+    FONT-FAMILY: Arial, PragmaticaC;
+}
+.TableBody
+{
+    TEXT-ALIGN: left;
+    FONT-FAMILY: Arial, PragmaticaC;
+}
+.TOC
+{
+    TEXT-ALIGN: center;
+}
+PRE.docPRE
+{
+    background-color: #ffffff;
+}

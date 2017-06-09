@@ -34,3 +34,4 @@ packages/
 *.ldf
 App_Data/
 PrivateSettings.config
+*.orig

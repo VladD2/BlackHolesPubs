@@ -234,14 +234,30 @@
     <Compile Include="Services\MailMessageService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="acceptance.html" />
     <Content Include="App_Code\Shared.cshtml" />
     <None Include="App_Data\BlackHoles.mdf" />
     <Content Include="App_Data\BlackHoles_log.ldf">
       <DependentUpon>BlackHoles.mdf</DependentUpon>
     </Content>
+    <Content Include="CD.CSS" />
+    <Content Include="chief_editor-eng.asp">
+      <BrowseToURL>~/chief_editor-eng.asp</BrowseToURL>
+    </Content>
+    <Content Include="chief_editor.asp">
+      <BrowseToURL>~/chief_editor.asp</BrowseToURL>
+    </Content>
+    <Content Include="conditions.htm" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="favicon.ico" />
+    <Content Include="default-eng.asp">
+      <BrowseToURL>~/default-eng.asp</BrowseToURL>
+    </Content>
+    <Content Include="editorial-board-eng.asp">
+      <BrowseToURL>~/editorial-board-eng.asp</BrowseToURL>
+    </Content>
+    <Content Include="editorial-board-eng.htm" />
+    <Content Include="editorial-board.htm" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -251,7 +267,20 @@
     <Content Include="Images\Delete-white.svg" />
     <Content Include="Images\Edit-white.svg" />
     <Content Include="Images\k-press-logo.gif" />
+    <Content Include="Images\obl.jpg">
+      <BrowseToURL>~/obl.jpg</BrowseToURL>
+    </Content>
     <Content Include="Images\View-white.svg" />
+    <Content Include="oferta.html" />
+    <Content Include="recens_eng.asp">
+      <BrowseToURL>~/recens_eng.asp</BrowseToURL>
+    </Content>
+    <Content Include="req.htm" />
+    <Content Include="req2.asp">
+      <BrowseToURL>~/req2.asp</BrowseToURL>
+    </Content>
+    <Content Include="requirements.htm" />
+    <Content Include="scientific-specialties-classifier.html" />
     <Content Include="Scripts\Article.js" />
     <Content Include="Scripts\bootstrap-filestyle.js" />
     <Content Include="Scripts\bootstrap-filestyle.min.js" />
@@ -266,10 +295,14 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="recensia_template.doc">
+      <BrowseToURL>~/recensia_template.doc</BrowseToURL>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -291,6 +324,9 @@
     <Content Include="Scripts\x.min.js" />
     <Content Include="Scripts\Shared.js" />
     <Content Include="Scripts\YandexTranslate.js" />
+    <Content Include="Subscription.asp">
+      <BrowseToURL>~/Subscription.asp</BrowseToURL>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

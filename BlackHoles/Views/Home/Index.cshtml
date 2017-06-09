@@ -8,69 +8,103 @@
 
 <div style="max-width: 900px; margin: auto;">
   <p><a href="http://www.k-press.ru/bh/default-eng.asp">English version</a></p>
-  <b><font color="#003399">Ж</font></b>урнал <b>@Constants.Jur</b> публикует аналитические статьи, результаты фундаментальных теоретических и
-  практических исследований в области российского законодательства и правоприменительной практики.</p>
 
-  <p>Журнал включен в перечень рецензируемых научных изданий  <b>ВАК</b> от <A href="http://vak.ed.gov.ru/87">01.12.2015 (по состоянию на 23.05.2017)</A> 
-  под номером 1378 (<A href="http://www.k-press.ru/bh/scientific-specialties-classifier.html"><b>12.00.00 – юридические науки</b></A>).</p>
-  
-  <p><A href="http://www.k-press.ru/bh/editorial-board.htm">Редколлегия журнала</A> <A href="http://www.k-press.ru/bh/editorial-board-eng.asp">(Editorial board - English)</A></p>
-  
-  <p>
-    <b>Главный редактор</b>: Чистякова Людмила Александровна, <b><span class="glyphicon glyphicon-earphone" aria-hidden="true"></b> +7 (916) 320-71-78, <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="mailto:bp2702@yandex.ru">bp2702@yandex.ru</a>
-  </p>
-
-  <ul>
-    <li><A href='@Url.Action("Requirements", "Home")'>Требования к статьям (рукописям), предоставляемым для публикации в журнал</A></li>
-    <li><a href='@Url.Action("Conditions", "Home")'>Порядок и условия публикации статей, права и обязанности авторов</a></li>
-    <li><a href='@Url.Action("ReviewRules", "Home")'>Правила рецензирования статей</a></li>
-    <li>Индекс по <a href="http://www.rosp.ru/service/subscribe/">каталогу “Роспечать”</a> - <B>80270</B></li>
-    <li>ISSN <b>0236-4964</b></li>
-    <li><a href="http://www.k-press.ru/bh/Subscription.asp">Подписка</a></li>
-    <li>Полные тексты статей<b> <a href="http://elibrary.ru/title_about.asp?id=7639">доступны на сайте РИНЦ</a></b> (Российского Индекса Цитирования).</li>
-  </ul>
-
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#issuesPanel">Выпуски журналов</a></li>
-    <li               ><a data-toggle="tab" href="#pubsPanel" style="color: red;"  ><b>Опубликовать статью</b></a></li>
-    <li               ><a data-toggle="tab" href="#learningPanel"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Инструкция</a></li>
-  </ul>
-
-  <div class="tab-content">
-    <div id="issuesPanel" class="tab-pane fade in active">
-      <p></p>
-      @Html.Partial("Issues")
+  <div class="row">
+    <div class="col-lg-2">
+      <img src="~/Images/k-press-logo.gif" class="img-fluid" alt="Responsive image" />
+      @*<img src="" style="width:100%">*@
     </div>
-    <div id="pubsPanel" class="tab-pane fade">
-      <p></p>
-      <p class="alert alert-info">
-        Сейчас идет формирование № <b>@settings.Number</b> за <b>@settings.Year</b> год, который выйдет в <b>@Html.PublicationMonth(settings.Number)</b>.
-        На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и статьях.
-      </p>
+    <div>
       <p>
-        Сначала добавьте авторов публикаций, а потом публикации (где можно будет указать заранее введенных авторов).
+        <b><font color="#003399">Ж</font></b>урнал <b>@Constants.Jur</b> публикует аналитические статьи, результаты фундаментальных теоретических и
+        практических исследований в области российского законодательства и правоприменительной практики.
+      </p></p>
+
+      <p>
+        Журнал включен в перечень рецензируемых научных изданий  <b>ВАК</b> от <A href="http://vak.ed.gov.ru/87">01.12.2015 (по состоянию на 23.05.2017)</A>
+        под номером 1378 (<A href="http://www.k-press.ru/bh/scientific-specialties-classifier.html"><b>12.00.00 – юридические науки</b></A>).
       </p>
-      @if (Request.IsAuthenticated)
-      {
-        <p>
-          @if (User.IsInRole(Constants.AdminRole))
-          {
-            @Html.ActionLink("Номера", "Index", "Issues", null, new { @class = "btn btn-primary" })
-          }
-          @Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary" })
-          @Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary" })
-        </p>
-      }
-      else
-      {
-        <p class="text-danger">Вы не произвели вход в систему (не авторизовались)!</p>
-        <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("войти в свою учетную запись (авторизоваться)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
-        <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтесь в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
-      }
     </div>
-    <div id="learningPanel" class="tab-pane fade">
+    </div>
+
+    <p><A href="http://www.k-press.ru/bh/editorial-board.htm">Редколлегия журнала</A> <A href="http://www.k-press.ru/bh/editorial-board-eng.asp">(Editorial board - English)</A></p>
+
+    <p>
+      <b>Главный редактор</b>: Чистякова Людмила Александровна, <b><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span></b> +7 (916) 320-71-78, <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="mailto:bp2702@yandex.ru">bp2702@yandex.ru</a>
+    </p>
+
+    <ul>
+      <li><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&nbsp;<a href='@Url.Action("Contact", "Home")' title="Телефоны, адреса электронной почты и другая информация">Контакты</a></li>
+      <li><A href='@Url.Action("Requirements", "Home")'>Требования к статьям (рукописям), предоставляемым для публикации в журнал</A></li>
+      <li><a href='@Url.Action("Conditions", "Home")'>Порядок и условия публикации статей, права и обязанности авторов</a></li>
+      <li><a href='@Url.Action("ReviewRules", "Home")'>Правила рецензирования статей</a></li>
+      <li>Индекс по <a href="http://www.rosp.ru/service/subscribe/">каталогу “Роспечать”</a> - <B>80270</B></li>
+      <li>ISSN <b>0236-4964</b></li>
+      <li><a href="http://www.k-press.ru/bh/Subscription.asp">Подписка</a></li>
+      <li>Полные тексты статей<b> <a href="http://elibrary.ru/title_about.asp?id=7639">доступны на сайте РИНЦ</a></b> (Российского Индекса Цитирования).</li>
+    </ul>
+
+    @{
+      const string ActiveTab = "ActiveTab";
+      var activeTabCooke = Request.Cookies[ActiveTab];
+      var activePan = int.Parse(activeTabCooke?.Value ?? "0");
+      var issuesPanelClass   = activePan == 0 ? " in active" : "";
+      var pubsPanelClass     = activePan == 1 ? " in active" : "";
+      var learningPanelClass = activePan == 2 ? " in active" : "";
+
+      var issuesTabClass     = activePan == 0 ? " class=active" : "";
+      var pubsTabClass       = activePan == 1 ? " class=active" : "";
+      var learningTabClass   = activePan == 2 ? " class=active" : "";
+    }
+
+    <ul class="nav nav-tabs">
+      <li@(issuesTabClass)  ><a data-toggle="tab" href="#issuesPanel"   onclick="$.cookie('@ActiveTab', 0);"                    >Выпуски журналов</a></li>
+      <li@(pubsTabClass)    ><a data-toggle="tab" href="#pubsPanel"     onclick="$.cookie('@ActiveTab', 1);" style="color: red;"><b>Опубликовать статью</b></a></li>
+      <li@(learningTabClass)><a data-toggle="tab" href="#learningPanel" onclick="$.cookie('@ActiveTab', 2);"                    ><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span> Инструкция</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="issuesPanel" class="tab-pane fade@(issuesPanelClass)">
+        <p></p>
+        @Html.Partial("Issues")
+      </div>
+      <div id="pubsPanel" class="tab-pane fade@(pubsPanelClass)">
+        <p></p>
+        <p class="alert alert-info">
+          Сейчас идет формирование № <b>@settings.Number</b> за <b>@settings.Year</b> год, который выйдет в <b>@Html.PublicationMonth(settings.Number)</b>.
+          На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и статьях.
+        </p>
+        <p class="alert alert-success">
+          В целях повышения удобства и качества обработки публикаций с 01.06.2017
+          подача заявок на публикацию в юридическом журнале @Constants.Jur
+          производится в электронном виде, через web-интерфейс.<br />
+          Формы ввода снабжены подробными комментариями. Это делает
+          процедуру подачи заявки на публикацию более однозначной и просто. <br />
+          Если у вас возникли трудности, задайте вопрос по адресу <a href="mailto:vladdq@yandex.ru">vladdq@yandex.ru</a>.
+        </p>
+
+        @if (Request.IsAuthenticated)
+      {
+          <p>Сначала добавьте авторов публикаций, а потом публикации (где можно будет указать заранее введенных авторов).</p>
+          <p>
+            @if (User.IsInRole(Constants.AdminRole))
+            {
+              @Html.ActionLink("Номера", "Index", "Issues", null, new { @class = "btn btn-primary" })
+            }
+            @Html.ActionLink("Авторы статей", "Index", "Authors", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Статьи в формируемый номер", "Index", "Articles", null, new { @class = "btn btn-primary" })
+          </p>
+        }
+        else
+        {
+          <p class="text-danger">Вы не произвели вход в личный кабинет (не авторизовались)!</p>
+          <p>Чтобы добавить запрос на публикацию нужно @Html.ActionLink("войти в свой личный кабинет (авторизоваться)", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
+          <p>Если у Вас еще нет учетной записи, @Html.ActionLink("создайте новую учетную запись (зарегистрируйтесь в системе)", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }).</p>
+        }
+    </div>
+    <div id="learningPanel" class="tab-pane fade@(learningPanelClass)">
       <img src="~/Images/bh-add-article-2.gif" />
+      </div>
     </div>
   </div>
-</div>
 
