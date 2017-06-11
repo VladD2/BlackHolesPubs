@@ -1,5 +1,6 @@
 ﻿using BlackHoles.DataContexts;
 using BlackHoles.Models;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
@@ -11,6 +12,7 @@ using System;
 using System.Reflection;
 using System.Resources;
 using System.Globalization;
+using System.Web;
 
 [assembly: OwinStartupAttribute(typeof(BlackHoles.Startup))]
 namespace BlackHoles
@@ -36,38 +38,44 @@ namespace BlackHoles
       //resourceCultureField.SetValue(null, ruCulture);
 
       ConfigureAuth(app);
-      CreateRolesandUsers();
+      CreateRolesandUsers(app);
     }
 
     // In this method we will create default User roles and Admin user for login    
-    private void CreateRolesandUsers()
+    private void CreateRolesandUsers(IAppBuilder app)
     {
       var context = new IssuesDb();
 
-
       var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-      var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+      var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+      
+      userManager.UserValidator = new UserValidator<ApplicationUser>(userManager)
+      {
+        AllowOnlyAlphanumericUserNames = false,
+        RequireUniqueEmail = true
+      };
+
 
       var editor1 = GetUser(context, "alxletur@gmail.com");
       if (editor1 != null)
-        AddRole(editor1, roleManager, UserManager, Constants.EditorRole);
+        AddRole(editor1, roleManager, userManager, Constants.EditorRole);
 
       var editor2 = GetUser(context, "bp2702@yandex.ru");
       if (editor2 != null)
-        AddRole(editor2, roleManager, UserManager, Constants.EditorRole);
+        AddRole(editor2, roleManager, userManager, Constants.EditorRole);
 
       var editor3 = GetUser(context, "vc@rsdn.ru");
       if (editor3 != null)
       {
-        RemoveRole(editor3, roleManager, UserManager, Constants.AdminRole);
-        AddRole(editor3, roleManager, UserManager, Constants.EditorRole);
+        RemoveRole(editor3, roleManager, userManager, Constants.AdminRole);
+        AddRole(editor3, roleManager, userManager, Constants.EditorRole);
       }
 
       var admin = GetUser(context, "vladdq@ya.ru");
       if (admin != null)
       {
-        AddRole(admin, roleManager, UserManager, Constants.AdminRole);
-        AddRole(admin, roleManager, UserManager, Constants.EditorRole);
+        AddRole(admin, roleManager, userManager, Constants.AdminRole);
+        AddRole(admin, roleManager, userManager, Constants.EditorRole);
       }
     }
 
@@ -86,6 +94,10 @@ namespace BlackHoles
       if (!UserManager.IsInRole(user.Id, roleName))
       {
         var result = UserManager.AddToRole(user.Id, roleName);
+        if (!result.Succeeded)
+        {
+          throw new ApplicationException(string.Join(Environment.NewLine, result.Errors));
+        }
       }
     }
 

@@ -291,6 +291,7 @@ namespace BlackHoles.Controllers
       if (orig == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
+      var prevStatus = orig.Status;
 
       Mapper.Initialize(cfg =>
         cfg.CreateMap<Article, Article>()
@@ -306,10 +307,10 @@ namespace BlackHoles.Controllers
 
       Mapper.Map(article, orig);
 
-      return EditImpl(orig);
+      return EditImpl(orig, prevStatus);
     }
 
-    private ActionResult EditImpl(Article article)
+    private ActionResult EditImpl(Article article, ArticleStatus prevStatus)
     {
       article.FillPrperties(db);
 
@@ -333,6 +334,8 @@ namespace BlackHoles.Controllers
 
         article.TrySeveFiles(Server.MapPath, additionalImg1, additionalImg2, Constants.ReviewImgPrefix);
 
+        TryAddAcceptedMessage(article, prevStatus);
+
         TryAddMessage(article);
 
         db.SaveChanges();
@@ -343,6 +346,18 @@ namespace BlackHoles.Controllers
       }
 
       return ContinueEdit(article);
+    }
+
+    private static void TryAddAcceptedMessage(Article article, ArticleStatus prevStatus)
+    {
+      if (string.IsNullOrWhiteSpace(article.CurrentMessageText) && article.Status == ArticleStatus.Accepted && prevStatus != ArticleStatus.Accepted)
+      {
+        article.CurrentMessageText =
+          $@"Ваша статья принята к публикации в № {article.IssueNumber} за {article.IssueYear} год, который выйдет в июне.
+При сдаче номера в печать Вы получите уведомление, содержащее: номера страниц, титульный лист, оглавление и PDF вашей статьи.
+Реквизиты для оплаты публикации: http://www.k-press.ru/bh/Home/PaymentDetails
+";
+      }
     }
 
     // GET: Articles/Delete/5
