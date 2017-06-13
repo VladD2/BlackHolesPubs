@@ -156,9 +156,8 @@ namespace BlackHoles.Models
       if (this.Id <= 0)
         return new string[0];
 
-      var settings = Settings.Default;
       var authors = this.GetArticleAuthorsSurnames();
-      var filePattern = $"{prefix}{settings.Year}-{settings.Number}-id{this.Id}-v*";
+      var filePattern = $"{prefix}{IssueYear}-{IssueNumber}-id{this.Id}-v*";
       var versions = Directory.EnumerateFiles(this.GetArticleDir(mapPath), filePattern)
         .Where(f => !string.IsNullOrWhiteSpace(Path.GetExtension(f)))
         .OrderByDescending(f => f)
@@ -171,15 +170,14 @@ namespace BlackHoles.Models
       return string.Join("-", this.Authors.Select(a => ValidFileText(a.RusSurname)));
     }
 
-    public static string GetFilesRootPath(int id)
+    public string GetFilesRootPath()
     {
-      var settings = Settings.Default;
-      return $"~/App_Data/UploadedFiles/{settings.Year}/{settings.Number}/{id}/";
+      return $"~/App_Data/UploadedFiles/{IssueYear}/{IssueNumber}/{Id}/";
     }
 
     private string GetArticleDir(Func<string, string> mapPath)
     {
-      var articleDir = mapPath(GetFilesRootPath(this.Id));
+      var articleDir = mapPath(GetFilesRootPath());
       if (!Directory.Exists(articleDir))
         Directory.CreateDirectory(articleDir);
       return articleDir;
@@ -247,15 +245,12 @@ StackTrace: {builder}
 
     public string GetNameForLatestFileVersion(Func<string, string> mapPath, string prefix = null)
     {
-      var settings = Settings.Default;
       var versions = GetFileVersions(mapPath, prefix);
-
       return versions.Max();
     }
 
     public string MakeFileName(HttpPostedFileBase file, Func<string, string> mapPath, string prefix = null)
     {
-      var settings = Settings.Default;
       var versions = GetFileVersions(mapPath, prefix);
       var rx = new Regex(FilePattern);
       var version = versions.Length + 1;
@@ -273,7 +268,7 @@ StackTrace: {builder}
 
       var authors = GetArticleAuthorsSurnames();
       var ext = Path.GetExtension(file.FileName);
-      var fileName = $"{prefix}{settings.Year}-{settings.Number}-id{Id}-v{version}-{authors}-{ShortArtTitles}{ext}";
+      var fileName = $"{prefix}{IssueYear}-{IssueNumber}-id{Id}-v{version}-{authors}-{ShortArtTitles}{ext}";
       var fullPath = Path.Combine(GetArticleDir(mapPath), fileName);
       return fullPath;
     }

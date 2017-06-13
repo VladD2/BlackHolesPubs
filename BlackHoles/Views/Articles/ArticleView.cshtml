@@ -38,6 +38,25 @@
       </tr>
 
       <tr>
+        <td width="5%">@Html.Label("№ журнала", htmlAttributes: new { @class = "control-label col-md-2" })</td>
+        <td width="60%">
+          @{  var issues = db.Issues.Where(i => i.Active).OrderBy(i => i.Year).ThenBy(i => i.Number).ToList(); }
+          <select class="form-control" id="Issue" name="Issue" onchange="onIssueChanged(this.value);">
+            @foreach (var i in issues)
+            {
+              var selected = (i.Year == Model.IssueYear && i.Number == Model.IssueNumber) ? "selected" : "";
+              <option @selected value="[@i.Year,@i.Number]">№ @i.Number за @i.Year год</option>
+            }
+          </select>
+          @Html.HiddenFor(model => model.IssueYear)
+          @Html.HiddenFor(model => model.IssueNumber)
+          @Html.ValidationMessageFor(model => model.IssueYear, "", new { @class = "text-danger" })
+          @Html.ValidationMessageFor(model => model.IssueNumber, "", new { @class = "text-danger" })
+        </td>
+        <td width="35%">Номер журнала, в котором планируется опубликовать статью.</td>
+      </tr>
+
+      <tr>
         <td>@Html.LabelFor(model => model.Specialty, htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td width="50%" colspan="2">
           @{

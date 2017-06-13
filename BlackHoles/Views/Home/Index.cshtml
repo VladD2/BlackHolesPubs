@@ -1,9 +1,11 @@
 ﻿@using BlackHoles;
 @using BlackHoles.Properties;
 @using BlackHoles.Utils;
+@using BlackHoles.DataContexts;
 @{
+  IssuesDb db = new IssuesDb();
   ViewBag.Title = "Публикация в журнале " + Constants.Jur;
-  var settings = @Settings.Default;
+  var activeIssue = db.GetActiveIssue();
 }
 
 <div style="max-width: 900px; margin: auto;">
@@ -71,7 +73,7 @@
       <div id="pubsPanel" class="tab-pane fade@(pubsPanelClass)">
         <p></p>
         <p class="alert alert-info">
-          Сейчас идет формирование № <b>@settings.Number</b> за <b>@settings.Year</b> год, который выйдет в <b>@Html.PublicationMonth(settings.Number)</b>.
+          Сейчас идет формирование № <b>@activeIssue.Number</b> за <b>@activeIssue.Year</b> год, который выйдет в <b>@Html.PublicationMonth(activeIssue.Number)</b>.
           На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и статьях.
         </p>
         <p class="alert alert-success">

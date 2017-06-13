@@ -155,4 +155,13 @@ function execCommentAjax(data, action, actionTitle, onSuccess)
   });
 }
 
+function onIssueChanged(issueText)
+{
+  var issue  = eval(issueText);
+  var yeat   = issue[0];
+  var number = issue[1];
+  $('#IssueYear').val(yeat);
+  $('#IssueNumber').val(number);
+}
+
 $(attachEvents);

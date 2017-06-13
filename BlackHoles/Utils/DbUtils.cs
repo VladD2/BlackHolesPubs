@@ -13,6 +13,11 @@ namespace BlackHoles.Utils
 {
   public static class DbUtils
   {
+    public static Issue GetActiveIssue(this IssuesDb db)
+    {
+      return db.Issues.Where(i => i.Active).OrderBy(i => i.Year).ThenBy(i => i.Number).First();
+    }
+
     public static bool IsYear(string str)
     {
       var year = 0;

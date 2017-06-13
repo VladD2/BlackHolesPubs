@@ -29,7 +29,11 @@ namespace BlackHoles.Controllers
     {
       var userId = User.GetUserId();
       var articles = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User)
-        .OrderByDescending(a => a.Status).ThenBy(a => a.Authors.Min(au => au.RusSurname)).ToList();
+        .OrderByDescending(a => a.IssueYear)
+        .ThenByDescending(a => a.IssueNumber)
+        .ThenByDescending(a => a.Status)
+        .ThenBy(a => a.Authors.Min(au => au.RusSurname))
+        .ToList();
       foreach (var article in articles)
       {
         article.FillFilesInfo(Server.MapPath);
@@ -96,6 +100,10 @@ namespace BlackHoles.Controllers
     {
       ViewBag.Create = true;
       var newArticle = new Article();
+      var issue = db.GetActiveIssue();
+      newArticle.Issue = issue;
+      newArticle.IssueYear = issue.Year;
+      newArticle.IssueNumber = issue.Number;
       return ContinueEdit(newArticle);
     }
 
@@ -107,7 +115,6 @@ namespace BlackHoles.Controllers
     public ActionResult Create([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed,Status,ArticleDate")] Article article)
     {
       ViewBag.Create = true;
-      var settings = Settings.Default;
       var isCreating = article.Id == 0;
       article.FillPrperties(db);
 
@@ -119,7 +126,7 @@ namespace BlackHoles.Controllers
 
       article.Created = article.Modified;
       article.Owner   = User.GetApplicationUser(db);
-      article.Issue   = db.Issues.Find(settings.Year, settings.Number);
+      article.Issue   = db.Issues.Find(article.IssueYear, article.IssueNumber);
 
       if (article.Issue == null)
         throw new ApplicationException("Незаполнен список изданий!");
@@ -181,7 +188,10 @@ namespace BlackHoles.Controllers
       if (article.CurrentMessageText == null)
         return;
 
-      MailMessageService.SendMail(Constants.MainEmail, $"Коментраий к статье '{article.ShortArtTitles}'",
+      var user = User.GetApplicationUser(db);
+      var email = user.Email.Equals(Constants.MainEmail, StringComparison.OrdinalIgnoreCase) ? article.Owner.Email : Constants.MainEmail;
+
+      MailMessageService.SendMail(email, $"Коментраий к статье '{article.ShortArtTitles}'",
         $@"<html>
 <body>
 </body>
@@ -348,15 +358,26 @@ namespace BlackHoles.Controllers
       return ContinueEdit(article);
     }
 
-    private static void TryAddAcceptedMessage(Article article, ArticleStatus prevStatus)
+    private void TryAddAcceptedMessage(Article article, ArticleStatus prevStatus)
     {
-      if (string.IsNullOrWhiteSpace(article.CurrentMessageText) && article.Status == ArticleStatus.Accepted && prevStatus != ArticleStatus.Accepted)
+      if (article.Status == ArticleStatus.Accepted && prevStatus != ArticleStatus.Accepted)
       {
-        article.CurrentMessageText =
-          $@"Ваша статья принята к публикации в № {article.IssueNumber} за {article.IssueYear} год, который выйдет в июне.
+        if (string.IsNullOrWhiteSpace(article.CurrentMessageText))
+          article.CurrentMessageText = $@"Ваша статья принята к публикации в № {article.IssueNumber} за {article.IssueYear} год, который выйдет в июне.
 При сдаче номера в печать Вы получите уведомление, содержащее: номера страниц, титульный лист, оглавление и PDF вашей статьи.
 Реквизиты для оплаты публикации: http://www.k-press.ru/bh/Home/PaymentDetails
 ";
+
+        MailMessageService.SendMail(Constants.ImposerEmail, $"Статья принята для печати. Сокращенное название: '{article.ShortArtTitles}'",
+  $@"<html>
+<body>
+</body>
+<p><i>Это автоматическое уведомление.</p>
+<p>Статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()} 
+  <b>принята</b> к публикации в № {article.IssueNumber} за {article.IssueYear}.</p>
+</p>
+</html>");
+
       }
     }
 

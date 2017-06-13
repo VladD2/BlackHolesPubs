@@ -40,6 +40,7 @@
         <th>@Html.DisplayNameFor(model => model.Id)</th>
       }
       <th>@Html.DisplayNameFor(model => model.Status)</th>
+      <th>@Html.DisplayName("№")</th>
       <th>@Html.DisplayNameFor(model => model.Authors)</th>
       <th>@Html.DisplayNameFor(model => model.ShortArtTitles)</th>
       <th>@Html.DisplayNameFor(model => model.Created)</th>
@@ -67,6 +68,7 @@
           <td>@Html.DisplayFor(modelItem => article.Id)</td>
         }
         <td><span class="@article.Status">@Html.DisplayFor(modelItem => article.Status)</span></td>
+        <td>@Html.DisplayFor(m => article.IssueYear) @Html.DisplayFor(m => article.IssueNumber)</td>
         <td>@article.GetAuthorsBriefFios()</td>
         <td>@Html.DisplayFor(m => article.ShortArtTitles)</td>
         <td>@Html.DisplayFor(m => article.Created)</td>
