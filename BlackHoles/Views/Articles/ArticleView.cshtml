@@ -40,8 +40,15 @@
       <tr>
         <td width="5%">@Html.Label("№ журнала", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td width="60%">
-          @{  var issues = db.Issues.Where(i => i.Active).OrderBy(i => i.Year).ThenBy(i => i.Number).ToList(); }
+          @{ 
+            var issues = db.Issues.Where(i => i.Active).OrderBy(i => i.Year).ThenBy(i => i.Number).ToList();
+            var needPlaceholder = !issues.Any(i => i.Year == Model.IssueYear && i.Number == Model.IssueNumber);
+          }
           <select class="form-control" id="Issue" name="Issue" onchange="onIssueChanged(this.value);">
+            @if (needPlaceholder)
+            {
+              <option value="" selected disabled hidden>Выберите номер...</option>
+            }
             @foreach (var i in issues)
             {
               var selected = (i.Year == Model.IssueYear && i.Number == Model.IssueNumber) ? "selected" : "";
@@ -205,7 +212,7 @@
         <td>
 
           @{ 
-            var canUpload = Model.Status != ArticleStatus.Accepted || User.IsInRole(Constants.EditorRole);
+            var canUpload = Model.Status < ArticleStatus.Accepted || User.IsInRole(Constants.EditorRole);
             var articleFileState = canUpload ? "" : "data-disabled=true";
             var articleFilePlaceholder = canUpload ? "файл не выбран!" : "Замена файла принятого к публикации невозможна!";
           }

@@ -28,12 +28,19 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      var articles = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User)
+      var articlesQuery = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User);
+
+      if (User.IsInRole(Constants.EditorRole))
+        articlesQuery = articlesQuery.Where(a => a.Status != ArticleStatus.Published);
+
+      articlesQuery = articlesQuery
         .OrderByDescending(a => a.IssueYear)
         .ThenByDescending(a => a.IssueNumber)
         .ThenByDescending(a => a.Status)
-        .ThenBy(a => a.Authors.Min(au => au.RusSurname))
-        .ToList();
+        .ThenBy(a => a.Authors.Min(au => au.RusSurname));
+
+      var articles = articlesQuery.ToList();
+
       foreach (var article in articles)
       {
         article.FillFilesInfo(Server.MapPath);
@@ -291,7 +298,7 @@ namespace BlackHoles.Controllers
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "Id,Specialty,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed,Status,ArticleDate")] Article article)
+    public ActionResult Edit([Bind(Include = "Id,Specialty,IssueYear,IssueNumber,RusArtTitles,ShortArtTitles,RusAbstract,RusKeywords,EnuArtTitles,EnuAbstract,EnuKeywords,AuthorsIds,CurrentMessageText,References,Agreed,Status,ArticleDate")] Article article)
     {
       ViewBag.Create = false;
 
@@ -308,14 +315,13 @@ namespace BlackHoles.Controllers
            .ForMember(dest => dest.Created,     opt => opt.Ignore())
            .ForMember(dest => dest.Owner,       opt => opt.Ignore())
            .ForMember(dest => dest.OwnerId,     opt => opt.Ignore())
-           .ForMember(dest => dest.Issue,       opt => opt.Ignore())
-           .ForMember(dest => dest.IssueYear,   opt => opt.Ignore())
-           .ForMember(dest => dest.IssueNumber, opt => opt.Ignore())
            .ForMember(dest => dest.Authors,     opt => opt.Ignore())
            .ForMember(dest => dest.Modified,    opt => opt.Ignore())
            );
 
       Mapper.Map(article, orig);
+
+      orig.Issue = db.Issues.Find(orig.IssueYear, orig.IssueNumber);
 
       return EditImpl(orig, prevStatus);
     }
@@ -377,7 +383,12 @@ namespace BlackHoles.Controllers
   <b>принята</b> к публикации в № {article.IssueNumber} за {article.IssueYear}.</p>
 </p>
 </html>");
-
+      }
+      else if (article.Status == ArticleStatus.Paid && prevStatus != ArticleStatus.Paid)
+      {
+        if (string.IsNullOrWhiteSpace(article.CurrentMessageText))
+          article.CurrentMessageText = $@"Получена оплата по статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}
+";
       }
     }
 

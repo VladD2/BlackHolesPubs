@@ -38,7 +38,7 @@
 
   </dl>
 
-  @if (Model.Status != ArticleStatus.Accepted || User.IsInRole(Constants.AdminRole))
+  @if (Model.Status < ArticleStatus.Accepted || User.IsInRole(Constants.AdminRole))
   {
     using (Html.BeginForm())
     {

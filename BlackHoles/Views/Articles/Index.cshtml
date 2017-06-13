@@ -19,7 +19,7 @@
         <dd>@articles.Count</dd>
 
         <dt>Принятых статей:</dt>
-        <dd>@articles.Count(a => a.Status == ArticleStatus.Accepted)</dd>
+        <dd>@articles.Count(a => a.Status >= ArticleStatus.Accepted)</dd>
 
         <dt>Требует проверки:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification)</dd>
@@ -61,6 +61,7 @@
       {
         case ArticleStatus.HasArrors: trClass = "danger"; break;
         case ArticleStatus.Accepted:  trClass = "success"; break;
+        case ArticleStatus.Paid:      trClass = "success"; break;
       }
       <tr class="@trClass">
         @if (User.IsInRole(Constants.EditorRole))

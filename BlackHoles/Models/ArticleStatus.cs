@@ -9,7 +9,11 @@ namespace BlackHoles.Models
     RequiresVerification = 0,
     [Display(Name = "Содержит ошибки")]
     HasArrors = 1,
-    [Display(Name = "Принят")]
+    [Display(Name = "Принята")]
     Accepted = 2,
+    [Display(Name = "Оплачена")]
+    Paid = 3,
+    [Display(Name = "Опубликована")]
+    Published = 4,
   }
 }
