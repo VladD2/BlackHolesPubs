@@ -391,6 +391,7 @@
     <Content Include="Views\Home\Issues.cshtml" />
     <Content Include="Views\Home\ReviewRules.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <Content Include="Views\Home\Instruction.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />

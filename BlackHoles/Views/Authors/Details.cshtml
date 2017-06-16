@@ -5,15 +5,25 @@
     ViewBag.Title = "Описание автора";
 }
 
-<a href='@Url.Action("Edit", new { id = Model.Id })' class="btn btn-primary" title="Изменить"><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
-@Shared.BackButton()
-<a href='@Url.Action("Index", "Home")' class="btn btn-primary" title="Перейти к главной странице"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
-<a href='@Url.Action("Index", "Articles")' class="btn btn-primary" title="Перейти к списку статей"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+<div style="max-width: 900px; margin: auto;">
+  <a href='@Url.Action("Edit", new { id = Model.Id })' class="btn btn-primary" title="Изменить"><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
+  @Shared.BackButton()
+  <a href='@Url.Action("Index", "Home")' class="btn btn-primary" title="Перейти к главной странице"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+  <a href='@Url.Action("Index", "Articles")' class="btn btn-primary" title="Перейти к списку статей"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Перейти к списку статей</a>
 
-<h2>@ViewBag.Title</h2>
+  <p></p>
 
-@Html.Partial("AuthorDetailsRus", Model)
+  <p class="alert alert-warning">
+    Обратите внимание на то, что добавление описания автора не достаточно для подачи заявки на публикацию статьи.
+    Вам, так же, необходимо перейти к <a href='@Url.Action("Index", "Articles")'>списку заявок на публикации</a> и создать заявку.
+  </p>
 
-<hr />
+  <h2>@ViewBag.Title</h2>
 
-@Html.Partial("AuthorDetailsEnu", Model)
+  @Html.Partial("AuthorDetailsRus", Model)
+
+  <hr />
+
+  @Html.Partial("AuthorDetailsEnu", Model)
+
+</div>

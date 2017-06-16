@@ -18,6 +18,7 @@ namespace BlackHoles.Controllers
     public ActionResult PaymentDetails()          { return View(); }
     public ActionResult Antiplagiat()             { return View(); }
     public ActionResult ReviewRules()             { return View(); }
+    public ActionResult Instruction()             { return View(); }
 
     public ActionResult About()
     {
