@@ -57,6 +57,13 @@ namespace BlackHoles.Models
     [DataType(DataType.PhoneNumber)]
     public string Phone         { get; set; }
 
+    [StringLength(10, ErrorMessage = Error.ToLong), Display(Name = "Индекс")]
+    public string Postcode { get; set; }
+
+    [StringLength(300, ErrorMessage = Error.ToLong), Display(Name = "Адрес")]
+    public string PostalAddress { get; set; }
+
+
     public List<Article> Articles { get; set; }
 
     public string MakeBriefInitials()

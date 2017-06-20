@@ -108,7 +108,39 @@
         <td>@InfoOptional() Используется для связи с автором. Публично недоступно.</td>
       </tr>
 
-      <tr><td colspan="3" class="alert alert-info">Следующие поля заполняются на <b>английсокм</b> языке:</td></tr>
+      <tr><td colspan="3" class="alert alert-info">Почтовые реквизиты. По ним будет <b>отправляться</b> номер, в случае оплаты доставки:</td></tr>
+
+      <tr>
+        <td>@Html.LabelFor(model => model.Postcode, htmlAttributes: new { @class = "control-label col-md-2" })</td>
+        <td>
+          <div>
+            @Html.EditorFor(model => model.Postcode, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Postcode, "", new { @class = "text-danger" })
+          </div>
+        </td>
+        <td>
+          <p>Это поле должно быть заполнено, <b>если заполенно поле @Html.NameFor(model => model.PostalAddress)</b></p>
+          <p><a href="https://www.pochta.ru/post-index">Поиск индекса</a></p>
+        </td>
+      </tr>
+
+      <tr>
+        <td>@Html.LabelFor(model => model.PostalAddress, htmlAttributes: new { @class = "control-label col-md-2" })</td>
+        <td>
+          <div>
+            @Html.EditorFor(model => model.PostalAddress, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PostalAddress, "", new { @class = "text-danger" })
+          </div>
+        </td>
+        <td><p>@InfoOptional() Адрес ледует заполнить, если автору нужно получить бумажный экземпляр номера.
+        Если это поле незаполнено или в заявке на публикацию не указано, что автору требуется экземпляр,
+        автору будет выслана только электронная версия статьи в формете PDF.</p>
+        <p>В адресе <b>обязательно должны</b> быть указаны: город, улица, номер дома, кварита. В случае организации - ее название. 
+          Если требуется доставка за пределы РФ, следует указать Страну. Если получатель отличается от автора, следует указать получателя.</p>
+        </td>
+      </tr>
+
+      <tr><td colspan = "3" class="alert alert-info">Следующие поля заполняются на<b>английсокм</b> языке:</td></tr>
 
       <tr>
         <td>@Html.LabelFor(model => model.EnuSurname, htmlAttributes: new { @class = "control-label col-md-2" })</td>
@@ -118,7 +150,7 @@
             @Html.ValidationMessageFor(model => model.EnuSurname, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>В именительном падеже. С прописной буквы. Например: Ivanov. @Shared.AutoTranslate("Surname")</td>
+        <td>В именительном падеже.С прописной буквы.Например: Ivanov.@Shared.AutoTranslate("Surname")</td>
       </tr>
 
       <tr>
@@ -129,7 +161,7 @@
             @Html.ValidationMessageFor(model => model.EnuInitials, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>Имя. С прописной буквы. Например: Peter. @Shared.AutoTranslate("Initials")</td>
+        <td>Имя.С прописной буквы.Например: Peter.@Shared.AutoTranslate("Initials")</td>
       </tr>
 
       <tr>
@@ -140,12 +172,12 @@
             @Html.ValidationMessageFor(model => model.EnuOrgName, "", new { @class = "text-danger" })
           </div>
         </td>
-        <td>В именительном подеже. Это поле не должно содержать ничего кроме названия учебного заведения или компании. . @Shared.AutoTranslate("OrgName")</td>
+        <td>В именительном подеже.Это поле не должно содержать ничего кроме названия учебного заведения или компании. .@Shared.AutoTranslate("OrgName")</td>
       </tr>
     </table>
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        @Shared.BackButton()&nbsp;&nbsp;<input type="submit" value="Записать" class="btn btn-primary" />
+        @Shared.BackButton()&nbsp;&nbsp;<input type = "submit" value="Записать" class="btn btn-primary" />
       </div>
     </div>
   </div>
@@ -155,7 +187,7 @@
 
 @section Scripts { @Scripts.Render("~/bundles/jqueryval") }
 
-@helper InfoOptional()
-{
+        @helper InfoOptional()
+        {
   @:Необязательное поле. <span class="text-warning">Оставьте его пустым</span>, если для него нет информации.
 }
