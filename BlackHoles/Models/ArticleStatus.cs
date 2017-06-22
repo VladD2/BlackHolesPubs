@@ -5,15 +5,28 @@ namespace BlackHoles.Models
 {
   public enum ArticleStatus
   {
-    [Display(Name = "Обрабатывается")]
+    [Display(Name = "Ожидает оборкботки")]
     RequiresVerification = 0,
+
+    [Display(Name = "Обрабатывается")]
+    AddedToAntiplagiat = 5,
+
     [Display(Name = "Содержит ошибки")]
-    HasArrors = 1,
+    HasErrors = 10,
+
+    [Display(Name = "Новая версия")]
+    NewVersion = 15,
+
     [Display(Name = "Принята")]
-    Accepted = 2,
-    [Display(Name = "Оплачена")]
-    Paid = 3,
+    Accepted = 20,
+
+    [Display(Name = "Принята и оплачена")]
+    Paid = 30,
+
+    [Display(Name = "Не оплачена")]
+    PublishedButNotPaid = 40,
+
     [Display(Name = "Опубликована")]
-    Published = 4,
+    Published = 50,
   }
 }

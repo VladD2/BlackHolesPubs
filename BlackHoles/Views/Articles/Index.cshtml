@@ -24,8 +24,11 @@
         <dt>Требует проверки:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification)</dd>
 
+        <dt>Требует ответа:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.AddedToAntiplagiat)</dd>
+
         <dt>С ошибками:</dt>
-        <dd>@articles.Count(a => a.Status == ArticleStatus.HasArrors)</dd>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.HasErrors)</dd>
       </dl>
     </div>
   }
@@ -59,7 +62,7 @@
       var trClass = "";
       switch (article.Status)
       {
-        case ArticleStatus.HasArrors: trClass = "danger"; break;
+        case ArticleStatus.HasErrors: trClass = "danger"; break;
         case ArticleStatus.Accepted:  trClass = "success"; break;
         case ArticleStatus.Paid:      trClass = "success"; break;
       }

@@ -35,9 +35,9 @@ namespace BlackHoles.Controllers
 
       articlesQuery = articlesQuery
         .OrderByDescending(a => a.IssueYear)
-        .ThenByDescending(a => a.IssueNumber)
-        .ThenByDescending(a => a.Status)
-        .ThenBy(a => a.Authors.Min(au => au.RusSurname));
+        .ThenByDescending (a => a.IssueNumber)
+        .ThenByDescending (a => a.Status)
+        .ThenBy           (a => a.Id);
 
       var articles = articlesQuery.ToList();
 
@@ -340,7 +340,7 @@ namespace BlackHoles.Controllers
         HttpPostedFileBase additionalImg2 = Request.Files["additionalImg2"];
 
         if (articleFile?.ContentLength > 0)
-          article.SeveFile(articleFile, Server.MapPath);
+          SaveArticleFile(article, articleFile, prevStatus);
 
         if (additionalTextFile?.ContentLength > 0)
           article.SeveFile(additionalTextFile, Server.MapPath, Constants.ReviewTextPrefix);
@@ -364,6 +364,29 @@ namespace BlackHoles.Controllers
       return ContinueEdit(article);
     }
 
+    private void SaveArticleFile(Article article, HttpPostedFileBase articleFile, ArticleStatus prevStatus)
+    {
+      var versionsOld = article.GetFileVersions(Server.MapPath);
+      article.SeveFile(articleFile, Server.MapPath);
+
+      if (prevStatus != ArticleStatus.RequiresVerification && article.Status != ArticleStatus.NewVersion)
+      {
+        article.Status = ArticleStatus.NewVersion;
+        var versionsNew = article.GetFileVersions(Server.MapPath);
+
+        MailMessageService.SendMail(Constants.MainEmail, $"Изменена версия файла к статье id{article.Id} '{article.ShortArtTitles}', авторов: {article.GetAuthorsBriefFios()}",
+          $@"<html>
+<body>
+</body>
+<p><i>Это автоматическое уведомление.</p>
+<p>В статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: <b>{article.GetAuthorsBriefFios()}</b> 
+  был <b>изменен файл</b> статьи.
+</p>
+<p>Предыдущий статус: {prevStatus}</p>
+</html>");
+      }
+    }
+
     private void TryAddAcceptedMessage(Article article, ArticleStatus prevStatus)
     {
       if (article.Status == ArticleStatus.Accepted && prevStatus != ArticleStatus.Accepted)
@@ -380,7 +403,7 @@ namespace BlackHoles.Controllers
 </body>
 <p><i>Это автоматическое уведомление.</p>
 <p>Статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()} 
-  <b>принята</b> к публикации в № {article.IssueNumber} за {article.IssueYear}.</p>
+  <b>принята</b> к публикации в № {article.IssueNumber} за {article.IssueYear}.
 </p>
 </html>");
       }

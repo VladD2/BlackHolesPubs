@@ -116,9 +116,34 @@ a.reply {
   text-align: center;
 }
 
-.HasArrors {
+.AddedToAntiplagiat {
+  display: inline;
+  background-color: darkcyan;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+
+.HasErrors {
   display: inline;
   background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.NewVersion {
+  display: inline;
+  background-color: orange;
   color: white;
   font-weight: bold;
   padding: .1em .4em .2em;
@@ -131,6 +156,42 @@ a.reply {
 .Accepted {
   display: inline;
   background-color: mediumseagreen;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.Paid {
+  display: inline;
+  background-color: mediumseagreen;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.PublishedButNotPaid {
+  display: inline;
+  background-color: orangered;
+  color: white;
+  font-weight: bold;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.Published {
+  display: inline;
+  background-color: darkgreen;
   color: white;
   font-weight: bold;
   padding: .1em .4em .2em;

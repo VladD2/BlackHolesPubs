@@ -151,7 +151,7 @@ namespace BlackHoles.Models
       this.ReviewImgVersions = GetFileVersions(mapPath, Constants.ReviewImgPrefix).Length;
     }
 
-    private string[] GetFileVersions(Func<string, string> mapPath, string prefix = null)
+    public string[] GetFileVersions(Func<string, string> mapPath, string prefix = null)
     {
       if (this.Id <= 0)
         return new string[0];
