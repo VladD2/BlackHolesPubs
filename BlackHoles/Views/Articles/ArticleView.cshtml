@@ -217,7 +217,7 @@
             var articleFilePlaceholder = canUpload ? "файл не выбран!" : "Замена файла принятого к публикации невозможна!";
           }
           
-          <input type="file" name="articleFile" id="articleFile" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="@articleFilePlaceholder" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." @articleFileState />
+          <input type="file" name="articleFile" id="articleFile" accept="application/msword,.doc,.docx,.txt,.rtf" class="filestyle" data-placeholder="@articleFilePlaceholder" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." @articleFileState />
           @Html.ValidationMessage("articleFile", "", new { @class = "text-danger" })
         </td>
         <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литературы, информации об авторах и т.п.). 
@@ -227,7 +227,7 @@
       <tr>
         <td>@Html.Label("Текст рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
-        <input type="file" name="additionalTextFile" id="additionalText" accept=".doc,.rtf,.txt,.docx" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (текст)..." />
+        <input type="file" name="additionalTextFile" id="additionalText" accept="application/msword,.doc,.docx,.txt,.rtf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (текст)..." />
         </td>
         <td>
           @Shared.Review(isFieldDesc: true)
@@ -238,8 +238,8 @@
         <td>@Html.Label("Фото/скан рецензии", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
           @Html.ValidationMessage("additionalImg", "", new { @class = "text-danger" })
-          <input type="file" name="additionalImg1" id="additionalImg1" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (фото/скан)..." />
-          <input type="file" name="additionalImg2" id="additionalImg2" accept=".png,.gif,.jpg,.jpeg,.tiff,.pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите второй файл рецензии (фото/скан)..." />
+          <input type="file" name="additionalImg1" id="additionalImg1" accept="image/png,image/gif,image/jpeg,image/tiff,application/pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите файл рецензии (фото/скан)..." />
+          <input type="file" name="additionalImg2" id="additionalImg2" accept="image/png,image/gif,image/jpeg,image/tiff,application/pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите второй файл рецензии (фото/скан)..." />
         </td>
         <td>
           <p>Изображение (фото или скан) рецензии/отзыва (передаваемого в предыдущем поле) в форматах: 

@@ -67,7 +67,41 @@
         <span class="label label-danger">рецензия (фото) не загружена!</span>
       }
     </dd>
-</dl>
+
+    @if (Model.AntiplagiatApdx > 0 && Model.AntiplagiatApdx == Model.AntiplagiatPdf)
+    {
+      <dt>Отчеты&nbsp;antiplagiat.ru:</dt>
+      var apdxUrl = Url.Action("AntiplagiatApdx", new { id = Model.Id });
+      var pdfUrl  = Url.Action("AntiplagiatPdf", new { id = Model.Id });
+      <dd>
+        <a href="@pdfUrl" ><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> в формате .pdf</a>, 
+        <a href="@apdxUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> в формате .apdx</a> (@Html.DisplayFor(m => m.AntiplagiatDate)) <a href="http://www.antiplagiat.ru/Page/Antiplagiat-report-viewer" target="_blank">Antiplagiat ReportViewer</a>
+      </dd>
+      }
+      else if (Model.AntiplagiatApdx != Model.AntiplagiatPdf)
+      {
+        <dt>Отчеты&nbsp;antiplagiat.ru:</dt>
+        <dd class="text-danger">Несовпадает количество отчетов Antiplagiat! Обратитесь в редакцию.</dd>
+      }
+  @if (User.IsInRole(Constants.EditorRole))
+  {
+    using (Html.BeginForm("UploadAntiplagiat", "Articles", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+      @Html.AntiForgeryToken()
+      @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+      @Html.HiddenFor(model => model.Id)
+      <dt>PDF-отчет:</dt>
+      <dd><input type="file" name="antiplagiatPdf" id="antiplagiatPdf" accept="application/pdf" /></dd>
+
+      <dt>APDX-отчет:</dt>
+      <dd><input type="file" name="antiplagiatApdx" id="antiplagiatApdx" accept="application/apdx,.apdx" /></dd>
+      <dd>
+        @Html.ValidationMessage("UploadAntiplagiatValidation", "", new { @class = "text-danger" })<br />
+        <input type="submit" value="Загрузить отчеты Antiplagiat" title="Загрузить отчеты Antiplagiat" class="btn btn-primary" @*onclick="return onSubmit();"*@ />
+      </dd>
+    }
+  }
+  </dl>
 </div>
 
 <hr />

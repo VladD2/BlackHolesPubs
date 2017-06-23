@@ -15,20 +15,23 @@
     var articles = Model.ToList();
     <div>
       <dl class="dl-horizontal">
-        <dt>Всего статей:</dt>
-        <dd>@articles.Count</dd>
-
         <dt>Принятых статей:</dt>
         <dd>@articles.Count(a => a.Status >= ArticleStatus.Accepted)</dd>
 
         <dt>Требует проверки:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification)</dd>
 
-        <dt>Требует ответа:</dt>
+        <dt>Проверен&nbsp;Antiplagiat:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.AddedToAntiplagiat)</dd>
+
+        <dt>Загружен&nbsp;отчет&nbsp;Antiplagiat:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.AntiplagiatReportLoaded)</dd>
 
         <dt>С ошибками:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.HasErrors)</dd>
+
+        <dt>Всего статей:</dt>
+        <dd>@articles.Count(a => a.Status != ArticleStatus.Published && a.Status != ArticleStatus.PublishedButNotPaid)</dd>
       </dl>
     </div>
   }
@@ -38,10 +41,7 @@
   </p>
   <table class="table table-hover">
     <tr>
-      @if (User.IsInRole(Constants.EditorRole))
-      {
-        <th>@Html.DisplayNameFor(model => model.Id)</th>
-      }
+      <th>@Html.DisplayNameFor(model => model.Id)</th>
       <th>@Html.DisplayNameFor(model => model.Status)</th>
       <th>@Html.DisplayName("№")</th>
       <th>@Html.DisplayNameFor(model => model.Authors)</th>
@@ -67,10 +67,7 @@
         case ArticleStatus.Paid:      trClass = "success"; break;
       }
       <tr class="@trClass">
-        @if (User.IsInRole(Constants.EditorRole))
-        {
-          <td>@Html.DisplayFor(modelItem => article.Id)</td>
-        }
+        <td>@Html.DisplayFor(modelItem => article.Id)</td>
         <td><span class="@article.Status">@Html.DisplayFor(modelItem => article.Status)</span></td>
         <td>@Html.DisplayFor(m => article.IssueYear) @Html.DisplayFor(m => article.IssueNumber)</td>
         <td>@article.GetAuthorsBriefFios()</td>

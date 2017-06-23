@@ -107,9 +107,20 @@ namespace BlackHoles.Models
     public int ReviewImgVersions { get; set; }
 
     [NotMapped]
+    public int AntiplagiatApdx { get; set; }
+
+    [NotMapped]
+    public int AntiplagiatPdf { get; set; }
+
+    [NotMapped]
+    public DateTime AntiplagiatDate { get; set; }
+
+    [NotMapped]
     [Range(typeof(bool), "true", "true", ErrorMessage = "Без подтверждения согласия вы не можете добавить запрос на публикацию статьи!")]
     public bool Agreed { get; set; }
 
+
+    public string AuthorsPlural => this.Authors.Count <= 1 ? "а" : "ов";
 
     public string GetAuthorsBriefFios()
     {
@@ -146,9 +157,17 @@ namespace BlackHoles.Models
         var articlePath = articleVersions[0];
         this.ArticleDate = File.GetLastWriteTimeUtc(articlePath);
       }
-      this.ArticleVersions = articleVersions.Length;
+      this.ArticleVersions    = articleVersions.Length;
       this.ReviewTextVersions = GetFileVersions(mapPath, Constants.ReviewTextPrefix).Length;
-      this.ReviewImgVersions = GetFileVersions(mapPath, Constants.ReviewImgPrefix).Length;
+      this.ReviewImgVersions  = GetFileVersions(mapPath, Constants.ReviewImgPrefix).Length;
+
+      var antiplagiatApdxVersions = GetFileVersions(mapPath, Constants.AntiplagiatApdxPrefix);
+
+      if (antiplagiatApdxVersions.Length > 0)
+        this.AntiplagiatDate = File.GetLastWriteTimeUtc(antiplagiatApdxVersions[0]);
+
+      this.AntiplagiatApdx    = antiplagiatApdxVersions.Length;
+      this.AntiplagiatPdf     = GetFileVersions(mapPath, Constants.AntiplagiatPdfPrefix).Length;
     }
 
     public string[] GetFileVersions(Func<string, string> mapPath, string prefix = null)
@@ -158,9 +177,10 @@ namespace BlackHoles.Models
 
       var authors = GetArticleAuthorsSurnames();
       var filePattern = $"{prefix}id{Id}-v*";
+      var rx = new Regex(@".+-v(\d+)-.+");
       var versions = Directory.EnumerateFiles(GetArticleDir(mapPath), filePattern)
         .Where(f => !string.IsNullOrWhiteSpace(Path.GetExtension(f)))
-        .OrderByDescending(f => f)
+        .OrderByDescending(f => int.Parse(rx.Match(f).Groups[1].Value))
         .ToArray();
       return versions;
     }
@@ -246,7 +266,7 @@ StackTrace: {builder}
     public string GetNameForLatestFileVersion(Func<string, string> mapPath, string prefix = null)
     {
       var versions = GetFileVersions(mapPath, prefix);
-      return versions.Max();
+      return versions[0];
     }
 
     public string MakeFileName(HttpPostedFileBase file, Func<string, string> mapPath, string prefix = null)

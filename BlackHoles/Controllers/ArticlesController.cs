@@ -86,6 +86,18 @@ namespace BlackHoles.Controllers
       return GetFile(id, Constants.ReviewImgPrefix);
     }
 
+    // GET: Articles/Doc/5
+    public ActionResult AntiplagiatApdx(int? id)
+    {
+      return GetFile(id, Constants.AntiplagiatApdxPrefix);
+    }
+
+    // GET: Articles/Doc/5
+    public ActionResult AntiplagiatPdf(int? id)
+    {
+      return GetFile(id, Constants.AntiplagiatPdfPrefix);
+    }
+
     private ActionResult GetFile(int? id, string prefix = null)
     {
       if (id == null)
@@ -302,7 +314,6 @@ namespace BlackHoles.Controllers
     {
       ViewBag.Create = false;
 
-      var userId = User.GetUserId();
       var orig = db.Articles.Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue)
                    .FilterByOwner(User).SingleOrDefault(a => a.Id == article.Id);
       if (orig == null)
@@ -559,6 +570,74 @@ namespace BlackHoles.Controllers
           DeleteCascad(subMsg);
 
       db.Messages.Remove(msg);
+    }
+
+    // POST: Articles/UploadAntiplagiat/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult UploadAntiplagiat([Bind(Include = "Id")] Article article)
+    {
+      Article orig = db.Articles.Include(a => a.Messages).Include(a => a.Authors.Select(x => x.Owner)).Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue)
+        .FilterByOwner(User)
+        .SingleOrDefault(a => a.Id == article.Id);
+
+      if (orig == null)
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+      HttpPostedFileBase antiplagiatApdx = Request.Files["antiplagiatApdx"];
+      HttpPostedFileBase antiplagiatPdf  = Request.Files["antiplagiatPdf"];
+
+      if (antiplagiatPdf?.ContentLength > 0 && antiplagiatApdx?.ContentLength > 0)
+      {
+        if (!Path.GetExtension(antiplagiatPdf.FileName).Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+          ModelState.AddModelError("UploadAntiplagiatValidation", "В первом поле должен быть .pdf!");
+          return View("Details", orig);
+        }
+
+        if (!Path.GetExtension(antiplagiatApdx.FileName).Equals(".apdx", StringComparison.OrdinalIgnoreCase))
+        {
+          ModelState.AddModelError("UploadAntiplagiatValidation", "Во втором поле должен быть .apdx!");
+          return View("Details", orig);
+        }
+
+        orig.SeveFile(antiplagiatApdx, Server.MapPath, Constants.AntiplagiatApdxPrefix);
+        orig.SeveFile(antiplagiatPdf, Server.MapPath, Constants.AntiplagiatPdfPrefix);
+
+        MailMessageService.SendMail(orig.Owner.Email, $"Загружен отчет antiplagiat.ru к статье id{orig.Id} '{orig.ShortArtTitles}', автор{orig.AuthorsPlural}: {orig.GetAuthorsBriefFios()}",
+          $@"<html>
+<body>
+<p><i>Это автоматическое уведомление.</p>
+<p>Обратите внимание на то, что <b>статья еще не обработана редактором</b>. Это всего лишь оповещение о ходе обработки статьи. 
+  Через некоторое время <b>Вам будет выслано уведомление о принятии статьи или письмо с замечаниями</b>, которые нужно исправить. 
+</p>
+<p>К статье '<a href='{this.Action("Details", "Articles", new { id = orig.Id })}'>{orig.ShortArtTitles}</a>', автор{orig.AuthorsPlural}: <b>{orig.GetAuthorsBriefFios()}</b> 
+  был добавлен отчет Antiplagiat.ru.
+</p>
+<p>Вы можете скачать его <a href='{this.Action("AntiplagiatPdf", "Articles", new { id = orig.Id })}'>PDF-версию</a>.</p>
+<p>Или его <a href='{this.Action("AntiplagiatApdx", "Articles", new { id = orig.Id })}'>APDX-версию</a>.</p>
+<p>Для просмотра APDX-версии Вам придется загрузить <a href='http://www.antiplagiat.ru/Page/Antiplagiat-report-viewer'>Antiplagiat ReportViewer</a>.</p>
+</body>
+</html>");
+        switch (orig.Status)
+        {
+          case ArticleStatus.RequiresVerification:
+          case ArticleStatus.AddedToAntiplagiat:
+          case ArticleStatus.NewVersion:
+            orig.Status = ArticleStatus.AntiplagiatReportLoaded;
+            orig.Agreed = true;
+            db.SaveChanges();
+            break;
+        }
+
+      }
+      else
+      {
+        ModelState.AddModelError("UploadAntiplagiatValidation", "Вы дожны задать одноверменно обва варианта отчета antiplagiat.ru .apdx и .pdf!");
+        return View("Details", orig);
+      }
+
+      return RedirectToAction("Details", new { id = article.Id });
     }
 
     protected override void Dispose(bool disposing)

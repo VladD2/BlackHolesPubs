@@ -11,6 +11,9 @@ namespace BlackHoles.Models
     [Display(Name = "Обрабатывается")]
     AddedToAntiplagiat = 5,
 
+    [Display(Name = "Проверен в Антиплагиат")]
+    AntiplagiatReportLoaded = 6,
+
     [Display(Name = "Содержит ошибки")]
     HasErrors = 10,
 
