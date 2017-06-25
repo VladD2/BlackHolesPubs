@@ -37,8 +37,17 @@
     <dt>@Html.DisplayNameFor(model => model.Modified):</dt>
     <dd>@Html.DisplayFor(model => model.Modified)</dd>
 
-    <dt>Разместил</dt>
-    <dd>@Html.DisplayFor(model => model.Owner.UserName) (@Html.DisplayFor(model => model.Owner.Email))</dd>
+    <dt>Разместил:</dt>
+    <dd>"@Html.DisplayFor(model => model.Owner.UserName)" &lt;@(Html.DisplayFor(model => model.Owner.Email))&gt;</dd>
+
+    @if (User.IsInRole(Constants.EditorRole))
+    {
+      <dt>Заголовок для письма:</dt>
+      <dd>Замечание по статье автор@(Model.AuthorsPlural) @Model.GetAuthorsBriefFios() '@Model.ShortArtTitles'</dd>
+
+      <dt>Телефоны авторов:</dt>
+      <dd>@string.Join(", ", Model.Authors.Where(a => !string.IsNullOrWhiteSpace(a.Phone)).Select(a => a.MakeBriefFio() + ": " + a.Phone))</dd>
+    }
 
     <dt>@Html.DisplayNameFor(model => model.Specialty):</dt>
     <dd>@Html.DisplayFor(model => model.Specialty)</dd>

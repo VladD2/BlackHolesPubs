@@ -13,10 +13,15 @@
   @if (User.IsInRole(Constants.EditorRole))
   {
     var articles = Model.ToList();
+    var groupedByIssue = articles.GroupBy(a => a.Issue);
     <div>
       <dl class="dl-horizontal">
         <dt>Принятых статей:</dt>
-        <dd>@articles.Count(a => a.Status >= ArticleStatus.Accepted)</dd>
+        <dd>
+          @{ var strs = groupedByIssue.Select(g => new { Issue = g.Key, Count = g.Count(a => a.Status == ArticleStatus.Accepted) }).Where(g => g.Count > 0)
+              .Select(g => $@"{g.Issue.Year} {g.Issue.Number}: {g.Count}"); }
+          @string.Join(", ", strs)
+        </dd>
 
         <dt>Требует проверки:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification)</dd>

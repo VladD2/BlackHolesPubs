@@ -28,7 +28,7 @@ namespace BlackHoles.Controllers
     public ActionResult Index()
     {
       var userId = User.GetUserId();
-      var articlesQuery = db.Articles.Include(a => a.Authors).Include(a => a.Owner).FilterByOwner(User);
+      var articlesQuery = db.Articles.Include(a => a.Authors).Include(a => a.Issue).Include(a => a.Owner).FilterByOwner(User);
 
       if (User.IsInRole(Constants.EditorRole))
         articlesQuery = articlesQuery.Where(a => a.Status != ArticleStatus.Published);
