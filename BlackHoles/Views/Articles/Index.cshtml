@@ -24,7 +24,7 @@
         </dd>
 
         <dt>Требует проверки:</dt>
-        <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification)</dd>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.RequiresVerification || a.Status == ArticleStatus.NewVersion)</dd>
 
         <dt>Проверен&nbsp;Antiplagiat:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.AddedToAntiplagiat)</dd>

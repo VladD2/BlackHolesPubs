@@ -405,7 +405,7 @@ namespace BlackHoles.Controllers
         if (string.IsNullOrWhiteSpace(article.CurrentMessageText))
           article.CurrentMessageText = $@"Ваша статья принята к публикации в № {article.IssueNumber} за {article.IssueYear} год, который выйдет в июне.
 При сдаче номера в печать Вы получите уведомление, содержащее: номера страниц, титульный лист, оглавление и PDF вашей статьи.
-Реквизиты для оплаты публикации: http://www.k-press.ru/bh/Home/PaymentDetails
+Реквизиты для оплаты публикации: http://www.k-press.ru/bh/Articles/PaymentDetails/{article.Id}
 ";
 
         MailMessageService.SendMail(Constants.ImposerEmail, $"Статья принята для печати. Сокращенное название: '{article.ShortArtTitles}'",
@@ -638,6 +638,24 @@ namespace BlackHoles.Controllers
       }
 
       return RedirectToAction("Details", new { id = article.Id });
+    }
+
+    public ActionResult PaymentDetails(int? id)
+    {
+      if (id == null)
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+      Article article = db.Articles.Include(a => a.Messages).Include(a => a.Authors.Select(x => x.Owner)).Include(a => a.Authors).Include(a => a.Owner).Include(a => a.Issue)
+        .FilterByOwner(User)
+        .SingleOrDefault(a => a.Id == id.Value);
+
+      if (article == null)
+        return HttpNotFound();
+
+      if (article.Status != ArticleStatus.Accepted)
+        return HttpNotFound("The publication request in an incorrect state!");
+
+      return View(article);
     }
 
     protected override void Dispose(bool disposing)

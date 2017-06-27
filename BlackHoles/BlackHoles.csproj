@@ -264,6 +264,7 @@
     <Content Include="Images\antiplagiat.gif" />
     <Content Include="Images\Back-white.svg" />
     <Content Include="Images\bh-add-article-2.gif" />
+    <Content Include="Images\bh-add-new-version.gif" />
     <Content Include="Images\Delete-white.svg" />
     <Content Include="Images\Edit-white.svg" />
     <Content Include="Images\k-press-logo.gif" />
@@ -386,7 +387,7 @@
     <Content Include="Views\Home\Requirements.cshtml" />
     <Content Include="Views\Home\Conditions.cshtml" />
     <Content Include="Views\Home\Prices.cshtml" />
-    <Content Include="Views\Home\PaymentDetails.cshtml" />
+    <Content Include="Views\Articles\PaymentDetails.cshtml" />
     <Content Include="Views\Home\Antiplagiat.cshtml" />
     <Content Include="Views\Home\Issues.cshtml" />
     <Content Include="Views\Home\ReviewRules.cshtml" />

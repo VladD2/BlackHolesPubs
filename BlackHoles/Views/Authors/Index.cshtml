@@ -31,7 +31,9 @@
       @if (User.IsInRole(Constants.EditorRole))
       {
         <th>Зарегистрировал</th>
-      }      <th>&nbsp;</th>
+      }
+      <th>Адрес доставки</th>
+      <th>&nbsp;</th>
     </tr>
 
     @foreach (var item in Model)
@@ -45,6 +47,8 @@
         {
           <td>@Html.DisplayFor(modelItem => item.Owner.UserName) (@Html.DisplayFor(modelItem => item.Owner.Email))</td>
         }
+        @{ var checkedAttr = string.IsNullOrWhiteSpace(item.PostalAddress) ? "" : "checked=checked"; }
+        <td><input title="Заполненен почтовый адрес" @checkedAttr disabled="disabled" id="HasPostAdres" name="HasPostAdres" readonly="readonly" type="checkbox" value="true"></td>
         @Shared.TableRowButtons(new { id = item.Id })
       </tr>
     }

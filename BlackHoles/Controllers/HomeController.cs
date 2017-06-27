@@ -15,7 +15,6 @@ namespace BlackHoles.Controllers
     public ActionResult FormattingExamples()      { return View(); }
     public ActionResult Conditions()              { return View(); }
     public ActionResult Prices()                  { return View(); }
-    public ActionResult PaymentDetails()          { return View(); }
     public ActionResult Antiplagiat()             { return View(); }
     public ActionResult ReviewRules()             { return View(); }
     public ActionResult Instruction()             { return View(); }
