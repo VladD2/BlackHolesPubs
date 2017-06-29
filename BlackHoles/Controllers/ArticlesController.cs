@@ -74,6 +74,11 @@ namespace BlackHoles.Controllers
       return GetFile(id);
     }
 
+    public ActionResult DocPrev(int? id)
+    {
+      return GetFile(id, prefix: null, needPreviousVersion: true);
+    }
+
     // GET: Articles/Doc/5
     public ActionResult ReviewTxt(int? id)
     {
@@ -98,7 +103,7 @@ namespace BlackHoles.Controllers
       return GetFile(id, Constants.AntiplagiatPdfPrefix);
     }
 
-    private ActionResult GetFile(int? id, string prefix = null)
+    private ActionResult GetFile(int? id, string prefix = null, bool needPreviousVersion = false)
     {
       if (id == null)
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -107,7 +112,12 @@ namespace BlackHoles.Controllers
         .FilterByOwner(User)
         .SingleOrDefault(a => a.Id == id);
 
-      var path = article.GetNameForLatestFileVersion(Server.MapPath, prefix);
+      var path = needPreviousVersion 
+        ? article.GetNameForPreviousFileVersion(Server.MapPath, prefix) 
+        : article.GetNameForLatestFileVersion(Server.MapPath, prefix);
+      if (path == null)
+        return HttpNotFound("File nor found!");
+
       var ext = Path.GetExtension(path);
       var name = Path.GetFileName(path);
       var contentType = "application/" + ext.TrimStart('.');

@@ -54,9 +54,14 @@
 
     <dt>Файлы:</dt>
     @{
-      var docUrl = Url.Action("Doc", new { id = Model.Id });
+      var docUrl     = Url.Action("Doc", new { id = Model.Id });
+      var docPrevUrl = Url.Action("DocPrev", new { id = Model.Id });
     }
     <dd><a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a> (@Html.DisplayFor(m => m.ArticleDate))
+      @if (User.IsInRole(Constants.EditorRole))
+      {
+          @:| <a href="@docPrevUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> прошлая версия</a>
+      }
       |
       @if (Model.ReviewTextVersions > 0)
       {

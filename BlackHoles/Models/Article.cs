@@ -269,6 +269,15 @@ StackTrace: {builder}
       return versions[0];
     }
 
+    public string GetNameForPreviousFileVersion(Func<string, string> mapPath, string prefix = null)
+    {
+      var versions = GetFileVersions(mapPath, prefix);
+      if (versions.Length >= 2)
+        return versions[1];
+
+      return null;
+    }
+
     public string MakeFileName(HttpPostedFileBase file, Func<string, string> mapPath, string prefix = null)
     {
       var versions = GetFileVersions(mapPath, prefix);
