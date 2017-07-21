@@ -26,6 +26,9 @@ namespace BlackHoles.Models
     [Display(Name = "Принята и оплачена")]
     Paid = 30,
 
+    [Display(Name = "Принята и оплачена доставка")]
+    PaidDelivery = 31,
+
     [Display(Name = "Не оплачена")]
     PublishedButNotPaid = 40,
 

@@ -78,9 +78,10 @@
       var trClass = "";
       switch (article.Status)
       {
-        case ArticleStatus.HasErrors: trClass = "danger"; break;
-        case ArticleStatus.Accepted:  trClass = "success"; break;
-        case ArticleStatus.Paid:      trClass = "success"; break;
+        case ArticleStatus.HasErrors:    trClass = "danger"; break;
+        case ArticleStatus.Accepted:     trClass = "success"; break;
+        case ArticleStatus.Paid:         trClass = "success"; break;
+        case ArticleStatus.PaidDelivery: trClass = "success"; break;
       }
       <tr class="@trClass">
         <td>@Html.DisplayFor(modelItem => article.Id)</td>

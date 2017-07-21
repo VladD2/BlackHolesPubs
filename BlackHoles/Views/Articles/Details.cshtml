@@ -43,10 +43,14 @@
     @if (User.IsInRole(Constants.EditorRole))
     {
       <dt>Заголовок для письма:</dt>
-      <dd>Замечание по статье автор@(Model.AuthorsPlural) @Model.GetAuthorsBriefFios() '@Model.ShortArtTitles'</dd>
+      <dd>Замечание по статье № @Model.Id автор@(Model.AuthorsPlural) @Model.GetAuthorsBriefFios() '@Model.ShortArtTitles.Trim()'</dd>
 
       <dt>Телефоны авторов:</dt>
       <dd>@string.Join(", ", Model.Authors.Where(a => !string.IsNullOrWhiteSpace(a.Phone)).Select(a => a.MakeBriefFio() + ": " + a.Phone))</dd>
+
+      <dt>Адреса авторов:</dt>
+      <dd>@string.Join("; ", Model.Authors.Where(a =>  !string.IsNullOrWhiteSpace(a.PostalAddress))
+            .Select(a => a.Postcode + ", " + a.PostalAddress + ", " +  a.MakeBriefFio()))</dd>
     }
 
     <dt>@Html.DisplayNameFor(model => model.Specialty):</dt>

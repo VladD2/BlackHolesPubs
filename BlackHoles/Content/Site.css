@@ -134,6 +134,7 @@ a.reply {
   background-color: dodgerblue;
   color: white;
   font-weight: bold;
+  font-size: xx-small;
   padding: .1em .4em .2em;
   vertical-align: baseline;
   border-radius: .25em;
@@ -182,6 +183,20 @@ a.reply {
   background-color: mediumseagreen;
   color: white;
   font-weight: bold;
+  font-size: xx-small;
+  padding: .1em .4em .2em;
+  vertical-align: baseline;
+  border-radius: .25em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.PaidDelivery {
+  display: inline;
+  background-color: mediumseagreen;
+  color: #ffffe6;
+  font-weight: bold;
+  font-size: xx-small;
   padding: .1em .4em .2em;
   vertical-align: baseline;
   border-radius: .25em;
