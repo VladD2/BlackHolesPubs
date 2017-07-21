@@ -266,3 +266,9 @@ a.reply {
 #content, #sidebar {
   margin-bottom: 5em;
 }
+
+.Important {
+  display: inline;
+  color: red;
+  font-weight: bold;
+}
