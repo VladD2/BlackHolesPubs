@@ -225,6 +225,8 @@
           
           <input type="file" name="articleFile" id="articleFile" accept="application/msword,.doc,.docx,.txt,.rtf" class="filestyle" data-placeholder="@articleFilePlaceholder" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." @articleFileState />
           @Html.ValidationMessage("articleFile", "", new { @class = "text-danger" })
+          <p class="alert alert-warning" style="margin-top: 5px">Орбатите внимание на то, что цитаты должны быть оформлены в соответствии с @Html.ActionLink("требованиями", "FormattingRequirements", "Home"). 
+          @Shared.FormattingRequirements()</p>
         </td>
         <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литературы, информации об авторах и т.п.). 
         Допустимые форматы: <code>.doc</code> - MS Word 97-2003 (предпочтительный формат), <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. 
