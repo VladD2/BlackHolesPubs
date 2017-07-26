@@ -454,7 +454,7 @@ namespace BlackHoles.Controllers
         {
           var address = string.IsNullOrWhiteSpace(a.PostalAddress) ? "Адрес не указан!" : a.PostalAddress;
           var index = string.IsNullOrWhiteSpace(a.Postcode) ? @"<b>Не указан индекс!</b> " : $"{a.Postcode}, ";
-          var line = $@"{index}<a href='http://www.k-press.ru/bh/Authors/Edit/{a.Id}'>{address}</a><br/>";
+          var line = $@"{index}<a href='http://www.k-press.ru/bh/Authors/Edit/{a.Id}#PostRequisites'>{address}</a><br/>";
           builder.AppendLine(line);
         }
 
