@@ -41,6 +41,11 @@ namespace BlackHoles.Utils
 
     public static MvcHtmlString PublicationMonth(this HtmlHelper htmlHelper, int number)
     {
+      return PublicationMonth(number);
+    }
+
+    public static MvcHtmlString PublicationMonth(int number)
+    {
       switch (number)
       {
         case 1: return new MvcHtmlString("феврале");

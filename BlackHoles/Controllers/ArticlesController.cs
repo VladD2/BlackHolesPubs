@@ -410,29 +410,66 @@ namespace BlackHoles.Controllers
 
     private void TryAddAcceptedMessage(Article article, ArticleStatus prevStatus)
     {
+
       if (article.Status == ArticleStatus.Accepted && prevStatus != ArticleStatus.Accepted)
       {
-        if (string.IsNullOrWhiteSpace(article.CurrentMessageText))
-          article.CurrentMessageText = $@"Ваша статья принята к публикации в № {article.IssueNumber} за {article.IssueYear} год, который выйдет в июне.
-При сдаче номера в печать Вы получите уведомление, содержащее: номера страниц, титульный лист, оглавление и PDF вашей статьи.
-Реквизиты для оплаты публикации: http://www.k-press.ru/bh/Articles/PaymentDetails/{article.Id}
-";
-
-        MailMessageService.SendMail(Constants.ImposerEmail, $"Статья принята для печати. Сокращенное название: '{article.ShortArtTitles}'",
-  $@"<html>
+        var title = $"Статья № {article.Id} принята к публикации. Сокращенное название: '{article.ShortArtTitles}'";
+        var text = $@"<html>
 <body>
-</body>
-<p><i>Это автоматическое уведомление.</p>
+<p><i>Это автоматическое уведомление!</p>
 <p>Статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()} 
   <b>принята</b> к публикации в № {article.IssueNumber} за {article.IssueYear}.
 </p>
-</html>");
+</body>
+</html>";
+        MailMessageService.SendMail(Constants.ImposerEmail, title, text);
+        var month = BlackHolesExtensions.PublicationMonth(article.IssueNumber);
+        text = $@"<html>
+<body>
+<p><i>Это автоматическое уведомление!</p>
+<p>
+  Ваша статья принята к публикации в № {article.IssueNumber} за {article.IssueYear} год журнала {Constants.Jur}, который <b>выйдет в {month}</b>.
+  При сдаче номера в печать Вы получите уведомление, содержащее: номера страниц, титульный лист, оглавление и PDF вашей статьи.
+  Реквизиты для оплаты публикации: http://www.k-press.ru/bh/Articles/PaymentDetails/{article.Id}
+</p>
+</body>
+</html>";
+        MailMessageService.SendMail(article.Owner.Email, title, text);
+        MailMessageService.SendMail(Constants.MainEmail, title, text);
       }
       else if (article.Status == ArticleStatus.Paid && prevStatus != ArticleStatus.Paid)
       {
-        if (string.IsNullOrWhiteSpace(article.CurrentMessageText))
-          article.CurrentMessageText = $@"Получена оплата по статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}
-";
+        var hasAdress = article.Authors.Any(a => !string.IsNullOrWhiteSpace(a.PostalAddress));
+        var builder =new StringBuilder();
+        if (hasAdress)
+          builder.AppendLine("<p>Проверьте адреса по которым будут направлены журналы, в случае оплаты доставки:</p>");
+        else
+        {
+          builder.AppendLine($@"<p><b>Внимание!</b> Ни у одного автора не указаны реквизиты доставки. 
+            Если вы оплачивали доставку журнала, укажите адрес доставки в реквизитах одного из авторов.</p>");
+          builder.AppendLine();
+        }
+
+        foreach (var a in article.Authors)
+        {
+          var address = string.IsNullOrWhiteSpace(a.PostalAddress) ? "Адрес не указан!" : a.PostalAddress;
+          var index = string.IsNullOrWhiteSpace(a.Postcode) ? @"<b>Не указан индекс!</b> " : $"{a.Postcode}, ";
+          var line = $@"{index}<a href='http://www.k-press.ru/bh/Authors/Edit/{a.Id}'>{address}</a><br/>";
+          builder.AppendLine(line);
+        }
+
+        var title = $"Получена оплата по статье № {article.Id}. Сокращенное название: '{article.ShortArtTitles}'";
+        var text = $@"
+<html>
+<body>
+<p>
+  Получена оплата по статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}
+</p>
+{builder}
+</body>
+</html>";
+        MailMessageService.SendMail(article.Owner.Email, title, text);
+        MailMessageService.SendMail(Constants.MainEmail, title, text);
       }
     }
 
