@@ -410,7 +410,6 @@ namespace BlackHoles.Controllers
 
     private void TryAddAcceptedMessage(Article article, ArticleStatus prevStatus)
     {
-
       if (article.Status == ArticleStatus.Accepted && prevStatus != ArticleStatus.Accepted)
       {
         var title = $"Статья № {article.Id} принята к публикации. Сокращенное название: '{article.ShortArtTitles}'";
@@ -439,14 +438,28 @@ namespace BlackHoles.Controllers
       }
       else if (article.Status == ArticleStatus.Paid && prevStatus != ArticleStatus.Paid)
       {
+        var title = $"Получена оплата по статье № {article.Id}. Сокращенное название: '{article.ShortArtTitles}'";
+        var text = $@"
+<html>
+<body>
+<p>
+  Получена оплата (без доставки) по статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}
+</p>
+</body>
+</html>";
+        MailMessageService.SendMail(article.Owner.Email, title, text);
+        MailMessageService.SendMail(Constants.MainEmail, title, text);
+      }
+      else if (article.Status == ArticleStatus.PaidDelivery && prevStatus != ArticleStatus.PaidDelivery)
+      {
         var hasAdress = article.Authors.Any(a => !string.IsNullOrWhiteSpace(a.PostalAddress));
-        var builder =new StringBuilder();
+        var builder = new StringBuilder();
         if (hasAdress)
           builder.AppendLine("<p>Проверьте адреса по которым будут направлены журналы, в случае оплаты доставки:</p>");
         else
         {
           builder.AppendLine($@"<p><b>Внимание!</b> Ни у одного автора не указаны реквизиты доставки. 
-            Если вы оплачивали доставку журнала, укажите адрес доставки в реквизитах одного из авторов.</p>");
+            Укажите адрес доставки в реквизитах одного из авторов.</p>");
           builder.AppendLine();
         }
 
