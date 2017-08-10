@@ -5,7 +5,7 @@ namespace BlackHoles.Models
 {
   public enum ArticleStatus
   {
-    [Display(Name = "Ожидает оборкботки")]
+    [Display(Name = "Ожидает обработки")]
     RequiresVerification = 0,
 
     [Display(Name = "Обрабатывается")]
