@@ -17,6 +17,12 @@ namespace BlackHoles.Models
     [Display(Name = "Содержит ошибки")]
     HasErrors = 10,
 
+    [Display(Name = "Отклонена")]
+    Rejected = 12,
+
+    [Display(Name = "Нет ответа")]
+    NoAnswerForALongTime = 13,
+
     [Display(Name = "Новая версия")]
     NewVersion = 15,
 
