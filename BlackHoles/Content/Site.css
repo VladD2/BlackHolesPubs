@@ -154,6 +154,30 @@ a.reply {
   text-align: center;
 }
 
+.Rejected {
+    display: inline;
+    background-color: brown;
+    color: lightgray;
+    font-weight: bold;
+    padding: .1em .4em .2em;
+    vertical-align: baseline;
+    border-radius: .25em;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.NoAnswerForALongTime {
+    display: inline;
+    background-color: gray;
+    color: lightgray;
+    font-weight: bold;
+    padding: .1em .4em .2em;
+    vertical-align: baseline;
+    border-radius: .25em;
+    white-space: nowrap;
+    text-align: center;
+}
+
 .NewVersion {
   display: inline;
   background-color: orange;

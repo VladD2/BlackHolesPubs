@@ -9,10 +9,10 @@
   @Shared.FreePublication()
 
   <p class="alert alert-warning"><span>Адрес доставки необходимо указать в описании автор@(Model.AuthorsPlural):</span>
-    @{ var i = 0; var last = Model.Authors.Count - 1; }  
+    @{ var i = 0; var last = Model.Authors.Count - 1; }
     @foreach (var a in Model.Authors)
     {
-      <a href='@Url.Action("Edit", "Authors", new { id = a.Id })#PostRequisites'>@a.MakeBriefFio()</a>@(i != last ? ", " : "")    
+      <a href='@Url.Action("Edit", "Authors", new { id = a.Id })#PostRequisites'>@a.MakeBriefFio()</a>@(i != last ? ", " : "")
       i++;
     }
     <br />
@@ -37,9 +37,18 @@
     <tr>
       <td align="right"><b>Основание&nbsp;платежа:</b></td>
       <td>
-        За публикацию № <b>@Model.Id</b>, автор@(Model.AuthorsPlural), в ЧД № @Model.IssueNumber за @Model.IssueYear год: @Model.GetAuthorsBriefFios()
+        За публикацию № <b>@Model.Id</b>, в ЧД № @Model.IssueNumber за @Model.IssueYear год, автор@(Model.AuthorsPlural): @Model.GetAuthorsBriefFios() НДС не облагается.
       </td>
     </tr>
-    <tr>  <td align="right"><b>Тип операции:</b></td>      <td>Платежи в пользу юридического лица</td> </tr>
+
+    <tr>
+        <td colspan="2">
+            <div class="text-info">
+                <p>Если в банке просят КПП, надо обратить внимание банковского работника на то, что получателем является Индивидуальный предприниматель у которого не может быть КПП.</p>
+                <p>Если вы платите из другой страны и у вас возникли проблемы с оплатой по указанным реквизитам, свяжитесь с Людмилой Александровной Чистяковой по адресу bp2702@yandex.ru, для получения альтернативного варианта оплаты.</p>
+            </div>
+        </td>
+    </tr>
+    <tr>  <td align="right"><b>Алпес регистрации:</b></td>   <td>129343, г. Москва, Берингов проезд, 4-88.</td></tr>
   </table>
 </div>

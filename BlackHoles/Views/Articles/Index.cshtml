@@ -26,6 +26,11 @@
     var articles = Model.ToList();
     var groupedByIssue = articles.GroupBy(a => a.Issue);
     <div>
+      @foreach (var g in groupedByIssue.Where(g => g.Any(a => a.Status == ArticleStatus.PaidDelivery && a.Authors.Any(au => !string.IsNullOrEmpty(au.PostalAddress)))).OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Number))
+      {
+        @Html.ActionLink($"Адреса для рассылки № {g.Key.Year} за {g.Key.Number}", "Adresses", new { year = g.Key.Year, number = g.Key.Number })<br />
+      }
+
       <dl class="dl-horizontal">
         <dt>Принятых статей:</dt>
         <dd>
@@ -45,6 +50,12 @@
 
         <dt>С ошибками:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.HasErrors)</dd>
+
+        <dt>Отклонено:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.Rejected)</dd>
+
+        <dt>Нет ответа:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.NoAnswerForALongTime)</dd>
 
         <dt>Всего статей:</dt>
         <dd>@articles.Count(a => a.Status != ArticleStatus.Published && a.Status != ArticleStatus.PublishedButNotPaid)</dd>
@@ -78,10 +89,12 @@
       var trClass = "";
       switch (article.Status)
       {
-        case ArticleStatus.HasErrors:    trClass = "danger"; break;
-        case ArticleStatus.Accepted:     trClass = "success"; break;
-        case ArticleStatus.Paid:         trClass = "success"; break;
-        case ArticleStatus.PaidDelivery: trClass = "success"; break;
+        case ArticleStatus.Rejected:             trClass = "muted";   break;
+        case ArticleStatus.NoAnswerForALongTime: trClass = "danger";  break;
+        case ArticleStatus.HasErrors:            trClass = "danger";  break;
+        case ArticleStatus.Accepted:             trClass = "success"; break;
+        case ArticleStatus.Paid:                 trClass = "success"; break;
+        case ArticleStatus.PaidDelivery:         trClass = "success"; break;
       }
       <tr class="@trClass">
         <td>@Html.DisplayFor(modelItem => article.Id)</td>

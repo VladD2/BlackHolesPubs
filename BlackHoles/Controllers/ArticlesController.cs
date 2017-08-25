@@ -700,6 +700,15 @@ namespace BlackHoles.Controllers
       return RedirectToAction("Details", new { id = article.Id });
     }
 
+    public ActionResult Adresses(int year, int number)
+    {
+      var authors = db.Articles
+        .Where(a => a.IssueYear == year && a.IssueNumber == number && a.Status == ArticleStatus.PaidDelivery)
+        .SelectMany(a => a.Authors.Where(au => !string.IsNullOrEmpty(au.PostalAddress)));
+
+      return View("AdressesView", authors);
+    }
+
     public ActionResult PaymentDetails(int? id)
     {
       if (id == null)

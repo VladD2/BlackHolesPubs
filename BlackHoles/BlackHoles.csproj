@@ -218,7 +218,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AccountViewModel.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -393,6 +393,7 @@
     <Content Include="Views\Home\ReviewRules.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
     <Content Include="Views\Home\Instruction.cshtml" />
+    <Content Include="Views\Articles\AdressesView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Shared\Helpers\" />
