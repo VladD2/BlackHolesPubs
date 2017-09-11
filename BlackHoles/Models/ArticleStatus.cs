@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlackHoles.Models
@@ -40,5 +40,8 @@ namespace BlackHoles.Models
 
     [Display(Name = "Опубликована")]
     Published = 50,
+
+    [Display(Name = "Опубликована и отправлена")]
+    PublishedAndDelivered = 60,
   }
 }

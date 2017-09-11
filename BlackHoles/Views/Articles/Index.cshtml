@@ -17,7 +17,7 @@
     После этого статус статьи изменится на «Новая версия» и редакторы получат уведомлении о наличии новой версии.
   </p>
   <p class="alert alert-danger">
-    Обратите внимание, что новую версию нельзя внести после принятия статьи к публикации. Если вы нашли ошибку в статье и хотите ее исправить 
+    Обратите внимание, что новую версию нельзя внести после принятия статьи к публикации. Если вы нашли ошибку в статье и хотите ее исправить
     (после принятия к публикации) напишите письмо на адрес <a href="mailto:vladdq@yandex.ru">vladdq@yandex.ru</a> и прикрепите к нему новую версию статьи.
   </p>
 
@@ -58,7 +58,7 @@
         <dd>@articles.Count(a => a.Status == ArticleStatus.NoAnswerForALongTime)</dd>
 
         <dt>Всего статей:</dt>
-        <dd>@articles.Count(a => a.Status != ArticleStatus.Published && a.Status != ArticleStatus.PublishedButNotPaid)</dd>
+        <dd>@articles.Count(a => a.Status < ArticleStatus.PublishedButNotPaid)</dd>
       </dl>
     </div>
   }
