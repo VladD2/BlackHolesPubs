@@ -57,6 +57,9 @@
         <dt>Нет ответа:</dt>
         <dd>@articles.Count(a => a.Status == ArticleStatus.NoAnswerForALongTime)</dd>
 
+        <dt>Опубликовано но не оплачено:</dt>
+        <dd>@articles.Count(a => a.Status == ArticleStatus.PublishedButNotPaid)</dd>
+
         <dt>Всего статей:</dt>
         <dd>@articles.Count(a => a.Status < ArticleStatus.PublishedButNotPaid)</dd>
       </dl>

@@ -31,7 +31,7 @@ namespace BlackHoles.Controllers
       var articlesQuery = db.Articles.Include(a => a.Authors).Include(a => a.Issue).Include(a => a.Owner).FilterByOwner(User);
 
       if (User.IsInRole(Constants.EditorRole))
-        articlesQuery = articlesQuery.Where(a => a.Status != ArticleStatus.Published);
+        articlesQuery = articlesQuery.Where(a => a.Status <= ArticleStatus.PublishedButNotPaid);
 
       articlesQuery = articlesQuery
         .OrderByDescending(a => a.IssueYear)
@@ -112,8 +112,8 @@ namespace BlackHoles.Controllers
         .FilterByOwner(User)
         .SingleOrDefault(a => a.Id == id);
 
-      var path = needPreviousVersion 
-        ? article.GetNameForPreviousFileVersion(Server.MapPath, prefix) 
+      var path = needPreviousVersion
+        ? article.GetNameForPreviousFileVersion(Server.MapPath, prefix)
         : article.GetNameForLatestFileVersion(Server.MapPath, prefix);
       if (path == null)
         return HttpNotFound("File nor found!");
@@ -137,7 +137,7 @@ namespace BlackHoles.Controllers
     }
 
     // POST: Articles/Create
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -316,7 +316,7 @@ namespace BlackHoles.Controllers
     }
 
     // POST: Articles/Edit/5
-    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for
     // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -400,7 +400,7 @@ namespace BlackHoles.Controllers
 <body>
 </body>
 <p><i>Это автоматическое уведомление.</p>
-<p>В статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: <b>{article.GetAuthorsBriefFios()}</b> 
+<p>В статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: <b>{article.GetAuthorsBriefFios()}</b>
   был <b>изменен файл</b> статьи.
 </p>
 <p>Предыдущий статус: {prevStatus}</p>
@@ -416,7 +416,7 @@ namespace BlackHoles.Controllers
         var text = $@"<html>
 <body>
 <p><i>Это автоматическое уведомление!</p>
-<p>Статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()} 
+<p>Статье <a href='{this.Action("Details", "Articles", new { id = article.Id })}'>{article.ShortArtTitles}</a>, авторов: {article.GetAuthorsBriefFios()}
   <b>принята</b> к публикации в № {article.IssueNumber} за {article.IssueYear}.
 </p>
 </body>
@@ -671,7 +671,7 @@ namespace BlackHoles.Controllers
 <p>Обратите внимание на то, что <b>статья еще не обработана редактором</b>. Это всего лишь оповещение о ходе обработки статьи. 
   Через некоторое время <b>Вам будет выслано уведомление о принятии статьи или письмо с замечаниями</b>, которые нужно исправить. 
 </p>
-<p>К статье '<a href='{this.Action("Details", "Articles", new { id = orig.Id })}'>{orig.ShortArtTitles}</a>', автор{orig.AuthorsPlural}: <b>{orig.GetAuthorsBriefFios()}</b> 
+<p>К статье '<a href='{this.Action("Details", "Articles", new { id = orig.Id })}'>{orig.ShortArtTitles}</a>', автор{orig.AuthorsPlural}: <b>{orig.GetAuthorsBriefFios()}</b>
   был добавлен отчет Antiplagiat.ru.
 </p>
 <p>Вы можете скачать его <a href='{this.Action("AntiplagiatPdf", "Articles", new { id = orig.Id })}'>PDF-версию</a>.</p>
