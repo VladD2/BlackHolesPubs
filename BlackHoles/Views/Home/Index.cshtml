@@ -3,9 +3,9 @@
 @using BlackHoles.Utils;
 @using BlackHoles.DataContexts;
 @{
-  IssuesDb db = new IssuesDb();
-  ViewBag.Title = "Публикация в журнале " + Constants.Jur;
-  var activeIssue = db.GetActiveIssue();
+    IssuesDb db = new IssuesDb();
+    ViewBag.Title = "Публикация в журнале " + Constants.Jur;
+    var activeIssueOpt = db.GetActiveIssueOpt();
 }
 
 <div style="max-width: 900px; margin: auto;">
@@ -72,10 +72,19 @@
       </div>
       <div id="pubsPanel" class="tab-pane fade@(pubsPanelClass)">
         <p></p>
-        <p class="alert alert-info">
-          Сейчас идет формирование № <b>@activeIssue.Number</b> за <b>@activeIssue.Year</b> год, который выйдет в <b>@Html.PublicationMonth(activeIssue.Number)</b>.
-          На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и подать электронную заявку на публикацию статьи.
-        </p>
+       @if (activeIssueOpt == null)
+       {
+          <p class="alert alert-info">
+            В настоящее время прием заявок на публикации статей неведется. Зайдите на сайт позже (через несколько дней).
+          </p>
+        }
+        else
+        {
+          <p class="alert alert-info">
+            Сейчас идет формирование № <b>@activeIssueOpt.Number</b> за <b>@activeIssueOpt.Year</b> год, который выйдет в <b>@Html.PublicationMonth(activeIssueOpt.Number))</b>.
+            На этой странице вы можете подать заявку на публикацию в нем. Для этого нужно заполнить метаинформацию об авторах и подать электронную заявку на публикацию статьи.
+          </p>
+        }
         <p class="alert alert-success">
           В целях повышения удобства и качества обработки публикаций с 01.06.2017
           подача заявок на публикацию в юридическом журнале @Constants.Jur
@@ -87,7 +96,7 @@
 
         @if (Request.IsAuthenticated)
       {
-          <p>Сначала добавьте @Html.ActionLink("авторов публикаций", "Index", "Authors"), а потом 
+          <p>Сначала добавьте @Html.ActionLink("авторов публикаций", "Index", "Authors"), а потом
             @Html.ActionLink("заявки на публикации", "Index", "Articles") (где можно будет указать заранее введенных авторов).</p>
           <p>
             @if (User.IsInRole(Constants.AdminRole))

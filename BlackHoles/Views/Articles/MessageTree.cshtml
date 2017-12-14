@@ -15,7 +15,7 @@
         <div class="message-header">Сообщение <b>@Mail(msg.Writer.Email)</b> от @Html.DisplayFor(modelItem => msg.Created):</div>
         <div class="message-text">@Html.DisplayFor(modelItem => msg.Text)</div>
         <div id="replyForm_@(msg.Id)" style="display:none">
-          <textarea cols="60" rows="2" name="replyText_@(msg.Id)" id="replyText_@(msg.Id)" contenteditable="true" spellcheck="true" placeholder="Введите текст коментария..."></textarea>
+          <textarea cols="60" rows="2" name="replyText_@(msg.Id)" id="replyText_@(msg.Id)" contenteditable="true" spellcheck="true" placeholder="Введите текст комментария..."></textarea>
           <input type="button" title="Нажмите на кномку чтобы добавить (сохранить) комментарий" id="replyButton_@(msg.Id)" value="Комментировать" class="btn btn-primary" onclick="return addComment(@articleId, @msg.Id);" />
         </div>
         <a onclick='$("#replyForm_@(msg.Id)").show();$(this).hide();' class="reply">Ответить</a>

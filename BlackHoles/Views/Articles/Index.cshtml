@@ -3,8 +3,10 @@
 @model IEnumerable<Article>
 
 @{
-  var title = "Публикуемые статьи";
-  ViewBag.Title = title;
+    var title = "Публикуемые статьи";
+    ViewBag.Title = title;
+    var db = new BlackHoles.DataContexts.IssuesDb();
+    var activeIssueOpt = db.GetActiveIssueOpt();
 }
 
 <div style="max-width: 1200px; margin: auto;">
@@ -35,7 +37,7 @@
         <dt>Принятых статей:</dt>
         <dd>
           @{ var strs = groupedByIssue.Select(g => new { Issue = g.Key, Count = g.Count(a => a.Status >= ArticleStatus.Accepted) }).Where(g => g.Count > 0)
-              .Select(g => $@"{g.Issue.Year} {g.Issue.Number}: {g.Count}"); }
+             .Select(g => $@"{g.Issue.Year} {g.Issue.Number}: {g.Count}"); }
           @string.Join(", ", strs)
         </dd>
 
@@ -66,9 +68,18 @@
     </div>
   }
 
-  <p>
-    @Html.ActionLink("Доабавить статью", "Create", null, new { @class = "btn btn-primary" })
-  </p>
+  @if (activeIssueOpt != null)
+  {
+    <p>
+      @Html.ActionLink("Доабавить статью", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+  }
+  else
+  {
+    <p class="alert alert-info alert-dismissable">
+      В настоящее время нет формирующихся номеров! Вы не можете добавить заявку на статью.
+    </p>
+  }
   <table class="table table-hover">
     <tr>
       <th>@Html.DisplayNameFor(model => model.Id)</th>
@@ -92,12 +103,12 @@
       var trClass = "";
       switch (article.Status)
       {
-        case ArticleStatus.Rejected:             trClass = "muted";   break;
-        case ArticleStatus.NoAnswerForALongTime: trClass = "danger";  break;
-        case ArticleStatus.HasErrors:            trClass = "danger";  break;
-        case ArticleStatus.Accepted:             trClass = "success"; break;
-        case ArticleStatus.Paid:                 trClass = "success"; break;
-        case ArticleStatus.PaidDelivery:         trClass = "success"; break;
+        case ArticleStatus.Rejected: trClass = "muted"; break;
+        case ArticleStatus.NoAnswerForALongTime: trClass = "danger"; break;
+        case ArticleStatus.HasErrors: trClass = "danger"; break;
+        case ArticleStatus.Accepted: trClass = "success"; break;
+        case ArticleStatus.Paid: trClass = "success"; break;
+        case ArticleStatus.PaidDelivery: trClass = "success"; break;
       }
       <tr class="@trClass">
         <td>@Html.DisplayFor(modelItem => article.Id)</td>

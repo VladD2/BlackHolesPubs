@@ -129,10 +129,14 @@ namespace BlackHoles.Controllers
     {
       ViewBag.Create = true;
       var newArticle = new Article();
-      var issue = db.GetActiveIssue();
-      newArticle.Issue = issue;
-      newArticle.IssueYear = issue.Year;
-      newArticle.IssueNumber = issue.Number;
+      var activeIssueOpt = db.GetActiveIssueOpt();
+
+      if (activeIssueOpt == null)
+        return HttpNotFound("В настоящее время нет формирующихся номеров!");
+
+      newArticle.Issue = activeIssueOpt;
+      newArticle.IssueYear = activeIssueOpt.Year;
+      newArticle.IssueNumber = activeIssueOpt.Number;
       return ContinueEdit(newArticle);
     }
 
@@ -220,8 +224,8 @@ namespace BlackHoles.Controllers
       var user = User.GetApplicationUser(db);
       var email = user.Email.Equals(Constants.MainEmail, StringComparison.OrdinalIgnoreCase) ? article.Owner.Email : Constants.MainEmail;
 
-      MailMessageService.SendMail(email, $"Коментраий к статье '{article.ShortArtTitles}'",
-        $@"<html>
+      var title = $"Коментраий к статье '{article.ShortArtTitles}'";
+      var text = $@"<html>
 <body>
 </body>
 <p><i>Это автоматическое уведомление. <b>Не отвечайте</b> на него.</i> Для ответа перейдите по ссылке ниже.</p>
@@ -230,7 +234,9 @@ namespace BlackHoles.Controllers
 <p>Текст сообщения:<br />
 {article.CurrentMessageText.Replace(Environment.NewLine, "<br />\r\n")}
 </p>
-</html>");
+</html>";
+      MailMessageService.SendMail(email, title, text);
+      MailMessageService.SendMail(Constants.MainEmail, title, text + "<br/>\r\n<br/>\r\n" + "Послано по адресу: <b>" + email + "</b>");
     }
 
     private void TrySendMessage(Article article, Message msg)

@@ -46,7 +46,7 @@
       <tr>
         <td width="5%">@Html.Label("№ журнала", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td width="60%">
-          @{ 
+          @{
             var issues = db.Issues.Where(i => i.Active).OrderBy(i => i.Year).ThenBy(i => i.Number).ToList();
             var needPlaceholder = !issues.Any(i => i.Year == Model.IssueYear && i.Number == Model.IssueNumber);
           }
@@ -127,7 +127,7 @@
           @Html.EditorFor(model => model.ShortArtTitles, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.ShortArtTitles, "", new { @class = "text-danger" })
         </td>
-        <td>Краткое (сокращенное) название статьи. Оно будет использоваться для отображения в списках, для именования файла статьи и в колонтитуле. 
+        <td>Краткое (сокращенное) название статьи. Оно будет использоваться для отображения в списках, для именования файла статьи и в колонтитуле.
             Не допускается использовать символы: <code>\</code>, <code>/</code>, <code>:</code>, <code>|</code>,
           <code>&lt;</code>, <code>&gt;</code>, <code>?</code>, <code>"</code> и <code>*</code>.</td>
       </tr>
@@ -138,7 +138,7 @@
           @Html.EditorFor(model => model.RusAbstract, new { htmlAttributes = new { @class = "form-control", rows = "5" } })
           @Html.ValidationMessageFor(model => model.RusAbstract, "", new { @class = "text-danger" })
         </td>
-        <td>Краткое описание статьи. В среднем 500 печатных символов (ГОСТ 7.9-95 СИБИД). Максимум @Html.MaximumLengthFor(model => model.RusAbstract) 
+        <td>Краткое описание статьи. В среднем 500 печатных символов (ГОСТ 7.9-95 СИБИД). Максимум @Html.MaximumLengthFor(model => model.RusAbstract)
           символов (включая непечатные).
           Аннотация должна отражать: предмет, тему, цель работы, метод или методологию, область применения результатов. Может содержать выводы.
           Помните, что аннотация доступна в Интернет и, что она является рекламой вашей работы!
@@ -151,7 +151,7 @@
           @Html.EditorFor(model => model.RusKeywords, new { htmlAttributes = new { @class = "form-control" } })
           @Html.ValidationMessageFor(model => model.RusKeywords, "", new { @class = "text-danger" })
         </td>
-        <td>1-6 слов/словосочетаний разделенных точкой с запятой или запятой (не смешивать!). Ключевые слова <b>не должны быть предложениями</b>, содержащими множество слов. 
+        <td>1-6 слов/словосочетаний разделенных точкой с запятой или запятой (не смешивать!). Ключевые слова <b>не должны быть предложениями</b>, содержащими множество слов.
         <a href="http://cyberleninka.ru/article/n/podbor-klyuchevyh-slov-dlya-nauchnoy-stati" target="_blank">Подробнее</a>.
         </td>
       </tr>
@@ -163,9 +163,9 @@
           @Html.ValidationMessageFor(model => model.References, "", new { @class = "text-danger" })
         </td>
         <td>
-          Каждое вхождение в списке должно отделяться новой строкой. Список должен быть пронумерован с единицы.  
+          Каждое вхождение в списке должно отделяться новой строкой. Список должен быть пронумерован с единицы.
           <a href="http://www.k-press.ru/bh/requirements.htm#citation" target="_blank">Требования</a> по цитированию и сноскам.
-        </td> 
+        </td>
       </tr>
 
       <tr>
@@ -217,19 +217,19 @@
         <td>@Html.Label("Файл статьи", htmlAttributes: new { @class = "control-label col-md-2" })</td>
         <td>
 
-          @{ 
+          @{
             var canUpload = Model.Status < ArticleStatus.Accepted || User.IsInRole(Constants.EditorRole);
             var articleFileState = canUpload ? "" : "data-disabled=true";
             var articleFilePlaceholder = canUpload ? "файл не выбран!" : "Замена файла принятого к публикации невозможна!";
           }
-          
+
           <input type="file" name="articleFile" id="articleFile" accept="application/msword,.doc,.docx,.txt,.rtf" class="filestyle" data-placeholder="@articleFilePlaceholder" data-buttonBefore="true" data-buttonText="Выберите файл статьи..." @articleFileState />
           @Html.ValidationMessage("articleFile", "", new { @class = "text-danger" })
-          <p class="alert alert-warning" style="margin-top: 5px">Орбатите внимание на то, что цитаты должны быть оформлены в соответствии с @Html.ActionLink("требованиями", "FormattingRequirements", "Home"). 
+          <p class="alert alert-warning" style="margin-top: 5px">Орбатите внимание на то, что цитаты должны быть оформлены в соответствии с @Html.ActionLink("требованиями", "FormattingRequirements", "Home").
           @Shared.FormattingRequirements()</p>
         </td>
-        <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литературы, информации об авторах и т.п.). 
-        Допустимые форматы: <code>.doc</code> - MS Word 97-2003 (предпочтительный формат), <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>. 
+        <td>Должен содержать только текст статьи, без метаданных (аннотации, ключевых слов, списка литературы, информации об авторах и т.п.).
+        Допустимые форматы: <code>.doc</code> - MS Word 97-2003 (предпочтительный формат), <code>.docx</code>, <code>.rtf</code>, <code>.txt</code>.
         @Html.ActionLink("Требования", "Requirements", "Home", null, null, "citation", null, null) по сноскам/цитатам.</td>
       </tr>
       <tr>
@@ -250,8 +250,8 @@
           <input type="file" name="additionalImg2" id="additionalImg2" accept="image/png,image/gif,image/jpeg,image/tiff,application/pdf" class="filestyle" data-placeholder="файл не выбран!" data-buttonBefore="true" data-buttonText="Выберите второй файл рецензии (фото/скан)..." />
         </td>
         <td>
-          <p>Изображение (фото или скан) рецензии/отзыва (передаваемого в предыдущем поле) в форматах: 
-            <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>. 
+          <p>Изображение (фото или скан) рецензии/отзыва (передаваемого в предыдущем поле) в форматах:
+            <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.pdf</code>.
             На изображении должны быть подписи рецензентов и печати учреждения.</p>
           <p>Желательно, чтобы это был один файл. Если у вас два файла (содержащий вторую страницу), добавьте второй файл в поле ниже.
           <b>Если файл один</b>, не заполняйте нижнее поле. Текст на переданном изображении должен совпадать с текстом, переданным в поле выше.</p>
@@ -263,13 +263,13 @@
         <td colspan="3">
           <div class="checkbox lead">
             <label>
-              @Html.CheckBoxFor(m => m.Agreed) Авторы статьи <span class="labelx label2-important">ознакомились</span> с 
+              @Html.CheckBoxFor(m => m.Agreed) Авторы статьи <span class="labelx label2-important">ознакомились</span> с
               <a href="@Url.Action("Requirements", "Home")" target="_blank">требованиями к статьям</a>,
               <a href="@Url.Action("Conditions", "Home")" target="_blank">порядком и условиями публикации статей, правами и обязанностями авторов</a>,
-              <a href='@Url.Action("Oferta", "Home")' target="_blank">публичной офертой</a>, 
-              <span class="labelx label2-agree">согласны</span> с описанными по приведенным ссылкам условиями. 
-              Устанавливая этот флажок, <span class="labelx label2-important">авторы производят акцепт</span> публичной 
-              <a href="@Url.Action("Oferta", "Home")" target="_blank">оферты</a>, и <span class="labelx label2-agree">соглашаются</span> 
+              <a href='@Url.Action("Oferta", "Home")' target="_blank">публичной офертой</a>,
+              <span class="labelx label2-agree">согласны</span> с описанными по приведенным ссылкам условиями.
+              Устанавливая этот флажок, <span class="labelx label2-important">авторы производят акцепт</span> публичной
+              <a href="@Url.Action("Oferta", "Home")" target="_blank">оферты</a>, и <span class="labelx label2-agree">соглашаются</span>
               на обработку своих персональных данных.
             </label>
           </div>
@@ -284,7 +284,7 @@
             <tr>
               <td width="100%">
           @{ ViewBag.ArticleId = Model.Id; }
-          @Html.EditorFor(model => model.CurrentMessageText, new { htmlAttributes = new { @class = "form-control", rows = "3", spellcheck = "true", placeholder = "Введите текст коментария, если хотите сообщить дополнительную информацию...", style = "margin-left: 10px; width: 100%; margin-bottom: 10px;" } })
+          @Html.EditorFor(model => model.CurrentMessageText, new { htmlAttributes = new { @class = "form-control", rows = "3", spellcheck = "true", placeholder = "Введите текст комментария, если хотите сообщить дополнительную информацию...", style = "margin-left: 10px; width: 100%; margin-bottom: 10px;" } })
           @Html.ValidationMessage("commentsValidation", "", new { @class = "text-danger" })
               </td>
               <td>

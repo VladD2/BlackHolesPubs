@@ -10,11 +10,25 @@ using System.Net.Mime;
 using System.IO;
 using System.Net;
 using System.Configuration;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace BlackHoles
 {
   public class MailMessageService : IIdentityMessageService
   {
+    public static bool CallbackIsInit { get; private set; }
+
+    static void TryInit()
+    {
+      if (CallbackIsInit)
+        return;
+
+      ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+
+      CallbackIsInit = true;
+    }
+
     public async Task SendAsync(IdentityMessage message)
     {
       using (var mail = new MailMessage())

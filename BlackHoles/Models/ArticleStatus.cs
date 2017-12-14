@@ -29,10 +29,10 @@ namespace BlackHoles.Models
     [Display(Name = "Принята")]
     Accepted = 20,
 
-    [Display(Name = "Принята и оплачена")]
+    [Display(Name = "Принята +")]
     Paid = 30,
 
-    [Display(Name = "Принята и оплачена доставка")]
+    [Display(Name = "Принята + доставка")]
     PaidDelivery = 31,
 
     [Display(Name = "Не оплачена")]
