@@ -7,7 +7,7 @@
   <td nowrap>
     <a href='@Url.Action("Edit",    routeValues)' class="btn btn-primary" title = "Изменить" ><img width="20" height="20" src='@Url.Content("~/Images/Edit-white.svg")' /></a>
     <a href='@Url.Action("Details", routeValues)' class="btn btn-primary" title = "Просмотор"><img width="20" height="20" src='@Url.Content("~/Images/View-white.svg")' /></a>
-    @if (!User.IsInRole(Constants.EditorRole) || User.IsInRole(Constants.AdminRole))
+    @if (User.IsInRole(Constants.AdminRole))
     {
       <a href='@Url.Action("Delete", routeValues)' class="btn btn-primary" title = "Удалить"  ><img width="20" height="20" src='@Url.Content("~/Images/Delete-white.svg")' /></a>
     }
@@ -100,8 +100,8 @@
   <span>Ссылки нужно давать <span class="Important">в конце цитат</span>. Цитаты <span class="Important">выделять кавычками</span>.
     Ссылки на источники даются (в сокращенном виде) по тексту в квадратных скобках (номер в списке литературы) или,
     если требуется указать страницу (номер в списке литературы, запятая, пробел, "с.", пробел, страница),
-    а также <b>в виде списка литературы в <span class="Important">конце статьи</span></b>. 
-    Обратите внимание на то, что статьи <span class="Important">с цитатами, невыделенными кавычками, не допускаются</span> 
+    а также <b>в виде списка литературы в <span class="Important">конце статьи</span></b>.
+    Обратите внимание на то, что статьи <span class="Important">с цитатами, невыделенными кавычками, не допускаются</span>
     для дальнейшей обработки и будут сразу помечены, как содержащие ошибки.</span>
 }
 
