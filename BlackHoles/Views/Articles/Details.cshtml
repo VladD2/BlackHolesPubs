@@ -41,67 +41,70 @@
     <dd>"@Html.DisplayFor(model => model.Owner.UserName)" &lt;@(Html.DisplayFor(model => model.Owner.Email))&gt;</dd>
 
     @if (User.IsInRole(Constants.EditorRole))
-    {
-      <dt>Заголовок для письма:</dt>
-      <dd>Замечание по статье № @Model.Id автор@(Model.AuthorsPlural) @Model.GetAuthorsBriefFios() '@Model.ShortArtTitles.Trim()'</dd>
+  {
+    <dt>Заголовок для письма:</dt>
+    <dd>Замечание по статье № @Model.Id автор@(Model.AuthorsPlural) @Model.GetAuthorsBriefFios() '@Model.ShortArtTitles.Trim()'</dd>
 
-      <dt>Телефоны авторов:</dt>
-      <dd>@string.Join(", ", Model.Authors.Where(a => !string.IsNullOrWhiteSpace(a.Phone)).Select(a => a.MakeBriefFio() + ": " + a.Phone))</dd>
+    <dt>Телефоны авторов:</dt>
+    <dd>@string.Join(", ", Model.Authors.Where(a => !string.IsNullOrWhiteSpace(a.Phone)).Select(a => a.MakeBriefFio() + ": " + a.Phone))</dd>
 
-      <dt>Адреса авторов:</dt>
-      <dd>@string.Join("; ", Model.Authors.Where(a =>  !string.IsNullOrWhiteSpace(a.PostalAddress))
-            .Select(a => a.Postcode + ", " + a.PostalAddress + ", " +  a.MakeBriefFio()))</dd>
-    }
+    <dt>Адреса авторов:</dt>
+    <dd>
+      @string.Join("; ", Model.Authors.Where(a => !string.IsNullOrWhiteSpace(a.PostalAddress))
+           .Select(a => a.Postcode + ", " + a.PostalAddress + ", " + a.MakeBriefFio()))
+  </dd>
+}
 
     <dt>@Html.DisplayNameFor(model => model.Specialty):</dt>
     <dd>@Html.DisplayFor(model => model.Specialty)</dd>
 
     <dt>Файлы:</dt>
     @{
-      var docUrl     = Url.Action("Doc", new { id = Model.Id });
-      var docPrevUrl = Url.Action("DocPrev", new { id = Model.Id });
+    var docUrl = Url.Action("Doc", new { id = Model.Id });
+    var docPrevUrl = Url.Action("DocPrev", new { id = Model.Id });
     }
-    <dd><a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a> (@Html.DisplayFor(m => m.ArticleDate))
+    <dd>
+      <a href="@docUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> статья</a> (@Html.DisplayFor(m => m.ArticleDate))
       @if (User.IsInRole(Constants.EditorRole))
-      {
-          @:| <a href="@docPrevUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> прошлая версия</a>
-      }
+    {
+      @:| <a href="@docPrevUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> прошлая версия</a>
+  }
       |
       @if (Model.ReviewTextVersions > 0)
-      {
-        <a href="@Url.Action("ReviewTxt", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (текст)</a>
-      }
-      else
-      {
-        <span class="label label-danger">рецензия (текст) не загружена!</span>
-      }
+    {
+      <a href="@Url.Action("ReviewTxt", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (текст)</a>
+  }
+  else
+  {
+    <span class="label label-danger">рецензия (текст) не загружена!</span>
+}
       |
       @if (Model.ReviewImgVersions > 0)
-      {
-        <a href="@Url.Action("ReviewImg", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (фото)</a>
-      }
-      else
-      {
-        <span class="label label-danger">рецензия (фото) не загружена!</span>
-      }
+    {
+      <a href="@Url.Action("ReviewImg", new { id = Model.Id })"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> рецензия (фото)</a>
+  }
+  else
+  {
+    <span class="label label-danger">рецензия (фото) не загружена!</span>
+}
     </dd>
 
     @if (Model.AntiplagiatApdx > 0 && Model.AntiplagiatApdx == Model.AntiplagiatPdf)
-    {
-      <dt>Отчеты&nbsp;antiplagiat.ru:</dt>
-      var apdxUrl = Url.Action("AntiplagiatApdx", new { id = Model.Id });
-      var pdfUrl  = Url.Action("AntiplagiatPdf", new { id = Model.Id });
-      <dd>
-        <a href="@pdfUrl" ><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> в формате .pdf</a>, 
-        <a href="@apdxUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> в формате .apdx</a> (@Html.DisplayFor(m => m.AntiplagiatDate)) <a href="http://www.antiplagiat.ru/Page/Antiplagiat-report-viewer" target="_blank">Antiplagiat ReportViewer</a>
-      </dd>
-      }
-      else if (Model.AntiplagiatApdx != Model.AntiplagiatPdf)
-      {
-        <dt>Отчеты&nbsp;antiplagiat.ru:</dt>
-        <dd class="text-danger">Несовпадает количество отчетов Antiplagiat! Обратитесь в редакцию.</dd>
-      }
-  @if (User.IsInRole(Constants.EditorRole))
+  {
+    <dt>Отчеты&nbsp;antiplagiat.ru:</dt>
+  var apdxUrl = Url.Action("AntiplagiatApdx", new { id = Model.Id });
+  var pdfUrl = Url.Action("AntiplagiatPdf", new { id = Model.Id });
+  <dd>
+    <a href="@pdfUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> в формате .pdf</a>,
+    <a href="@apdxUrl"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> в формате .apdx</a> (@Html.DisplayFor(m => m.AntiplagiatDate)) <a href="http://www.antiplagiat.ru/Page/Antiplagiat-report-viewer" target="_blank">Antiplagiat ReportViewer</a>
+  </dd>
+}
+else if (Model.AntiplagiatApdx != Model.AntiplagiatPdf)
+{
+  <dt>Отчеты&nbsp;antiplagiat.ru:</dt>
+  <dd class="text-danger">Несовпадает количество отчетов Antiplagiat! Обратитесь в редакцию.</dd>
+}
+    @if (User.IsInRole(Constants.EditorRole))
   {
     using (Html.BeginForm("UploadAntiplagiat", "Articles", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
@@ -117,8 +120,8 @@
         @Html.ValidationMessage("UploadAntiplagiatValidation", "", new { @class = "text-danger" })<br />
         <input type="submit" value="Загрузить отчеты Antiplagiat" title="Загрузить отчеты Antiplagiat" class="btn btn-primary" @*onclick="return onSubmit();"*@ />
       </dd>
-    }
   }
+}
   </dl>
 </div>
 

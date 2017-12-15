@@ -151,11 +151,25 @@ namespace BlackHoles.Controllers
       var isCreating = article.Id == 0;
       article.FillPrperties(db);
 
+      if (db.Articles.Any(a => a.RusArtTitles.Equals(article.RusArtTitles, StringComparison.CurrentCultureIgnoreCase)))
+      {
+        var id = db.Articles.Where(a => a.RusArtTitles.Equals(article.RusArtTitles, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id;
+        ModelState.AddModelError("RusArtTitles", $"Статья (№ {id}) с таким заголовком уже существует! Если вы загружаете измененные файлы, вам надо сделать это в первой заявке.");
+        return ContinueEdit(article);
+      }
+      if (db.Articles.Any(a => a.ShortArtTitles.Equals(article.ShortArtTitles, StringComparison.CurrentCultureIgnoreCase)))
+      {
+        var id = db.Articles.Where(a => a.ShortArtTitles.Equals(article.ShortArtTitles, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id;
+        ModelState.AddModelError("ShortArtTitles", $"Статья (№ {id}) с таким кратким названием уже существует! Если вы загружаете измененные файлы, вам надо сделать это в первой заявке.");
+        return ContinueEdit(article);
+      }
+
       if (string.IsNullOrWhiteSpace(article.AuthorsIds))
         return ContinueEdit(article);
 
       if (Request.Files.Count != 4)
         throw new ApplicationException("Invalid uploaded files count!");
+
 
       article.Created = article.Modified;
       article.Owner   = User.GetApplicationUser(db);
